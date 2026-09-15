@@ -1,0 +1,77 @@
+.container {
+  padding: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.kpiRow {
+  margin-bottom: 16px;
+}
+
+.kpiCard {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s;
+}
+
+.kpiCard:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.valueStyle {
+  fontSize: 28px;
+  fontWeight: 600;
+}
+
+.trend {
+  color: #52c41a;
+  fontSize: 12px;
+  fontWeight: 500;
+}
+
+.chartRow {
+  marginBottom: 16px;
+}
+
+.chartCard {
+  borderRadius: 12px;
+  boxShadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+}
+
+.chart {
+  height: 300px;
+}
+
+.tableRow {
+  marginBottom: 16px;
+}
+
+.tableCard {
+  borderRadius: 12px;
+  boxShadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+}
+
+.tableCard ::deep(.ant-table-thead > tr > th) {
+  background: #fafafa;
+  fontWeight: 600;
+}
+
+.tableCard ::deep(.ant-table-tbody > tr:hover > td) {
+  background: #fafafa;
+}

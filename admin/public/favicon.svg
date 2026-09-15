@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="48" y2="48">
+      <stop offset="0%" stop-color="rgb(7, 95, 172)"/>
+      <stop offset="100%" stop-color="#00f2fe"/>
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="12" fill="url(#bg)"/>
+  <g transform="translate(24,24)" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- bar -->
+    <line x1="-14" y1="0" x2="14" y2="0"/>
+    <!-- left outer weight -->
+    <rect x="-16" y="-7" width="4" height="14" rx="1.5" fill="#fff" stroke="none"/>
+    <!-- left inner weight -->
+    <rect x="-11" y="-5" width="3" height="10" rx="1" fill="#fff" stroke="none"/>
+    <!-- right inner weight -->
+    <rect x="8" y="-5" width="3" height="10" rx="1" fill="#fff" stroke="none"/>
+    <!-- right outer weight -->
+    <rect x="12" y="-7" width="4" height="14" rx="1.5" fill="#fff" stroke="none"/>
+  </g>
+</svg>

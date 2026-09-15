@@ -1,0 +1,42 @@
+.container {
+  padding: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.title {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.subtitle {
+  margin: 0;
+  color: #8c8c8c;
+  font-size: 14px;
+}
+
+.filterCard {
+  margin-bottom: 16px;
+  border-radius: 8px;
+}
+
+.filterForm {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.slug {
+  font-size: 12px;
+  color: #8c8c8c;
+  margin-top: 4px;
+}

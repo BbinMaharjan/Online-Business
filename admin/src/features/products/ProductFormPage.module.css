@@ -1,0 +1,88 @@
+.container {
+  padding: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.form {
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.tabs ::deep(.ant-tabs-nav) {
+  margin-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tabs ::deep(.ant-tabs-tab) {
+  padding: 12px 24px;
+  font-size: 14px;
+}
+
+.tabs ::deep(.ant-tabs-tab-active) {
+  font-weight: 600;
+}
+
+.tabs ::deep(.ant-tabs-ink-bar) {
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  font-size: 16px;
+  color: #8c8c8c;
+}
+
+.variantsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.emptyVariants {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  color: #8c8c8c;
+}
+
+.emptyVariants p {
+  margin: 16px 0;
+}
+
+.variantImage {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.uploadHint {
+  margin-top: 8px;
+  color: #8c8c8c;
+  font-size: 12px;
+  text-align: center;
+}
