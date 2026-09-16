@@ -25,9 +25,7 @@ try {
         const response = await apiClient.post<{
           success: boolean;
           message: string;
-          data: { user: any };
-          accessToken: string;
-          refreshToken: string;
+          data: { admin: any; accessToken: string; refreshToken: string };
         }>("/auth/login", {
           email: values.email,
           password: values.password,
@@ -35,25 +33,24 @@ try {
         });
 
         if (response.data.success) {
-          const { user } = response.data.data;
-          const { accessToken, refreshToken } = response.data;
-          const permissions = user.permissions || [];
+          const { admin, accessToken, refreshToken } = response.data.data;
+          const permissions = admin.permissions || [];
 
           dispatch(
             setAuth({
               admin: {
-                _id: user._id || user.id,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                role: user.role,
+                _id: admin._id,
+                firstName: admin.firstName,
+                lastName: admin.lastName,
+                email: admin.email,
+                role: admin.role,
                 permissions,
-                avatar: user.avatar,
-                lastLoginAt: user.lastLoginAt,
-                status: user.status,
-                phone: user.phone,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt,
+                avatar: admin.avatar,
+                lastLoginAt: admin.lastLoginAt,
+                status: admin.status,
+                phone: admin.phone,
+                createdAt: admin.createdAt,
+                updatedAt: admin.updatedAt,
               },
               permissions,
               accessToken,
@@ -67,10 +64,10 @@ try {
           setError(response.data.message || "Login failed");
         }
       } catch (err: any) {
-      setError(err.response?.data?.message || "An error occurred during login");
-    } finally {
-      setLoading(false);
-    }
+        setError(err.response?.data?.message || "An error occurred during login");
+      } finally {
+        setLoading(false);
+      }
   };
 
   return (

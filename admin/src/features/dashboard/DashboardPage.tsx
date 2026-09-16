@@ -61,58 +61,58 @@ const DashboardPage = () => {
   const { data: lowStockProducts, isLoading: stockLoading } =
     useLowStockProductsQuery(5);
 
-  const kpiCards = [
-    {
-      title: "Total Revenue",
-      value: summary?.totalRevenue || 0,
-      formatter: formatCurrency,
-      icon: <DollarCircleOutlined style={{ fontSize: 24, color: "#1890ff" }} />,
-      trend: "+12.5%",
-      trendIcon: <UpOutlined />,
-    },
-    {
-      title: "Total Orders",
-      value: summary?.totalOrders || 0,
-      formatter: formatNumber,
-      icon: <ShoppingCartOutlined style={{ fontSize: 24, color: "#52c41a" }} />,
-      trend: "+8.2%",
-      trendIcon: <UpOutlined />,
-    },
-    {
-      title: "Total Customers",
-      value: summary?.totalCustomers || 0,
-      formatter: formatNumber,
-      icon: <TeamOutlined style={{ fontSize: 24, color: "#722ed1" }} />,
-      trend: "+5.1%",
-      trendIcon: <UpOutlined />,
-    },
-    {
-      title: "Total Products",
-      value: summary?.totalProducts || 0,
-      formatter: formatNumber,
-      icon: <BoxPlotOutlined style={{ fontSize: 24, color: "#fa8c16" }} />,
-      trend: "+3.7%",
-      trendIcon: <UpOutlined />,
-    },
-    {
-      title: "Pending Orders",
-      value: summary?.pendingOrders || 0,
-      formatter: formatNumber,
-      icon: <ClockCircleOutlined style={{ fontSize: 24, color: "#faad14" }} />,
-      trend: "-2.1%",
-      trendIcon: <DownOutlined />,
-    },
-    {
-      title: "Low Stock Products",
-      value: summary?.lowStockProducts || 0,
-      formatter: formatNumber,
-      icon: (
-        <ExclamationCircleOutlined style={{ fontSize: 24, color: "#ff4d4f" }} />
-      ),
-      trend: "+1.3%",
-      trendIcon: <UpOutlined />,
-    },
-  ];
+  // const kpiCards = [
+  //   {
+  //     title: "Total Revenue",
+  //     value: summary?.totalRevenue || 0,
+  //     formatter: formatCurrency,
+  //     icon: <DollarCircleOutlined style={{ fontSize: 24, color: "#1890ff" }} />,
+  //     trend: "+12.5%",
+  //     trendIcon: <UpOutlined />,
+  //   },
+  //   {
+  //     title: "Total Orders",
+  //     value: summary?.totalOrders || 0,
+  //     formatter: formatNumber,
+  //     icon: <ShoppingCartOutlined style={{ fontSize: 24, color: "#52c41a" }} />,
+  //     trend: "+8.2%",
+  //     trendIcon: <UpOutlined />,
+  //   },
+  //   {
+  //     title: "Total Customers",
+  //     value: summary?.totalCustomers || 0,
+  //     formatter: formatNumber,
+  //     icon: <TeamOutlined style={{ fontSize: 24, color: "#722ed1" }} />,
+  //     trend: "+5.1%",
+  //     trendIcon: <UpOutlined />,
+  //   },
+  //   {
+  //     title: "Total Products",
+  //     value: summary?.totalProducts || 0,
+  //     formatter: formatNumber,
+  //     icon: <BoxPlotOutlined style={{ fontSize: 24, color: "#fa8c16" }} />,
+  //     trend: "+3.7%",
+  //     trendIcon: <UpOutlined />,
+  //   },
+  //   {
+  //     title: "Pending Orders",
+  //     value: summary?.pendingOrders || 0,
+  //     formatter: formatNumber,
+  //     icon: <ClockCircleOutlined style={{ fontSize: 24, color: "#faad14" }} />,
+  //     trend: "-2.1%",
+  //     trendIcon: <DownOutlined />,
+  //   },
+  //   {
+  //     title: "Low Stock Products",
+  //     value: summary?.lowStockProducts || 0,
+  //     formatter: formatNumber,
+  //     icon: (
+  //       <ExclamationCircleOutlined style={{ fontSize: 24, color: "#ff4d4f" }} />
+  //     ),
+  //     trend: "+1.3%",
+  //     trendIcon: <UpOutlined />,
+  //   },
+  // ];
 
   const revenueData = [
     { name: "Mon", revenue: 12500, orders: 45 },
@@ -150,11 +150,11 @@ const DashboardPage = () => {
         </PermissionGuard>
       </div>
 
-      <Row gutter={[16, 16]} className={styles.kpiRow}>
+      {/* <Row gutter={[16, 16]} className={styles.kpiRow}>
         {kpiCards.map((card, index) => (
           <Col key={index} xs={24} sm={12} lg={8} xl={4}>
             <Card className={styles.kpiCard}>
-              {/* <Statistic
+              <Statistic
                 title={card.title}
                 value={card.value}
                 formatter={card.formatter}
@@ -165,11 +165,11 @@ const DashboardPage = () => {
                   </span>
                 }
                 valueStyle={styles.valueStyle}
-              /> */}
+              />
             </Card>
           </Col>
         ))}
-      </Row>
+      </Row> */}
 
       <Row gutter={[16, 16]} className={styles.chartRow}>
         <Col xs={24} lg={16}>
@@ -258,7 +258,7 @@ const DashboardPage = () => {
         <Col xs={24} lg={12}>
           <Card title="Recent Orders" className={styles.tableCard}>
             <Table
-              dataSource={recentOrders || []}
+              dataSource={recentOrders?.data || []}
               loading={ordersLoading}
               rowKey="_id"
               pagination={false}
@@ -336,7 +336,7 @@ const DashboardPage = () => {
         <Col xs={24} lg={12}>
           <Card title="Low Stock Products" className={styles.tableCard}>
             <Table
-              dataSource={lowStockProducts || []}
+              dataSource={lowStockProducts?.data || []}
               loading={stockLoading}
               rowKey="productId"
               pagination={false}
