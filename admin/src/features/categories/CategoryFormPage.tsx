@@ -27,7 +27,8 @@ const CategoryFormPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isEdit = !!id;
-  const { data: category, isLoading } = useCategoryQuery(id || "");
+  const { data: categoryResponse, isLoading } = useCategoryQuery(id || "");
+  const category = categoryResponse?.data;
   const createMutation = useCreateCategoryMutation();
   const updateMutation = useUpdateCategoryMutation();
   const uploadMutation = useUploadMediaMutation();

@@ -72,7 +72,7 @@ const RolesPage = () => {
         <Col xs={24} lg={12}>
           <Card title="Roles">
             <Table
-              dataSource={roles || []}
+              dataSource={roles?.data || []}
               loading={rolesLoading}
               columns={[
                 { title: "Name", dataIndex: "name", key: "name" },
@@ -119,7 +119,7 @@ const RolesPage = () => {
         <Col xs={24} lg={12}>
           <Card title="Available Permissions">
             <div className={styles.permGrid}>
-              {permissions?.items?.map((p: any) => (
+              {permissions?.data?.map((p: any) => (
                 <Tag key={p.key} color="geekblue">
                   {p.name} ({p.key})
                 </Tag>
@@ -147,7 +147,7 @@ const RolesPage = () => {
             mode="multiple"
             placeholder="Select permissions"
             options={
-              permissions?.items?.map((p: any) => ({
+              permissions?.data?.map((p: any) => ({
                 value: p.key,
                 label: p.name,
               })) || []

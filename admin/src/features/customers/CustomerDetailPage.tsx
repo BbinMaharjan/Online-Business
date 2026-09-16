@@ -36,8 +36,10 @@ const CustomerDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: customer, isLoading } = useCustomerQuery(id || "");
-  const { data: orders } = useCustomerOrdersQuery(id || "");
+  const { data: customerResponse, isLoading, refetch } = useCustomerQuery(id || "");
+  const customer = customerResponse?.data;
+  const { data: ordersResponse } = useCustomerOrdersQuery(id || "");
+  const orders = ordersResponse?.data;
   const updateStatusMutation = useUpdateCustomerStatusMutation();
 
   useEffect(() => {

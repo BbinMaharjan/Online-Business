@@ -53,9 +53,10 @@ const ProductFormPage = () => {
   const { id } = useParams<{ id: string }>();
   const isEdit = !!id;
 
-  const { data: product, isLoading: productLoading } = useProductQuery(
+  const { data: productResponse, isLoading: productLoading } = useProductQuery(
     id || "",
   );
+  const product = productResponse?.data;
   const { data: categories } = useCategoriesQuery({ limit: 1000 });
   const { data: brands } = useBrandsQuery({ limit: 1000 });
   const createMutation = useCreateProductMutation();

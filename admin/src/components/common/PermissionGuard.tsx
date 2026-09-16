@@ -12,7 +12,7 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
   children,
   fallback = null,
 }) => {
-  const permissions = useAppSelector((state) => state.auth.permissions);
+  const permissions = useAppSelector((state) => state.auth.permissions) || [];
 
   const hasPermission = permissions.includes(permission);
 
@@ -47,11 +47,11 @@ export const usePermission = (permission: string) => {
 };
 
 export const useAnyPermission = (permissions: string[]) => {
-  const userPermissions = useAppSelector((state) => state.auth.permissions);
+  const userPermissions = useAppSelector((state) => state.auth.permissions) || [];
   return permissions.some((p) => userPermissions.includes(p));
 };
 
 export const useAllPermissions = (permissions: string[]) => {
-  const userPermissions = useAppSelector((state) => state.auth.permissions);
+  const userPermissions = useAppSelector((state) => state.auth.permissions) || [];
   return permissions.every((p) => userPermissions.includes(p));
 };

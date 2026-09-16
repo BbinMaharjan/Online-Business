@@ -30,7 +30,8 @@ const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: product, isLoading } = useProductQuery(id || "");
+  const { data: productResponse, isLoading } = useProductQuery(id || "");
+  const product = productResponse?.data;
 
   useEffect(() => {
     if (product) {

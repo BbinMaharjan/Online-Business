@@ -27,7 +27,8 @@ const BrandFormPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isEdit = !!id;
-  const { data: brand, isLoading } = useBrandQuery(id || "");
+  const { data: brandResponse, isLoading } = useBrandQuery(id || "");
+  const brand = brandResponse?.data;
   const createMutation = useCreateBrandMutation();
   const updateMutation = useUpdateBrandMutation();
   const uploadMutation = useUploadMediaMutation();

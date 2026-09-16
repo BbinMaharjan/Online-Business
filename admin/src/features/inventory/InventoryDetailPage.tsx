@@ -37,7 +37,8 @@ const InventoryDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: inventory, isLoading } = useInventoryByProductQuery(id || "");
+  const { data: inventoryResponse, isLoading, refetch } = useInventoryByProductQuery(id || "");
+  const inventory = inventoryResponse?.data;
   const adjustMutation = useAdjustStockMutation();
 
   useEffect(() => {

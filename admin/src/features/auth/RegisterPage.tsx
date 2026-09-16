@@ -26,7 +26,9 @@ const RegisterPage = () => {
       const response = await apiClient.post<{
         success: boolean;
         message: string;
-        data: { admin: any; accessToken: string; refreshToken: string };
+        data: { user: any };
+        accessToken: string;
+        refreshToken: string;
       }>("/auth/register", {
         firstName: values.firstName,
         lastName: values.lastName,

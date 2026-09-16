@@ -36,7 +36,8 @@ const OrderDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: order, isLoading } = useOrderQuery(id || "");
+  const { data: orderResponse, isLoading, refetch } = useOrderQuery(id || "");
+  const order = orderResponse?.data;
   const updateStatusMutation = useUpdateOrderStatusMutation();
 
   useEffect(() => {

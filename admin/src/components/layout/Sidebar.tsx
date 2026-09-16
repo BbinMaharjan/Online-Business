@@ -313,9 +313,10 @@ export const Sidebar = () => {
         mode="inline"
         theme="light"
         selectedKeys={[location.pathname]}
-        items={renderMenuItems(menuItems, collapsed)}
         style={{ borderRight: "none" }}
-      />
+      >
+        {renderMenuItems(menuItems, collapsed)}
+      </Menu>
       {!collapsed && admin && (
         <div className={styles.profile}>
           <Dropdown
