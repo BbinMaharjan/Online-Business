@@ -3,10 +3,13 @@ import { Form, Input, Button, Card, message, Alert, Checkbox } from "antd";
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { useNavigate, Link } from "react-router-dom";
 import apiClient from "../../lib/apiClient";
+import { useAppDispatch } from "../../store/hooks";
+import { setAuth } from "../../store/authSlice";
 import styles from "./LoginPage.module.css";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -23,7 +26,7 @@ const RegisterPage = () => {
     setSuccess(null);
 
     try {
-      const response = await apiClient.post<{
+      const regResponse = await apiClient.post<{
         success: boolean;
         message: string;
         data: { admin: any; accessToken: string; refreshToken: string };
@@ -34,13 +37,54 @@ const RegisterPage = () => {
         password: values.password,
       });
 
-      if (response.data.success) {
-        setSuccess("Registration successful! Redirecting to login...");
+      if (!regResponse.data.success) {
+        setError(regResponse.data.message || "Registration failed");
+        return;
+      }
+
+      const loginResponse = await apiClient.post<{
+        success: boolean;
+        message: string;
+        data: { admin: any; accessToken: string; refreshToken: string };
+      }>("/auth/login", {
+        email: values.email,
+        password: values.password,
+        rememberMe: true,
+      });
+
+      if (loginResponse.data.success) {
+        const { admin, accessToken, refreshToken } = loginResponse.data.data;
+        const permissions = admin.permissions || [];
+
+        dispatch(
+          setAuth({
+            admin: {
+              _id: admin._id,
+              firstName: admin.firstName,
+              lastName: admin.lastName,
+              email: admin.email,
+              role: admin.role,
+              permissions,
+              avatar: admin.avatar,
+              lastLoginAt: admin.lastLoginAt,
+              status: admin.status,
+              phone: admin.phone,
+              createdAt: admin.createdAt,
+              updatedAt: admin.updatedAt,
+            },
+            permissions,
+            accessToken,
+            refreshToken,
+          }),
+        );
+
+        message.success("Registration successful! Welcome to Admin Portal.");
+        navigate("/dashboard");
+      } else {
+        setError(loginResponse.data.message || "Auto-login failed. Please sign in manually.");
         setTimeout(() => {
           navigate("/login");
         }, 2000);
-      } else {
-        setError(response.data.message || "Registration failed");
       }
     } catch (err: any) {
       setError(err.response?.data?.message || "An error occurred during registration");
