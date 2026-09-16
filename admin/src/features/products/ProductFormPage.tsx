@@ -197,9 +197,7 @@ const ProductFormPage = () => {
         </h1>
         <Space>
           <Button onClick={() => navigate("/products")}>Cancel</Button>
-          <PermissionGuard
-            permission={isEdit ? "PRODUCT_UPDATE" : "PRODUCT_CREATE"}
-          >
+          <PermissionGuard permission={isEdit ? "products:update" : "products:create"}>
             <Button
               type="primary"
               htmlType="submit"
@@ -392,9 +390,7 @@ const ProductFormPage = () => {
             <Card>
               <div className={styles.variantsHeader}>
                 <span>Product Variants</span>
-                <PermissionGuard
-                  permission={isEdit ? "PRODUCT_UPDATE" : "PRODUCT_CREATE"}
-                >
+                <PermissionGuard permission={isEdit ? "products:update" : "products:create"}>
                   <Button
                     type="primary"
                     icon={<PlusOutlined />}
@@ -409,9 +405,7 @@ const ProductFormPage = () => {
                 <div className={styles.emptyVariants}>
                   <PictureOutlined style={{ fontSize: 48, color: "#d9d9d9" }} />
                   <p>No variants added yet</p>
-                  <PermissionGuard
-                    permission={isEdit ? "PRODUCT_UPDATE" : "PRODUCT_CREATE"}
-                  >
+                  <PermissionGuard permission={isEdit ? "products:update" : "products:create"}>
                     <Button
                       type="primary"
                       icon={<PlusOutlined />}
@@ -472,9 +466,7 @@ const ProductFormPage = () => {
                       render: (_, record: Variant) => (
                         <Space>
                           <PermissionGuard
-                            permission={
-                              isEdit ? "PRODUCT_UPDATE" : "PRODUCT_CREATE"
-                            }
+                            permission={isEdit ? "products:update" : "products:create"}
                           >
                             <Button
                               type="link"

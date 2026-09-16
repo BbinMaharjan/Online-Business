@@ -88,7 +88,7 @@ const OrderDetailPage = () => {
         </Button>
         <h1 className={styles.title}>Order {order.orderNumber}</h1>
         <Space>
-          <PermissionGuard permission="ORDER_UPDATE">
+          <PermissionGuard permission="orders:update">
             <Dropdown
               menu={{
                 items: statusOptions.map((s) => ({

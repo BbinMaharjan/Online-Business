@@ -62,7 +62,7 @@ const RolesPage = () => {
           <h1 className={styles.title}>Roles & Permissions</h1>
           <p className={styles.subtitle}>Manage access control</p>
         </div>
-        <PermissionGuard permission="ROLE_CREATE">
+        <PermissionGuard permission="roles:create">
           <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
             Create Role
           </Button>
@@ -99,7 +99,7 @@ const RolesPage = () => {
                   key: "actions",
                   render: (_, r: any) => (
                     <Space>
-                      <PermissionGuard permission="ROLE_READ">
+                      <PermissionGuard permission="roles:read">
                         <Button
                           type="link"
                           icon={<EditOutlined />}

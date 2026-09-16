@@ -143,7 +143,7 @@ const AdministratorListPage = () => {
       fixed: "right",
       render: (_, r: any) => (
         <Space>
-          <PermissionGuard permission="ADMIN_READ">
+          <PermissionGuard permission="users:read">
             <Dropdown
               menu={{
                 items: [
@@ -185,7 +185,7 @@ const AdministratorListPage = () => {
           <h1 className={styles.title}>Administrators</h1>
           <p className={styles.subtitle}>Manage admin users</p>
         </div>
-        <PermissionGuard permission="ADMIN_CREATE">
+        <PermissionGuard permission="users:create">
           <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
             Add Admin
           </Button>

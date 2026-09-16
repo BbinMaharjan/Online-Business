@@ -122,7 +122,7 @@ const CustomerListPage = () => {
       fixed: "right",
       render: (_, r: any) => (
         <Space>
-          <PermissionGuard permission="CUSTOMER_READ">
+          <PermissionGuard permission="customers:read">
             <Dropdown
               menu={{
                 items: [

@@ -13,6 +13,7 @@ export interface IUser extends Document {
   avatar?: string;
   emailVerified?: boolean;
   lastLoginAt?: Date;
+  permissions: string[];
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -80,6 +81,10 @@ const userSchema = new Schema(
         select: false,
       },
     ],
+    permissions: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,

@@ -124,7 +124,7 @@ const OrderListPage = () => {
       fixed: "right",
       render: (_, r: any) => (
         <Space>
-          <PermissionGuard permission="ORDER_READ">
+          <PermissionGuard permission="orders:read">
             <Dropdown
               menu={{
                 items: [

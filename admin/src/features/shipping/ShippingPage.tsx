@@ -68,7 +68,7 @@ const ShippingPage = () => {
       fixed: "right",
       render: (_, r: any) => (
         <Space>
-          <PermissionGuard permission="SHIPPING_READ">
+          <PermissionGuard permission="shipping:read">
             <Button
               type="link"
               icon={<EyeOutlined />}
@@ -96,7 +96,7 @@ const ShippingPage = () => {
           <h1 className={styles.title}>Shipping Methods</h1>
           <p className={styles.subtitle}>Manage shipping options</p>
         </div>
-        <PermissionGuard permission="SHIPPING_CREATE">
+        <PermissionGuard permission="shipping:create">
           <Button
             type="primary"
             icon={<PlusOutlined />}

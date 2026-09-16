@@ -100,7 +100,7 @@ const PaymentListPage = () => {
       fixed: "right",
       render: (_, r: any) => (
         <Space>
-          <PermissionGuard permission="PAYMENT_READ">
+          <PermissionGuard permission="payments:read">
             <Dropdown
               menu={{
                 items: [

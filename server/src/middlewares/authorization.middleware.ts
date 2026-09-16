@@ -25,6 +25,19 @@ export const requireRole = (...allowedRoles: string[]) => {
 
 export const requirePermission = (permission: string) => {
   return (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user?.role) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized - no role found",
+        error: { code: "UNAUTHORIZED" },
+      });
+    }
+
+    // SUPER_ADMIN bypasses all permission checks
+    if (req.user.role === ROLES.SUPER_ADMIN) {
+      return next();
+    }
+
     if (!req.user?.permissions) {
       return res.status(403).json({
         success: false,

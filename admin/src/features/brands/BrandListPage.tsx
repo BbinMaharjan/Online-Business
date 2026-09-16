@@ -91,7 +91,7 @@ const BrandListPage = () => {
       fixed: "right",
       render: (_, r: any) => (
         <Space>
-          <PermissionGuard permission="BRAND_READ">
+          <PermissionGuard permission="brands:read">
             <Dropdown
               menu={{
                 items: [
@@ -133,7 +133,7 @@ const BrandListPage = () => {
           <h1 className={styles.title}>Brands</h1>
           <p className={styles.subtitle}>Manage product brands</p>
         </div>
-        <PermissionGuard permission="BRAND_CREATE">
+        <PermissionGuard permission="brands:create">
           <Button
             type="primary"
             icon={<PlusOutlined />}

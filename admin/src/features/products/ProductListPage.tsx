@@ -199,7 +199,7 @@ const ProductListPage = () => {
       fixed: "right",
       render: (_, record: any) => (
         <Space>
-          <PermissionGuard permission="PRODUCT_READ">
+          <PermissionGuard permission="products:read">
             <Dropdown
               menu={{
                 items: [
@@ -262,7 +262,7 @@ const ProductListPage = () => {
           <h1 className={styles.title}>Products</h1>
           <p className={styles.subtitle}>Manage your product catalog</p>
         </div>
-        <PermissionGuard permission="PRODUCT_CREATE">
+        <PermissionGuard permission="products:create">
           <Button
             type="primary"
             icon={<PlusOutlined />}

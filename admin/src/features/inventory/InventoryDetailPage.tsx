@@ -142,7 +142,7 @@ const InventoryDetailPage = () => {
           <Col key="actions" xs={24} lg={12}>
             <Card title="Actions">
               <Space>
-                <PermissionGuard permission="INVENTORY_UPDATE">
+                <PermissionGuard permission="inventory:update">
                   <Button
                     icon={<PlusOutlined />}
                     onClick={() => handleAdjust(inventory, "ADD")}

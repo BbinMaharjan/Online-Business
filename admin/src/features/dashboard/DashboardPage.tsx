@@ -143,7 +143,7 @@ const DashboardPage = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>Dashboard</h1>
-        <PermissionGuard permission="DASHBOARD_READ">
+        <PermissionGuard permission="dashboard:read">
           <Button type="primary" icon={<DollarCircleOutlined />}>
             Export Report
           </Button>

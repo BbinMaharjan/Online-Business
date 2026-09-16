@@ -59,7 +59,7 @@ const ProductDetailPage = () => {
         </Button>
         <h1 className={styles.title}>{product.name}</h1>
         <Space>
-          <PermissionGuard permission="PRODUCT_UPDATE">
+          <PermissionGuard permission="products:update">
             <Button
               type="primary"
               icon={<EditOutlined />}

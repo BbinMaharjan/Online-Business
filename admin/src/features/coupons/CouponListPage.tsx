@@ -109,7 +109,7 @@ const CouponListPage = () => {
       fixed: "right",
       render: (_, r: any) => (
         <Space>
-          <PermissionGuard permission="COUPON_READ">
+          <PermissionGuard permission="coupons:read">
             <Dropdown
               menu={{
                 items: [
@@ -151,7 +151,7 @@ const CouponListPage = () => {
           <h1 className={styles.title}>Coupons</h1>
           <p className={styles.subtitle}>Manage discount coupons</p>
         </div>
-        <PermissionGuard permission="COUPON_CREATE">
+        <PermissionGuard permission="coupons:create">
           <Button
             type="primary"
             icon={<PlusOutlined />}

@@ -143,7 +143,7 @@ const ReviewListPage = () => {
       fixed: "right",
       render: (_, r: any) => (
         <Space>
-          <PermissionGuard permission="REVIEW_READ">
+          <PermissionGuard permission="reviews:read">
             <Dropdown
               menu={{
                 items: [

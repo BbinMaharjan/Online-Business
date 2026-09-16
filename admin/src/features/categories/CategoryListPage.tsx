@@ -104,7 +104,7 @@ const CategoryListPage = () => {
       fixed: "right",
       render: (_, record: any) => (
         <Space>
-          <PermissionGuard permission="CATEGORY_READ">
+          <PermissionGuard permission="categories:read">
             <Dropdown
               menu={{
                 items: [
@@ -146,7 +146,7 @@ const CategoryListPage = () => {
           <h1 className={styles.title}>Categories</h1>
           <p className={styles.subtitle}>Manage product categories</p>
         </div>
-        <PermissionGuard permission="CATEGORY_CREATE">
+        <PermissionGuard permission="categories:create">
           <Button
             type="primary"
             icon={<PlusOutlined />}

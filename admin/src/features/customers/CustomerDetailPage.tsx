@@ -80,7 +80,7 @@ const CustomerDetailPage = () => {
           {customer.firstName} {customer.lastName}
         </h1>
         <Space>
-          <PermissionGuard permission="CUSTOMER_UPDATE">
+          <PermissionGuard permission="customers:update">
             <Button
               type="primary"
               icon={

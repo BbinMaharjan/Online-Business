@@ -43,7 +43,7 @@ const MediaPage = () => {
         </div>
       </div>
       <Card className={styles.uploadCard}>
-        <PermissionGuard permission="MEDIA_CREATE">
+        <PermissionGuard permission="media:create">
           <Upload
             action="/api/upload"
             listType="picture-card"
