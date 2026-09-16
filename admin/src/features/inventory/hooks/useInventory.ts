@@ -14,7 +14,18 @@ export const useInventoryQuery = (filters: InventoryFilters = {}) => {
   return useQuery({
     queryKey: inventoryKeys.list(filters),
     queryFn: () => inventoryApi.getInventory(filters),
-    select: (response) => response.data,
+    select: (response) => {
+      const res = response.data;
+      return {
+        items: res.data || [],
+        pagination: res.meta || {
+          page: filters.page || 1,
+          limit: filters.limit || 20,
+          total: 0,
+          totalPages: 0,
+        },
+      };
+    },
   });
 };
 

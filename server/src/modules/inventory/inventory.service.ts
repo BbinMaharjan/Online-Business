@@ -3,7 +3,7 @@ import Inventory from "./inventory.model";
 
 export const getInventory = async (req: Request, res: Response) => {
   try {
-    const { productId, variantId } = req.query;
+    const { productId, variantId, search, lowStock, page = 1, limit = 20 } = req.query;
 
     let filter: any = {};
 
@@ -15,12 +15,41 @@ export const getInventory = async (req: Request, res: Response) => {
       filter.variantId = variantId;
     }
 
-    const inventory = await Inventory.find(filter);
+    if (search) {
+      filter.$or = [
+        { "product.name": { $regex: search, $options: "i" } },
+        { "product.sku": { $regex: search, $options: "i" } },
+      ];
+    }
+
+    if (lowStock === "true") {
+      filter.$expr = { $lt: ["$quantity", "$lowStockThreshold"] };
+    }
+
+    const pageNum = Number(page);
+    const limitNum = Math.min(Number(limit), 100);
+    const skip = (pageNum - 1) * limitNum;
+
+    const [inventory, total] = await Promise.all([
+      Inventory.find(filter)
+        .populate("productId", "name sku")
+        .populate("variantId")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limitNum),
+      Inventory.countDocuments(filter),
+    ]);
 
     return res.json({
       success: true,
       message: "Inventory retrieved successfully",
       data: inventory,
+      meta: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+        totalPages: Math.ceil(total / limitNum),
+      },
     });
   } catch (error: any) {
     return res.status(500).json({

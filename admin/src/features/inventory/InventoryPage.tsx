@@ -146,7 +146,7 @@ const InventoryPage = () => {
       fixed: "right",
       render: (_, r: any) => (
         <Space>
-          <PermissionGuard permission="INVENTORY_UPDATE">
+          <PermissionGuard permission="inventory:update">
             <Button
               type="link"
               icon={<PlusOutlined />}
@@ -201,25 +201,38 @@ const InventoryPage = () => {
         </Form>
       </Card>
       <Card>
-        <Table
-          dataSource={data?.items || []}
-          loading={isLoading}
-          rowKey="productId"
-          columns={columns}
-          pagination={{
-            current: data?.pagination.page,
-            pageSize: data?.pagination.limit,
-            total: data?.pagination.total,
-            showSizeChanger: true,
-            pageSizeOptions: ["10", "20", "50", "100"],
-            onChange: (page) => setFilters((p) => ({ ...p, page })),
-            onShowSizeChange: (page, limit) =>
-              setFilters((p) => ({ ...p, page, limit })),
-          }}
-          scroll={{ x: 1200 }}
-        />
-        {!data?.items?.length && !isLoading && (
-          <Empty description="No inventory records" />
+        {data ? (
+          <>
+            <Table
+              dataSource={data.items}
+              loading={isLoading}
+              rowKey="productId"
+              columns={columns}
+              pagination={{
+                current: data.pagination.page,
+                pageSize: data.pagination.limit,
+                total: data.pagination.total,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "20", "50", "100"],
+                onChange: (page) => setFilters((p) => ({ ...p, page })),
+                onShowSizeChange: (page, limit) =>
+                  setFilters((p) => ({ ...p, page, limit })),
+              }}
+              scroll={{ x: 1200 }}
+            />
+            {!data.items.length && !isLoading && (
+              <Empty description="No inventory records" />
+            )}
+          </>
+        ) : (
+          <Table
+            dataSource={[]}
+            loading={isLoading}
+            rowKey="productId"
+            columns={columns}
+            pagination={false}
+            scroll={{ x: 1200 }}
+          />
         )}
       </Card>
     </div>
