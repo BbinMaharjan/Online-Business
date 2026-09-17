@@ -28,17 +28,17 @@ const { Option } = Select;
 
 const SalesReportPage = () => {
   const dispatch = useAppDispatch();
-  const [period, setPeriod] = useState("30d");
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
+  const [period, setPeriod] = useState<"today" | "yesterday" | "7d" | "30d" | "this_month" | "last_month" | "custom">("30d");
+  const [dateRange, setDateRange] = useState<{ startDate: string; endDate: string } | null>(null);
   const filters = dateRange
     ? {
-        startDate: dateRange[0].toISOString().split("T")[0],
-        endDate: dateRange[1].toISOString().split("T")[0],
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
       }
     : { period };
   const { data, isLoading } = useSalesReportQuery(filters);
 
-  const summary = data?.reduce(
+  const summary = data?.data?.reduce(
     (acc, cur) => ({
       revenue: acc.revenue + cur.revenue,
       orders: acc.orders + cur.orders,
@@ -59,7 +59,13 @@ const SalesReportPage = () => {
           <Col xs={24} sm={12}>
             <RangePicker
               style={{ width: "100%" }}
-              onChange={setDateRange}
+              onChange={(dates) => {
+                if (dates) {
+                  setDateRange({ startDate: dates[0]?.format("YYYY-MM-DD") || "", endDate: dates[1]?.format("YYYY-MM-DD") || "" });
+                } else {
+                  setDateRange(null);
+                }
+              }}
               placeholder={["Start Date", "End Date"]}
             />
           </Col>
@@ -131,7 +137,7 @@ const SalesReportPage = () => {
       </Row>
       <Card>
         <Table
-          dataSource={data || []}
+          dataSource={data?.data || []}
           loading={isLoading}
           columns={[
             { title: "Date", dataIndex: "date", key: "date" },

@@ -12,6 +12,7 @@ import {
   Form,
   message,
   Empty,
+  Card,
 } from "antd";
 import {
   PlusOutlined,
@@ -19,6 +20,7 @@ import {
   EyeOutlined,
   DeleteOutlined,
   DownOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../store/hooks";
@@ -56,7 +58,7 @@ const BrandListPage = () => {
       title: "Logo",
       key: "logo",
       width: 60,
-      render: (_, r: any) =>
+      render: (_1: any, r: any) =>
         r.logo ? (
           <img
             src={r.logo}
@@ -70,7 +72,7 @@ const BrandListPage = () => {
     {
       title: "Name",
       key: "name",
-      render: (_, r: any) => (
+      render: (_1: any, r: any) => (
         <div>
           <div style={{ fontWeight: 500 }}>{r.name}</div>
           <div className={styles.slug}>/{r.slug}</div>
@@ -88,8 +90,8 @@ const BrandListPage = () => {
       title: "Actions",
       key: "actions",
       width: 180,
-      fixed: "right",
-      render: (_, r: any) => (
+      fixed: "right" as const,
+      render: (_1: any, r: any) => (
         <Space>
           <PermissionGuard permission="brands:read">
             <Dropdown
@@ -197,8 +199,5 @@ const BrandListPage = () => {
     </div>
   );
 };
-
-import { SearchOutlined } from "@ant-design/icons";
-import { Card } from "antd";
 
 export default BrandListPage;

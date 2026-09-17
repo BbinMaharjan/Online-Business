@@ -7,13 +7,12 @@ import {
   Input,
   Select,
   Dropdown,
-  Menu,
   Modal,
   Form,
   message,
-  Popconfirm,
   Empty,
   Spin,
+  Card,
 } from "antd";
 import {
   PlusOutlined,
@@ -24,6 +23,8 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   ReloadOutlined,
+  DownOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../store/hooks";
@@ -31,7 +32,6 @@ import { setBreadcrumbs } from "../../store/uiSlice";
 import {
   useProductsQuery,
   useDeleteProductMutation,
-  useProductsQuery as useProductsQueryHook,
 } from "./hooks/useProducts";
 import { productApi } from "./api/productApi";
 import { PermissionGuard } from "../../components/common/PermissionGuard";
@@ -114,7 +114,7 @@ const ProductListPage = () => {
 
   const handleStatusChange = async (product: any, newStatus: string) => {
     try {
-      await productApi.updateProduct(product._id, { status: newStatus });
+      await productApi.updateProduct(product._id, { status: newStatus as "ACTIVE" | "INACTIVE" | "DRAFT" | "ARCHIVED" });
       message.success("Product status updated");
       refetch();
     } catch (error) {
@@ -127,7 +127,7 @@ const ProductListPage = () => {
       title: "Image",
       key: "images",
       width: 60,
-      render: (_, record: any) => (
+      render: (_: any, record: any) => (
         <img
           src={record.images?.[0] || "/placeholder.png"}
           alt={record.name}
@@ -138,7 +138,7 @@ const ProductListPage = () => {
     {
       title: "Name",
       key: "name",
-      render: (_, record: any) => (
+      render: (_: any, record: any) => (
         <div>
           <div style={{ fontWeight: 500 }}>{record.name}</div>
           <div className={styles.sku}>{record.sku}</div>
@@ -148,24 +148,24 @@ const ProductListPage = () => {
     {
       title: "Category",
       key: "category",
-      render: (_, record: any) => record.categoryId,
+      render: (_: any, record: any) => record.categoryId,
     },
     {
       title: "Brand",
       key: "brand",
-      render: (_, record: any) => record.brandId,
+      render: (_: any, record: any) => record.brandId,
     },
     {
       title: "Price",
       key: "price",
       width: 100,
-      render: (value: number) => formatCurrency(value),
+      render: (_: any, record: any) => formatCurrency(record.price),
     },
     {
       title: "Stock",
       key: "stock",
       width: 100,
-      render: (_, record: any) => {
+      render: (_: any, record: any) => {
         const totalStock =
           record.variants?.reduce((sum: number, v: any) => sum + v.stock, 0) ||
           0;
@@ -182,22 +182,22 @@ const ProductListPage = () => {
       title: "Status",
       key: "status",
       width: 100,
-      render: (status: string) => (
-        <Tag color={getStatusColor(status)}>{status}</Tag>
+      render: (_: any, record: any) => (
+        <Tag color={getStatusColor(record.status)}>{record.status}</Tag>
       ),
     },
     {
       title: "Created",
       key: "createdAt",
       width: 160,
-      render: (date: string) => truncate(date, 16),
+      render: (_: any, record: any) => truncate(record.createdAt, 16),
     },
     {
       title: "Actions",
       key: "actions",
       width: 200,
-      fixed: "right",
-      render: (_, record: any) => (
+      fixed: "right" as const,
+      render: (_: any, record: any) => (
         <Space>
           <PermissionGuard permission="products:read">
             <Dropdown
@@ -222,7 +222,8 @@ const ProductListPage = () => {
                     onClick: () => handleDuplicate(record),
                   },
                   {
-                    label: record.status === "ACTIVE" ? "Unpublish" : "Publish",
+                    label:
+                      record.status === "ACTIVE" ? "Unpublish" : "Publish",
                     key: "publish",
                     icon:
                       record.status === "ACTIVE" ? (
@@ -274,80 +275,63 @@ const ProductListPage = () => {
       </div>
 
       <Card className={styles.filterCard}>
-        <Form
-          layout="inline"
-          className={styles.filterForm}
-          onValuesChange={setFilters}
-        >
-          <Form.Item name="search">
-            <Input
-              placeholder="Search products..."
-              prefix={<SearchOutlined />}
-              style={{ width: 280 }}
-              onPressEnter={(e) => handleSearch(e.currentTarget.value)}
-            />
-          </Form.Item>
-          <Form.Item name="status">
-            <Select
-              placeholder="Status"
-              style={{ width: 140 }}
-              options={statusOptions}
-              allowClear
-            />
-          </Form.Item>
-          <Form.Item name="categoryId">
-            <Select
-              placeholder="Category"
-              style={{ width: 160 }}
-              allowClear
-              options={[]}
-            />
-          </Form.Item>
-          <Form.Item name="brandId">
-            <Select
-              placeholder="Brand"
-              style={{ width: 160 }}
-              allowClear
-              options={[]}
-            />
-          </Form.Item>
-        </Form>
+        <Space wrap>
+          <Input
+            placeholder="Search products..."
+            prefix={<SearchOutlined />}
+            style={{ width: 280 }}
+            onPressEnter={(e) => handleSearch(e.currentTarget.value)}
+            allowClear
+          />
+          <Select
+            placeholder="Status"
+            style={{ width: 140 }}
+            options={statusOptions}
+            allowClear
+            onChange={(value) => handleFilterChange("status", value || "")}
+          />
+          <Select
+            placeholder="Category"
+            style={{ width: 160 }}
+            allowClear
+            onChange={(value) => handleFilterChange("categoryId", value || "")}
+            options={[]}
+          />
+          <Select
+            placeholder="Brand"
+            style={{ width: 160 }}
+            allowClear
+            onChange={(value) => handleFilterChange("brandId", value || "")}
+            options={[]}
+          />
+          <Button icon={<ReloadOutlined />} onClick={() => refetch()}>
+            Refresh
+          </Button>
+        </Space>
       </Card>
 
       <div className={styles.tableWrapper}>
-        {data ? (
-          <>
-            <Table
-              dataSource={data.items}
-              loading={isLoading}
-              rowKey="_id"
-              columns={columns}
-              pagination={{
-                current: data.pagination.page,
-                pageSize: data.pagination.limit,
-                total: data.pagination.total,
-                showSizeChanger: true,
-                pageSizeOptions: ["10", "20", "50", "100"],
-                onChange: handlePageChange,
-                onShowSizeChange: handlePageSizeChange,
-              }}
-              scroll={{ x: 1200 }}
-            />
-            {data.items.length === 0 && !isLoading && (
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description="No products found"
-              />
-            )}
-          </>
-        ) : (
-          <Spin size="large" />
-        )}
+        <Table
+          dataSource={data?.items}
+          loading={isLoading}
+          rowKey="_id"
+          columns={columns}
+          pagination={{
+            current: data?.pagination?.page || 1,
+            pageSize: data?.pagination?.limit || 20,
+            total: data?.pagination?.total || 0,
+            showSizeChanger: true,
+            pageSizeOptions: ["10", "20", "50", "100"],
+            onChange: handlePageChange,
+            onShowSizeChange: handlePageSizeChange,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} products`,
+          }}
+          scroll={{ x: 1200 }}
+        />
       </div>
     </div>
   );
 };
-
-import { SearchOutlined } from "@ant-design/icons";
 
 export default ProductListPage;

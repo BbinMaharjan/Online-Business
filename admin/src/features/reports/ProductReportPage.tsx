@@ -15,7 +15,7 @@ const ProductReportPage = () => {
       </div>
       <Card>
         <Table
-          dataSource={data || []}
+          dataSource={data?.data || []}
           loading={isLoading}
           columns={[
             { title: "Product", dataIndex: "productName", key: "productName" },

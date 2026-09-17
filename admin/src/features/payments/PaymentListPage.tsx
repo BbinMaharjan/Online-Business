@@ -70,13 +70,13 @@ const PaymentListPage = () => {
       title: "Order",
       key: "order",
       width: 140,
-      render: (_, r: any) => r.orderId,
+      render: (_1: any, r: any) => r.orderId,
     },
     {
       title: "Customer",
       key: "customer",
       width: 160,
-      render: (_, r: any) => r.userId,
+      render: (_1: any, r: any) => r.userId,
     },
     { title: "Provider", key: "provider", width: 120 },
     {
@@ -97,8 +97,8 @@ const PaymentListPage = () => {
       title: "Actions",
       key: "actions",
       width: 180,
-      fixed: "right",
-      render: (_, r: any) => (
+      fixed: "right" as const,
+      render: (_1: any, r: any) => (
         <Space>
           <PermissionGuard permission="payments:read">
             <Dropdown

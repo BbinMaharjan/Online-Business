@@ -17,8 +17,8 @@ export const useInventoryQuery = (filters: InventoryFilters = {}) => {
     select: (response) => {
       const res = response.data;
       return {
-        items: res.data || [],
-        pagination: res.meta || {
+        items: res.items || [],
+        pagination: res.pagination || {
           page: filters.page || 1,
           limit: filters.limit || 20,
           total: 0,

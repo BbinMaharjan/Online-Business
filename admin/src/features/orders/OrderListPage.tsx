@@ -13,6 +13,7 @@ import {
   Empty,
   DatePicker,
   message,
+  Card,
 } from "antd";
 import {
   SearchOutlined,
@@ -79,7 +80,7 @@ const OrderListPage = () => {
     {
       title: "Customer",
       key: "customer",
-      render: (_, r: any) =>
+      render: (_1: any, r: any) =>
         r.user ? (
           <div>
             <div style={{ fontWeight: 500 }}>
@@ -121,8 +122,8 @@ const OrderListPage = () => {
       title: "Actions",
       key: "actions",
       width: 180,
-      fixed: "right",
-      render: (_, r: any) => (
+      fixed: "right" as const,
+      render: (_1: any, r: any) => (
         <Space>
           <PermissionGuard permission="orders:read">
             <Dropdown
@@ -239,7 +240,5 @@ const OrderListPage = () => {
     </div>
   );
 };
-
-import { Card } from "antd";
 
 export default OrderListPage;

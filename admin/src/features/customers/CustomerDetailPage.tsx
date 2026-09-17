@@ -19,6 +19,7 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   ShoppingCartOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../store/hooks";
@@ -140,16 +141,6 @@ const CustomerDetailPage = () => {
                 {formatCurrency(
                   orders?.reduce((sum, o) => sum + o.total, 0) || 0,
                 )}
-              </Descriptions.Item>
-            </Descriptions>
-          </Card>
-          <Card title="Addresses">
-            <Descriptions column={2}>
-              <Descriptions.Item label="Shipping">
-                {customer.addresses?.shipping?.addressLine1}
-              </Descriptions.Item>
-              <Descriptions.Item label="Billing">
-                {customer.addresses?.billing?.addressLine1}
               </Descriptions.Item>
             </Descriptions>
           </Card>

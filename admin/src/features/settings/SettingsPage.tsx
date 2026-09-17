@@ -165,7 +165,7 @@ const SettingsPage = () => {
               </Col>
             </Row>
           </Card>
-          <Form.Item wrapperStyle={{ marginTop: 24 }}>
+          <Form.Item style={{ marginTop: 24 }}>
             <Button type="primary" htmlType="submit" size="large">
               Save Settings
             </Button>

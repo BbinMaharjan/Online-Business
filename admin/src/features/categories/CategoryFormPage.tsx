@@ -48,7 +48,7 @@ const CategoryFormPage = () => {
         seoDescription: category.seo?.description,
         seoKeywords: category.seo?.keywords?.join(", "),
       });
-      setImage(category.image);
+      setImage(category.image || null);
       dispatch(
         setBreadcrumbs([
           { label: "Categories", path: "/categories" },
@@ -72,8 +72,8 @@ const CategoryFormPage = () => {
         referenceId: id || "temp",
         referenceType: "CATEGORY",
       });
-      setImage(res.data.url);
-      return res.data.url;
+      setImage(res.data.data.url);
+      return res.data.data.url;
     } catch {
       message.error("Upload failed");
       throw new Error("Upload failed");

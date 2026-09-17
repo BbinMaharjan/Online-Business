@@ -11,6 +11,7 @@ import {
   Descriptions,
   Avatar,
   message,
+  Dropdown,
 } from "antd";
 import {
   ArrowLeftOutlined,
@@ -155,7 +156,7 @@ const OrderDetailPage = () => {
                   title: "Product",
                   dataIndex: "productName",
                   key: "productName",
-                  render: (_, r: any) => (
+                  render: (_1: any, r: any) => (
                     <div>
                       <div style={{ fontWeight: 500 }}>{r.productName}</div>
                       <div className={styles.small}>{r.variant || r.sku}</div>

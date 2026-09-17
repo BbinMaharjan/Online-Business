@@ -11,6 +11,10 @@ import {
   message,
   Empty,
   Tree,
+  Card,
+  Row,
+  Col,
+  Dropdown,
 } from "antd";
 import {
   PlusOutlined,
@@ -19,6 +23,7 @@ import {
   DeleteOutlined,
   DownOutlined,
   ReloadOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../store/hooks";
@@ -67,7 +72,7 @@ const CategoryListPage = () => {
       title: "Name",
       key: "name",
       width: 300,
-      render: (_, record: any) => (
+      render: (_1: any, record: any) => (
         <div>
           <div style={{ fontWeight: 500 }}>{record.name}</div>
           <div className={styles.slug}>/{record.slug}</div>
@@ -77,7 +82,7 @@ const CategoryListPage = () => {
     {
       title: "Parent",
       key: "parent",
-      render: (_, record: any) => record.parentId || "—",
+      render: (_1: any, record: any) => record.parentId || "—",
     },
     {
       title: "Status",
@@ -101,8 +106,8 @@ const CategoryListPage = () => {
       title: "Actions",
       key: "actions",
       width: 180,
-      fixed: "right",
-      render: (_, record: any) => (
+      fixed: "right" as const,
+      render: (_1: any, record: any) => (
         <Space>
           <PermissionGuard permission="categories:read">
             <Dropdown
@@ -220,8 +225,5 @@ const CategoryListPage = () => {
     </div>
   );
 };
-
-import { SearchOutlined } from "@ant-design/icons";
-import { Card, Row, Col } from "antd";
 
 export default CategoryListPage;

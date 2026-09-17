@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Form,
   Input,
@@ -16,8 +16,8 @@ import {
   Modal,
   message,
   Switch,
-  TextArea,
-  Checkbox,
+  Popconfirm,
+  Table,
 } from "antd";
 import {
   PlusOutlined,
@@ -25,6 +25,7 @@ import {
   PictureOutlined,
   EyeOutlined,
   LoadingOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch } from "../../store/hooks";
@@ -39,6 +40,7 @@ import { useBrandsQuery } from "../brands/hooks/useBrands";
 import { useUploadMediaMutation } from "../media/hooks/useMedia";
 import { PermissionGuard } from "../../components/common/PermissionGuard";
 import { Product, Variant } from "../../types";
+import { formatCurrency } from "../../utils/formatters";
 import styles from "./ProductFormPage.module.css";
 
 const { TabPane } = Tabs;
@@ -70,6 +72,7 @@ const ProductFormPage = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const [form] = Form.useForm();
+  const variantFormRef = useRef<any>(null);
 
   useEffect(() => {
     if (isEdit && product) {
@@ -103,8 +106,8 @@ const ProductFormPage = () => {
         referenceId: id || "temp",
         referenceType: "PRODUCT",
       });
-      setImages((prev) => [...prev, response.data.url]);
-      return response.data.url;
+      setImages((prev) => [...prev, response.data.data.url]);
+      return response.data.data.url;
     } catch (error) {
       message.error("Failed to upload image");
       throw error;
@@ -463,7 +466,7 @@ const ProductFormPage = () => {
                     {
                       title: "Actions",
                       key: "actions",
-                      render: (_, record: Variant) => (
+                      render: (_: unknown, record: Variant) => (
                         <Space>
                           <PermissionGuard
                             permission={isEdit ? "products:update" : "products:create"}
@@ -614,10 +617,5 @@ const ProductFormPage = () => {
     </div>
   );
 };
-
-import { formatCurrency } from "../../utils/formatters";
-import { useRef } from "react";
-
-const variantFormRef = useRef<any>(null);
 
 export default ProductFormPage;

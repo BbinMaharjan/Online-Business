@@ -53,7 +53,7 @@ const LoginPage = () => {
               firstName: user.firstName,
               lastName: user.lastName,
               email: user.email,
-              role: user.role,
+              role: user.role as "ADMIN" | "SUPER_ADMIN" | "MANAGER" | "STAFF",
               permissions,
               avatar: (user as any).avatar,
               lastLoginAt: (user as any).lastLoginAt,

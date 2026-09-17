@@ -10,6 +10,7 @@ import {
   Empty,
   DatePicker,
   message,
+  Card,
 } from "antd";
 import { SearchOutlined, DownOutlined, EyeOutlined } from "@ant-design/icons";
 import { useAppDispatch } from "../../store/hooks";
@@ -34,7 +35,7 @@ const AuditLogPage = () => {
       title: "Admin",
       key: "admin",
       width: 180,
-      render: (_, r: any) =>
+      render: (_1: any, r: any) =>
         r.admin ? (
           <div>
             <div style={{ fontWeight: 500 }}>

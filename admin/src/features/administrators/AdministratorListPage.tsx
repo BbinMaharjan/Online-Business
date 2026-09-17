@@ -114,7 +114,7 @@ const AdministratorListPage = () => {
       title: "Name",
       key: "name",
       width: 200,
-      render: (_, r: any) => (
+      render: (_1: any, r: any) => (
         <div>
           <div style={{ fontWeight: 500 }}>
             {r.firstName} {r.lastName}
@@ -140,8 +140,8 @@ const AdministratorListPage = () => {
       title: "Actions",
       key: "actions",
       width: 180,
-      fixed: "right",
-      render: (_, r: any) => (
+      fixed: "right" as const,
+      render: (_1: any, r: any) => (
         <Space>
           <PermissionGuard permission="users:read">
             <Dropdown
@@ -256,11 +256,9 @@ const AdministratorListPage = () => {
       <Modal
         title={editingAdmin ? "Edit Admin" : "Create Admin"}
         open={modalVisible}
-        onOk={() => form.validateFields()}
+        onOk={() => form.validateFields().then(onFinish)}
         onCancel={() => setModalVisible(false)}
-        form={form}
         width={600}
-        onSubmit={onFinish}
       >
         <Form.Item
           name="firstName"

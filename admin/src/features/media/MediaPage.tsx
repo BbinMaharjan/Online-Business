@@ -24,8 +24,8 @@ const MediaPage = () => {
         {
           uid: Date.now().toString(),
           name: file.name,
-          url: res.data.url,
-          thumbUrl: res.data.url,
+          url: res.data.data.url,
+          thumbUrl: res.data.data.url,
         },
       ]);
       message.success("Uploaded successfully");

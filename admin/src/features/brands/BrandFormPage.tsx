@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Form,
   Input,
@@ -46,7 +46,7 @@ const BrandFormPage = () => {
         seoDescription: brand.seo?.description,
         seoKeywords: brand.seo?.keywords?.join(", "),
       });
-      setLogo(brand.logo);
+      setLogo(brand.logo || null);
       dispatch(
         setBreadcrumbs([
           { label: "Brands", path: "/brands" },
@@ -70,8 +70,8 @@ const BrandFormPage = () => {
         referenceId: id || "temp",
         referenceType: "BRAND",
       });
-      setLogo(res.data.url);
-      return res.data.url;
+      setLogo(res.data.data.url);
+      return res.data.data.url;
     } catch {
       message.error("Upload failed");
       throw new Error("Upload failed");
@@ -174,7 +174,5 @@ const BrandFormPage = () => {
     </div>
   );
 };
-
-import { useState } from "react";
 
 export default BrandFormPage;

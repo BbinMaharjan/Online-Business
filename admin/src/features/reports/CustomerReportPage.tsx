@@ -15,7 +15,7 @@ const CustomerReportPage = () => {
       </div>
       <Card>
         <Table
-          dataSource={data || []}
+          dataSource={data?.data || []}
           loading={isLoading}
           columns={[
             {

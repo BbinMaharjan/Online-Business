@@ -66,7 +66,7 @@ const InventoryPage = () => {
     {
       title: "Product",
       key: "product",
-      render: (_, r: any) =>
+      render: (_1: any, r: any) =>
         r.product ? (
           <div>
             <div style={{ fontWeight: 500 }}>{r.product.name}</div>
@@ -79,7 +79,7 @@ const InventoryPage = () => {
     {
       title: "Variant",
       key: "variant",
-      render: (_, r: any) =>
+      render: (_1: any, r: any) =>
         r.variant ? (
           <Tag>
             {Object.entries(r.variant.attributes)
@@ -101,7 +101,7 @@ const InventoryPage = () => {
       title: "Available",
       key: "available",
       width: 100,
-      render: (_, r: any) => (
+      render: (_1: any, r: any) => (
         <Tag
           color={
             r.quantity - r.reservedQuantity < r.lowStockThreshold
@@ -118,7 +118,7 @@ const InventoryPage = () => {
       title: "Status",
       key: "status",
       width: 100,
-      render: (_, r: any) => {
+      render: (_1: any, r: any) => {
         const available = r.quantity - r.reservedQuantity;
         return (
           <Tag
@@ -143,8 +143,8 @@ const InventoryPage = () => {
       title: "Actions",
       key: "actions",
       width: 180,
-      fixed: "right",
-      render: (_, r: any) => (
+      fixed: "right" as const,
+      render: (_1: any, r: any) => (
         <Space>
           <PermissionGuard permission="inventory:update">
             <Button
@@ -196,7 +196,7 @@ const InventoryPage = () => {
             />
           </Form.Item>
           <Form.Item name="lowStock" valuePropName="checked">
-            <Switch>Low Stock Only</Switch>
+            <Switch checkedChildren="Low Stock" />
           </Form.Item>
         </Form>
       </Card>

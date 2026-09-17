@@ -35,7 +35,7 @@ const ShippingPage = () => {
       title: "Name",
       key: "name",
       width: 180,
-      render: (_, r: any) => (
+      render: (_1: any, r: any) => (
         <div>
           <div style={{ fontWeight: 500 }}>{r.name}</div>
           <div className={styles.small}>{r.description || "—"}</div>
@@ -65,8 +65,8 @@ const ShippingPage = () => {
       title: "Actions",
       key: "actions",
       width: 180,
-      fixed: "right",
-      render: (_, r: any) => (
+      fixed: "right" as const,
+      render: (_1: any, r: any) => (
         <Space>
           <PermissionGuard permission="shipping:read">
             <Button
@@ -108,14 +108,14 @@ const ShippingPage = () => {
       </div>
       <Card>
         <Table
-          dataSource={data || []}
+          dataSource={data?.data || []}
           loading={isLoading}
           rowKey="_id"
           columns={columns}
           pagination={false}
           scroll={{ x: 1000 }}
         />
-        {!data?.length && !isLoading && (
+        {!data?.data?.length && !isLoading && (
           <Empty description="No shipping methods" />
         )}
       </Card>

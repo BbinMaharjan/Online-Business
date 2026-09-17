@@ -73,7 +73,7 @@ const CustomerListPage = () => {
     {
       title: "Name",
       key: "name",
-      render: (_, r: any) => (
+      render: (_1: any, r: any) => (
         <div>
           <div style={{ fontWeight: 500 }}>
             {r.firstName} {r.lastName}
@@ -119,8 +119,8 @@ const CustomerListPage = () => {
       title: "Actions",
       key: "actions",
       width: 180,
-      fixed: "right",
-      render: (_, r: any) => (
+      fixed: "right" as const,
+      render: (_1: any, r: any) => (
         <Space>
           <PermissionGuard permission="customers:read">
             <Dropdown

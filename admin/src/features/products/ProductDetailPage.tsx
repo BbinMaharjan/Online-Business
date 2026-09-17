@@ -9,14 +9,11 @@ import {
   Space,
   Button,
   Empty,
+  Table,
 } from "antd";
 import {
   EditOutlined,
   ArrowLeftOutlined,
-  ImageOutlined,
-  ShoppingOutlined,
-  TagOutlined,
-  DollarCircleOutlined,
 } from "@ant-design/icons";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../store/hooks";

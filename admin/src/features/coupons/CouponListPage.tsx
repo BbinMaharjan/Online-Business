@@ -12,6 +12,7 @@ import {
   Popconfirm,
   Empty,
   message,
+  Card,
 } from "antd";
 import {
   SearchOutlined,
@@ -87,13 +88,13 @@ const CouponListPage = () => {
       title: "Usage",
       key: "usage",
       width: 120,
-      render: (_, r: any) => `${r.usedCount}/${r.usageLimit}`,
+      render: (_1: any, r: any) => `${r.usedCount}/${r.usageLimit}`,
     },
     {
       title: "Valid",
       key: "validity",
       width: 200,
-      render: (_, r: any) =>
+      render: (_1: any, r: any) =>
         `${new Date(r.startDate).toLocaleDateString()} - ${new Date(r.endDate).toLocaleDateString()}`,
     },
     {
@@ -106,8 +107,8 @@ const CouponListPage = () => {
       title: "Actions",
       key: "actions",
       width: 180,
-      fixed: "right",
-      render: (_, r: any) => (
+      fixed: "right" as const,
+      render: (_1: any, r: any) => (
         <Space>
           <PermissionGuard permission="coupons:read">
             <Dropdown
@@ -216,7 +217,5 @@ const CouponListPage = () => {
     </div>
   );
 };
-
-import { Card } from "antd";
 
 export default CouponListPage;

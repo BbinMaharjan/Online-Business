@@ -131,10 +131,8 @@ const RolesPage = () => {
       <Modal
         title={editingRole ? "Edit Role" : "Create Role"}
         open={modalVisible}
-        onOk={() => form.validateFields()}
+        onOk={() => form.validateFields().then(onFinish)}
         onCancel={() => setModalVisible(false)}
-        form={form}
-        onSubmit={onFinish}
       >
         <Form.Item name="name" label="Name" rules={[{ required: true }]}>
           <Input placeholder="Role name" />

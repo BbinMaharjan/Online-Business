@@ -9,6 +9,7 @@ import {
   Form,
   Empty,
   message,
+  Card,
 } from "antd";
 import {
   SearchOutlined,
@@ -28,7 +29,7 @@ import styles from "./NotificationPage.module.css";
 
 const NotificationPage = () => {
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.auth.admin?.id);
+  const userId = useAppSelector((state) => state.auth.admin?._id);
   const [filters, setFilters] = useState({ page: 1, limit: 20 });
   const { data, isLoading, refetch } = useNotificationsQuery(
     userId || "",
@@ -73,8 +74,8 @@ const NotificationPage = () => {
       title: "Actions",
       key: "actions",
       width: 120,
-      fixed: "right",
-      render: (_, r: any) => (
+      fixed: "right" as const,
+      render: (_1: any, r: any) => (
         <Space>
           {!r.isRead && (
             <Button

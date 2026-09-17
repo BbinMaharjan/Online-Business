@@ -1,4 +1,4 @@
-import { Result, Button, Link } from "antd";
+import { Result, Button } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import styles from "./NotFoundPage.module.css";

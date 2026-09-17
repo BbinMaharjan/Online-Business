@@ -77,13 +77,13 @@ const ReviewListPage = () => {
       title: "Product",
       key: "product",
       width: 200,
-      render: (_, r: any) => r.productId,
+      render: (_1: any, r: any) => r.productId,
     },
     {
       title: "Customer",
       key: "customer",
       width: 160,
-      render: (_, r: any) =>
+      render: (_1: any, r: any) =>
         r.user ? (
           <div>
             <div style={{ fontWeight: 500 }}>
@@ -140,8 +140,8 @@ const ReviewListPage = () => {
       title: "Actions",
       key: "actions",
       width: 180,
-      fixed: "right",
-      render: (_, r: any) => (
+      fixed: "right" as const,
+      render: (_1: any, r: any) => (
         <Space>
           <PermissionGuard permission="reviews:read">
             <Dropdown
