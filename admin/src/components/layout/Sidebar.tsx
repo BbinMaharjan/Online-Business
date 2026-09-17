@@ -55,6 +55,7 @@ const menuItems: MenuItem[] = [
     key: "catalog",
     label: "Catalog",
     icon: <AppstoreOutlined />,
+    permission: "products:read",
     children: [
       {
         key: "products",
@@ -83,6 +84,7 @@ const menuItems: MenuItem[] = [
     key: "sales",
     label: "Sales",
     icon: <ShoppingOutlined />,
+    permission: "orders:read",
     children: [
       {
         key: "orders",
@@ -126,12 +128,13 @@ const menuItems: MenuItem[] = [
     label: "Customers",
     icon: <TeamOutlined />,
     path: "/customers",
-    permission: "customers:read",
+    permission: "users:read",
   },
   {
     key: "engagement",
     label: "Engagement",
     icon: <StarOutlined />,
+    permission: "reviews:read",
     children: [
       {
         key: "reviews",
@@ -152,28 +155,29 @@ const menuItems: MenuItem[] = [
   {
     key: "reports",
     label: "Reports",
-    icon: <FileTextOutlined />,
+    icon: <BarChartOutlined />,
+    permission: "analytics:read",
     children: [
       {
         key: "sales-reports",
         label: "Sales",
         icon: <BarChartOutlined />,
         path: "/reports/sales",
-        permission: "reports:read",
+        permission: "analytics:read",
       },
       {
         key: "product-reports",
         label: "Products",
         icon: <BoxPlotOutlined />,
         path: "/reports/products",
-        permission: "reports:read",
+        permission: "analytics:read",
       },
       {
         key: "customer-reports",
         label: "Customers",
         icon: <TeamOutlined />,
         path: "/reports/customers",
-        permission: "reports:read",
+        permission: "analytics:read",
       },
     ],
   },
@@ -188,6 +192,7 @@ const menuItems: MenuItem[] = [
     key: "administration",
     label: "Administration",
     icon: <SafetyOutlined />,
+    permission: "users:read",
     children: [
       {
         key: "administrators",
@@ -201,14 +206,14 @@ const menuItems: MenuItem[] = [
         label: "Roles & Permissions",
         icon: <SafetyOutlined />,
         path: "/roles",
-        permission: "roles:read",
+        permission: "users:read",
       },
       {
         key: "audit-logs",
         label: "Audit Logs",
         icon: <AuditOutlined />,
         path: "/audit-logs",
-        permission: "audit_logs:read",
+        permission: "users:read",
       },
       {
         key: "settings",
@@ -327,14 +332,16 @@ export const Sidebar = () => {
       <div className={styles.logo}>
         {collapsed ? <AppstoreOutlined /> : <span>Admin Portal</span>}
       </div>
-      <Menu
-        mode="inline"
-        theme="light"
-        selectedKeys={[getActiveKey(location.pathname)]}
-        style={{ borderRight: "none" }}
-      >
-        {renderMenuItems(menuItems, collapsed)}
-      </Menu>
+      <div className={styles.menuWrapper}>
+        <Menu
+          mode="inline"
+          theme="light"
+          selectedKeys={[getActiveKey(location.pathname)]}
+          style={{ borderRight: "none" }}
+        >
+          {renderMenuItems(menuItems, collapsed)}
+        </Menu>
+      </div>
       {!collapsed && admin && (
         <div className={styles.profile}>
           <Dropdown

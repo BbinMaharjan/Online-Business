@@ -3,7 +3,7 @@ import { Alert, Button, Card, Checkbox, Form, Input, message } from "antd";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import apiClient from "../../lib/apiClient";
-import { setAuth } from "../../store/authSlice";
+import { setAuth, loadAdmin } from "../../store/authSlice";
 import { useAppDispatch } from "../../store/hooks";
 import styles from "./LoginPage.module.css";
 
@@ -67,6 +67,8 @@ const LoginPage = () => {
             refreshToken,
           }),
         );
+
+        dispatch(loadAdmin());
 
         message.success("Login successful");
         navigate("/dashboard");
