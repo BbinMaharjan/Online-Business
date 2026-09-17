@@ -26,6 +26,20 @@ function App() {
     store.dispatch(loadAdmin());
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = store.subscribe(() => {
+      const state = store.getState();
+      if (
+        state.auth.isAuthenticated &&
+        state.auth.permissions.length === 0 &&
+        !state.auth.isLoading
+      ) {
+        store.dispatch(loadAdmin());
+      }
+    });
+    return unsubscribe;
+  }, []);
+
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>

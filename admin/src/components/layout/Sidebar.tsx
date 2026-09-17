@@ -221,6 +221,24 @@ const menuItems: MenuItem[] = [
   },
 ];
 
+const flattenMenuPaths = (items: MenuItem[]): string[] => {
+  return items.reduce<string[]>((acc, item) => {
+    if (item.path) acc.push(item.path);
+    if (item.children) acc.push(...flattenMenuPaths(item.children));
+    return acc;
+  }, []);
+};
+
+const allMenuPaths = flattenMenuPaths(menuItems);
+
+const getActiveKey = (pathname: string): string => {
+  if (allMenuPaths.includes(pathname)) return pathname;
+  const match = [...allMenuPaths]
+    .sort((a, b) => b.length - a.length)
+    .find((p) => pathname.startsWith(p + "/"));
+  return match || pathname;
+};
+
 const renderMenuItems = (items: MenuItem[], collapsed: boolean) => {
   return items
     .map((item) => {
@@ -312,7 +330,7 @@ export const Sidebar = () => {
       <Menu
         mode="inline"
         theme="light"
-        selectedKeys={[location.pathname]}
+        selectedKeys={[getActiveKey(location.pathname)]}
         style={{ borderRight: "none" }}
       >
         {renderMenuItems(menuItems, collapsed)}
