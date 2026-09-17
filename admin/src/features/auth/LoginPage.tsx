@@ -21,53 +21,61 @@ const LoginPage = () => {
     setLoading(true);
     setError(null);
 
-try {
-        const response = await apiClient.post<{
-          success: boolean;
-          message: string;
-          data: { admin: any; accessToken: string; refreshToken: string };
-        }>("/auth/login", {
-          email: values.email,
-          password: values.password,
-          rememberMe: values.rememberMe,
-        });
+    try {
+      const response = await apiClient.post<{
+        success: boolean;
+        message: string;
+        data: {
+          user: {
+            id: string;
+            firstName: string;
+            lastName: string;
+            email: string;
+            role: string;
+          };
+        };
+        accessToken: string;
+        refreshToken: string;
+      }>("/auth/login", {
+        email: values.email,
+        password: values.password,
+        rememberMe: values.rememberMe,
+      });
+      if (response.data?.success) {
+        const { user } = response.data.data;
+        const { accessToken, refreshToken } = response.data;
+        const permissions = (user as any).permissions || [];
 
-        if (response.data.success) {
-          const { admin, accessToken, refreshToken } = response.data.data;
-          const permissions = admin.permissions || [];
-
-          dispatch(
-            setAuth({
-              admin: {
-                _id: admin._id,
-                firstName: admin.firstName,
-                lastName: admin.lastName,
-                email: admin.email,
-                role: admin.role,
-                permissions,
-                avatar: admin.avatar,
-                lastLoginAt: admin.lastLoginAt,
-                status: admin.status,
-                phone: admin.phone,
-                createdAt: admin.createdAt,
-                updatedAt: admin.updatedAt,
-              },
+        dispatch(
+          setAuth({
+            admin: {
+              _id: user.id,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
+              role: user.role,
               permissions,
-              accessToken,
-              refreshToken,
-            }),
-          );
+              avatar: (user as any).avatar,
+              lastLoginAt: (user as any).lastLoginAt,
+              status: (user as any).status,
+              phone: (user as any).phone,
+              createdAt: (user as any).createdAt,
+              updatedAt: (user as any).updatedAt,
+            },
+            permissions,
+            accessToken,
+            refreshToken,
+          }),
+        );
 
-          message.success("Login successful");
-          navigate("/dashboard");
-        } else {
-          setError(response.data.message || "Login failed");
-        }
-      } catch (err: any) {
-        setError(err.response?.data?.message || "An error occurred during login");
-      } finally {
-        setLoading(false);
+        message.success("Login successful");
+        navigate("/dashboard");
       }
+    } catch (err: any) {
+      setError(err.response?.data?.message || "An error occurred during login");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
