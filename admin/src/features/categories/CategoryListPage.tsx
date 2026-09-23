@@ -195,9 +195,9 @@ const CategoryListPage = () => {
               rowKey="_id"
               columns={columns}
               pagination={{
-                current: data?.pagination.page,
-                pageSize: data?.pagination.limit,
-                total: data?.pagination.total,
+                current: data?.pagination?.page ?? 1,
+                pageSize: data?.pagination?.limit ?? 50,
+                total: data?.pagination?.total ?? 0,
                 showSizeChanger: true,
                 pageSizeOptions: ["10", "20", "50", "100"],
                 onChange: (page) => setFilters((prev) => ({ ...prev, page })),

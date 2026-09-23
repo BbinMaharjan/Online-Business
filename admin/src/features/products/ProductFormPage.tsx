@@ -269,7 +269,7 @@ const ProductFormPage = () => {
                     <Select
                       placeholder="Select category"
                       options={
-                        categories?.items.map((c) => ({
+                        categories?.items?.map((c) => ({
                           value: c._id,
                           label: c.name,
                         })) || []
@@ -288,7 +288,7 @@ const ProductFormPage = () => {
                     <Select
                       placeholder="Select brand"
                       options={
-                        brands?.items.map((b) => ({
+                        brands?.items?.map((b) => ({
                           value: b._id,
                           label: b.name,
                         })) || []

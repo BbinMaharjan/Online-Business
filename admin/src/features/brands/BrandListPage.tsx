@@ -99,20 +99,20 @@ const BrandListPage = () => {
                 items: [
                   {
                     label: "View",
-                    key: "view",
+                    key: `view-${r._id}`,
                     icon: <EyeOutlined />,
                     onClick: () => navigate(`/brands/${r._id}`),
                   },
                   {
                     label: "Edit",
-                    key: "edit",
+                    key: `edit-${r._id}`,
                     icon: <EditOutlined />,
                     onClick: () => navigate(`/brands/${r._id}/edit`),
                   },
                   { type: "divider" },
                   {
                     label: "Delete",
-                    key: "delete",
+                    key: `delete-${r._id}`,
                     icon: <DeleteOutlined />,
                     danger: true,
                     onClick: () => handleDelete(r._id),
@@ -181,9 +181,9 @@ const BrandListPage = () => {
           rowKey="_id"
           columns={columns}
           pagination={{
-            current: data?.pagination.page,
-            pageSize: data?.pagination.limit,
-            total: data?.pagination.total,
+            current: data?.pagination?.page ?? 1,
+            pageSize: data?.pagination?.limit ?? 20,
+            total: data?.pagination?.total ?? 0,
             showSizeChanger: true,
             pageSizeOptions: ["10", "20", "50", "100"],
             onChange: (page) => setFilters((p) => ({ ...p, page })),

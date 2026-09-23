@@ -16,7 +16,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../store/hooks";
 import { setBreadcrumbs } from "../../store/uiSlice";
 import {
-  useCouponsQuery,
+  useCouponQuery,
   useCreateCouponMutation,
   useUpdateCouponMutation,
 } from "./hooks/useCoupons";
@@ -28,11 +28,13 @@ const CouponFormPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isEdit = !!id;
-  const { data: coupon } = useCouponsQuery({});
-  const currentCoupon = coupon?.items.find((c: any) => c.code === id);
+  const { data: currentCoupon, isLoading } = useCouponQuery(id || "");
   const createMutation = useCreateCouponMutation();
   const updateMutation = useUpdateCouponMutation();
   const [form] = Form.useForm();
+
+  if (isEdit && isLoading)
+    return <div className={styles.loading}>Loading...</div>;
 
   useEffect(() => {
     if (isEdit && currentCoupon) {

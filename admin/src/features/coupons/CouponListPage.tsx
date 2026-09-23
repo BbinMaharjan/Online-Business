@@ -116,20 +116,20 @@ const CouponListPage = () => {
                 items: [
                   {
                     label: "View",
-                    key: "view",
+                    key: `view-${r.code}`,
                     icon: <EyeOutlined />,
                     onClick: () => navigate(`/coupons/${r.code}`),
                   },
                   {
                     label: "Edit",
-                    key: "edit",
+                    key: `edit-${r.code}`,
                     icon: <EditOutlined />,
                     onClick: () => navigate(`/coupons/${r.code}/edit`),
                   },
                   { type: "divider" },
                   {
                     label: "Delete",
-                    key: "delete",
+                    key: `delete-${r.code}`,
                     icon: <DeleteOutlined />,
                     danger: true,
                     onClick: () => handleDelete(r.code),
@@ -199,9 +199,9 @@ const CouponListPage = () => {
           rowKey="code"
           columns={columns}
           pagination={{
-            current: data?.pagination.page,
-            pageSize: data?.pagination.limit,
-            total: data?.pagination.total,
+            current: data?.pagination?.page ?? 1,
+            pageSize: data?.pagination?.limit ?? 20,
+            total: data?.pagination?.total ?? 0,
             showSizeChanger: true,
             pageSizeOptions: ["10", "20", "50", "100"],
             onChange: (page) => setFilters((p) => ({ ...p, page })),

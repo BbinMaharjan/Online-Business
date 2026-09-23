@@ -15,6 +15,7 @@ import { useAppDispatch } from "../../store/hooks";
 import { setBreadcrumbs } from "../../store/uiSlice";
 import {
   useCategoryQuery,
+  useCategoriesQuery,
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
 } from "./hooks/useCategories";
@@ -29,6 +30,7 @@ const CategoryFormPage = () => {
   const isEdit = !!id;
   const { data: categoryResponse, isLoading } = useCategoryQuery(id || "");
   const category = categoryResponse?.data;
+  const { data: categoriesData } = useCategoriesQuery({ limit: 1000 });
   const createMutation = useCreateCategoryMutation();
   const updateMutation = useUpdateCategoryMutation();
   const uploadMutation = useUploadMediaMutation();
@@ -137,7 +139,12 @@ const CategoryFormPage = () => {
         <Form.Item name="parentId" label="Parent Category">
           <Select
             placeholder="Select parent"
-            options={[]}
+            options={
+              categoriesData?.items?.map((c) => ({
+                value: c._id,
+                label: c.name,
+              })) || []
+            }
             allowClear
             showSearch
           />

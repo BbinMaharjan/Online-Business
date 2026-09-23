@@ -24,9 +24,9 @@ export const AdminLayout = () => {
           <Content className={styles.content}>
             <Outlet />
           </Content>
-          <Footer className={styles.footer}>
+          {/* <Footer className={`${styles.footer} ${collapsed ? styles.collapsed : ""}`}>
             E-Commerce Admin Portal © {new Date().getFullYear()}
-          </Footer>
+          </Footer> */}
         </Layout>
       </Layout>
     </ConfigProvider>
