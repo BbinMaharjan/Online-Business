@@ -5,7 +5,7 @@ export const productIdSchema = z.string().min(1, "Product ID is required");
 export const createProductSchema = z.object({
   name: z.string().min(1, "Product name is required").max(200),
   sku: z.string().min(1, "Product SKU is required"),
-  description: z.string().min(1, "Product description is required"),
+  description: z.string().optional(),
   price: z.number().min(0, "Price must be greater than or equal to 0"),
   compareAtPrice: z.number().min(0, "Compare at price must be greater than or equal to 0").optional(),
   tax: z.number().min(0, "Tax must be greater than or equal to 0").default(0),

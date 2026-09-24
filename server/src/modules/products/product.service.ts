@@ -235,10 +235,11 @@ export const createProduct = async (req: Request, res: Response) => {
       data: product,
     });
   } catch (error: any) {
+    console.error("Create product error:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      error: { code: "INTERNAL_ERROR" },
+      error: { code: "INTERNAL_ERROR", details: error.message },
     });
   }
 };
@@ -319,10 +320,11 @@ export const updateProduct = async (req: Request, res: Response) => {
       data: product,
     });
   } catch (error: any) {
+    console.error("Update product error:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      error: { code: "INTERNAL_ERROR" },
+      error: { code: "INTERNAL_ERROR", details: error.message },
     });
   }
 };
