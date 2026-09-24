@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import { validate } from "../../middlewares/validate";
 import {
   getProducts,
   getProductById,
@@ -7,6 +8,7 @@ import {
   updateProduct,
   deleteProduct,
 } from "./product.controller";
+import { createProductSchema, updateProductSchema } from "./product.validation";
 
 const router = Router();
 
@@ -14,8 +16,8 @@ const router = Router();
 router.get("/", getProducts);
 router.get("/:id", getProductById);
 router.get("/slug/:slug", getProductBySlug);
-router.post("/", createProduct);
-router.patch("/:id", updateProduct);
+router.post("/", validate(createProductSchema), createProduct);
+router.patch("/:id", validate(updateProductSchema), updateProduct);
 router.delete("/:id", deleteProduct);
 
 export default router;

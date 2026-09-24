@@ -165,6 +165,7 @@ export const createProduct = async (req: Request, res: Response) => {
   try {
     const {
       name,
+      sku,
       description,
       price,
       compareAtPrice,
@@ -192,8 +193,21 @@ export const createProduct = async (req: Request, res: Response) => {
       });
     }
 
+    // Check if SKU already exists
+    if (sku) {
+      const existingSku = await Product.findOne({ sku });
+      if (existingSku) {
+        return res.status(409).json({
+          success: false,
+          message: "Product with this SKU already exists",
+          error: { code: "SKU_EXISTS" },
+        });
+      }
+    }
+
     const product = new Product({
       name,
+      sku,
       slug,
       description,
       price,
@@ -233,6 +247,7 @@ export const updateProduct = async (req: Request, res: Response) => {
   try {
     const {
       name,
+      sku,
       description,
       price,
       compareAtPrice,
@@ -249,6 +264,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 
     const updateData: any = {
       name,
+      sku,
       description,
       price,
       compareAtPrice,
@@ -269,6 +285,18 @@ export const updateProduct = async (req: Request, res: Response) => {
     // Update slug if name changes
     if (name) {
       updateData.slug = slugify(name, { lower: true, strict: true });
+    }
+
+    // Check if SKU already exists (for another product)
+    if (sku) {
+      const existingSku = await Product.findOne({ sku, _id: { $ne: req.params.id } });
+      if (existingSku) {
+        return res.status(409).json({
+          success: false,
+          message: "Product with this SKU already exists",
+          error: { code: "SKU_EXISTS" },
+        });
+      }
     }
 
     const product = await Product.findByIdAndUpdate(
