@@ -15,6 +15,8 @@ export interface Product {
   rating: number;
   reviewCount: number;
   variants: Variant[];
+  brand?: Brand;
+  category?: Category;
   createdAt: string;
   updatedAt: string;
 }
@@ -39,6 +41,7 @@ export interface Category {
   image?: string;
   sortOrder: number;
   status: "ACTIVE" | "INACTIVE";
+  children?: Category[];
 }
 
 export interface Brand {
@@ -60,6 +63,8 @@ export interface CartItem {
   price: number;
   quantity: number;
   subtotal: number;
+  product?: Product;
+  variantData?: Variant;
 }
 
 export interface Cart {
@@ -71,6 +76,8 @@ export interface Cart {
   tax: number;
   shipping: number;
   total: number;
+  coupon?: string;
+  couponDiscount?: number;
 }
 
 export interface Order {
@@ -92,6 +99,7 @@ export interface Order {
   notes?: string;
   createdAt: string;
   updatedAt: string;
+  shippingMethod?: ShippingMethod;
 }
 
 export interface OrderItem {
@@ -118,11 +126,13 @@ export interface Address {
   country: string;
   postalCode: string;
   type: "SHIPPING" | "BILLING";
+  isDefault?: boolean;
 }
 
 export interface Customer {
   _id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone?: string;
   image?: string;
@@ -130,6 +140,7 @@ export interface Customer {
   orderHistory: string[];
   createdAt: string;
   updatedAt: string;
+  role: "CUSTOMER" | "ADMIN";
 }
 
 export interface Review {
@@ -141,7 +152,11 @@ export interface Review {
   comment: string;
   images?: string[];
   userName: string;
+  userImage?: string;
+  verifiedPurchase: boolean;
+  helpfulCount: number;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface Payment {
@@ -154,12 +169,14 @@ export interface Payment {
   status: "PENDING" | "PAID" | "FAILED" | "REFUNDED";
   transactionId?: string;
   paidAt?: string;
+  method?: "COD" | "CARD" | "WALLET";
 }
 
 export interface SearchSuggestion {
   label: string;
   value: string;
   type: "product" | "category" | "brand";
+  image?: string;
 }
 
 export interface PaginationInfo {
@@ -168,3 +185,141 @@ export interface PaginationInfo {
   limit: number;
   totalPages: number;
 }
+
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data?: T;
+  error?: {
+    code: string;
+    message: string;
+    details?: Record<string, string[]>;
+  };
+  meta?: {
+    pagination?: PaginationInfo;
+  };
+}
+
+export interface PaginatedResponse<T> extends ApiResponse<T[]> {
+  meta: {
+    pagination: PaginationInfo;
+  };
+}
+
+export interface ShippingMethod {
+  _id: string;
+  name: string;
+  description?: string;
+  price: number;
+  estimatedDays: number;
+  isActive: boolean;
+}
+
+export interface Coupon {
+  _id: string;
+  code: string;
+  type: "PERCENTAGE" | "FIXED";
+  value: number;
+  minOrderAmount?: number;
+  maxDiscount?: number;
+  usageLimit?: number;
+  usedCount: number;
+  validFrom: string;
+  validUntil: string;
+  isActive: boolean;
+}
+
+export interface WishlistItem {
+  _id: string;
+  productId: string;
+  product: Product;
+  addedAt: string;
+}
+
+export interface Notification {
+  _id: string;
+  userId: string;
+  type: "ORDER_CONFIRMED" | "ORDER_SHIPPED" | "ORDER_DELIVERED" | "ORDER_CANCELLED" | "PAYMENT_RECEIVED" | "PROMOTIONAL" | "REVIEW_REQUEST";
+  title: string;
+  message: string;
+  data?: Record<string, unknown>;
+  isRead: boolean;
+  createdAt: string;
+}
+
+export interface SEOData {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  ogType?: "website" | "product";
+  twitterCard?: "summary" | "summary_large_image";
+  structuredData?: Record<string, unknown>;
+}
+
+export interface ProductFilters {
+  category?: string;
+  brand?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  rating?: number;
+  inStock?: boolean;
+  sort?: "featured" | "price-asc" | "price-desc" | "newest" | "rating" | "best-selling";
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
+export interface ProductSortOption {
+  value: ProductFilters["sort"];
+  label: string;
+}
+
+export const PRODUCT_SORT_OPTIONS: ProductSortOption[] = [
+  { value: "featured", label: "Featured" },
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+  { value: "newest", label: "Newest" },
+  { value: "rating", label: "Best Rated" },
+  { value: "best-selling", label: "Best Selling" },
+];
+
+export interface CartMutationResult {
+  cart: Cart;
+  message: string;
+}
+
+export interface CheckoutSession {
+  id: string;
+  userId: string;
+  step: number;
+  data: Record<string, unknown>;
+  expiresAt: string;
+}
+
+export interface PaymentIntent {
+  clientSecret?: string;
+  redirectUrl?: string;
+  paymentId: string;
+}
+
+export type OrderStatus = Order["orderStatus"];
+export type PaymentStatus = Order["paymentStatus"];
+
+export const ORDER_STATUSES: { value: OrderStatus; label: string; color: "default" | "primary" | "secondary" | "success" | "warning" | "error" | "info" }[] = [
+  { value: "PENDING", label: "Pending", color: "warning" },
+  { value: "CONFIRMED", label: "Confirmed", color: "info" },
+  { value: "PROCESSING", label: "Processing", color: "primary" },
+  { value: "SHIPPED", label: "Shipped", color: "secondary" },
+  { value: "DELIVERED", label: "Delivered", color: "success" },
+  { value: "CANCELLED", label: "Cancelled", color: "error" },
+  { value: "REFUNDED", label: "Refunded", color: "default" },
+];
+
+export const PAYMENT_STATUSES: { value: PaymentStatus; label: string; color: "default" | "primary" | "secondary" | "success" | "warning" | "error" | "info" }[] = [
+  { value: "PENDING", label: "Pending", color: "warning" },
+  { value: "PROCESSING", label: "Processing", color: "info" },
+  { value: "PAID", label: "Paid", color: "success" },
+  { value: "FAILED", label: "Failed", color: "error" },
+  { value: "REFUNDED", label: "Refunded", color: "default" },
+];
