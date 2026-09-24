@@ -41,6 +41,7 @@ const BrandListPage = () => {
   });
 
   const { data, isLoading, refetch } = useBrandsQuery(filters);
+
   const deleteMutation = useDeleteBrandMutation();
 
   const handleDelete = async (id: string) => {
@@ -55,37 +56,28 @@ const BrandListPage = () => {
 
   const columns = [
     {
-      title: "Logo",
-      key: "logo",
-      width: 60,
-      render: (_1: any, r: any) =>
-        r.logo ? (
-          <img
-            src={r.logo}
-            alt={r.name}
-            style={{ width: 40, height: 40, borderRadius: 4 }}
-          />
-        ) : (
-          "—"
-        ),
-    },
-    {
       title: "Name",
       key: "name",
       render: (_1: any, r: any) => (
         <div>
           <div style={{ fontWeight: 500 }}>{r.name}</div>
-          <div className={styles.slug}>/{r.slug}</div>
         </div>
       ),
     },
     {
       title: "Status",
       key: "status",
+      dataIndex: "status",
       width: 100,
       render: (s: string) => <Tag color={getStatusColor(s)}>{s}</Tag>,
     },
-    { title: "Created", key: "createdAt", width: 160 },
+    {
+      title: "Created",
+      key: "createdAt",
+      dataIndex: "createdAt",
+      width: 160,
+      render: (v: string) => new Date(v).toLocaleDateString(),
+    },
     {
       title: "Actions",
       key: "actions",
@@ -94,34 +86,9 @@ const BrandListPage = () => {
       render: (_1: any, r: any) => (
         <Space>
           <PermissionGuard permission="brands:read">
-            <Dropdown
-              menu={{
-                items: [
-                  {
-                    label: "View",
-                    key: `view-${r._id}`,
-                    icon: <EyeOutlined />,
-                    onClick: () => navigate(`/brands/${r._id}`),
-                  },
-                  {
-                    label: "Edit",
-                    key: `edit-${r._id}`,
-                    icon: <EditOutlined />,
-                    onClick: () => navigate(`/brands/${r._id}/edit`),
-                  },
-                  { type: "divider" },
-                  {
-                    label: "Delete",
-                    key: `delete-${r._id}`,
-                    icon: <DeleteOutlined />,
-                    danger: true,
-                    onClick: () => handleDelete(r._id),
-                  },
-                ],
-              }}
-            >
-              <Button type="text" icon={<DownOutlined />} />
-            </Dropdown>
+            <Button type="text" icon={<EyeOutlined />} onClick={() => navigate(`/brands/${r._id}`)} />
+            <Button type="text" icon={<EditOutlined />} onClick={() => navigate(`/brands/${r._id}/edit`)} />
+            <Button type="text" icon={<DeleteOutlined />} danger onClick={() => handleDelete(r._id)} />
           </PermissionGuard>
         </Space>
       ),

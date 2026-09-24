@@ -3,12 +3,40 @@ import Brand from "./brand.model";
 
 export const getBrands = async (req: Request, res: Response) => {
   try {
-    const brands = await Brand.find({ status: "ACTIVE" });
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const search = req.query.search as string;
+    const status = req.query.status as string;
+    const sortBy = (req.query.sortBy as string) || "createdAt";
+    const sortOrder = (req.query.sortOrder as "asc" | "desc") || "desc";
+
+    const query: any = {};
+    if (status) query.status = status;
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { slug: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const [items, total] = await Promise.all([
+      Brand.find(query)
+        .sort({ [sortBy]: sortOrder === "asc" ? 1 : -1 })
+        .skip((page - 1) * limit)
+        .limit(limit),
+      Brand.countDocuments(query),
+    ]);
 
     return res.json({
       success: true,
       message: "Brands retrieved successfully",
-      data: brands,
+      items,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
     });
   } catch (error: any) {
     return res.status(500).json({
@@ -57,10 +85,19 @@ export const getBrandBySlug = async (req: Request, res: Response) => {
       });
     }
 
+    // Fetch products for this brand
+    const Product = (await import("../products/product.model")).default;
+    const products = await Product.find({ brandId: brand._id, status: "ACTIVE" } as any)
+      .select("name slug price compareAtPrice images rating stock")
+      .sort({ createdAt: -1 });
+
     return res.json({
       success: true,
       message: "Brand retrieved successfully",
-      data: brand,
+      data: {
+        ...brand.toObject(),
+        products,
+      },
     });
   } catch (error: any) {
     return res.status(500).json({

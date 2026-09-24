@@ -14,14 +14,12 @@ import {
   Card,
   Row,
   Col,
-  Dropdown,
 } from "antd";
 import {
   PlusOutlined,
   EditOutlined,
   EyeOutlined,
   DeleteOutlined,
-  DownOutlined,
   ReloadOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
@@ -71,6 +69,7 @@ const CategoryListPage = () => {
     {
       title: "Name",
       key: "name",
+      dataIndex: "name",
       width: 300,
       render: (_1: any, record: any) => (
         <div>
@@ -82,11 +81,13 @@ const CategoryListPage = () => {
     {
       title: "Parent",
       key: "parent",
-      render: (_1: any, record: any) => record.parentId || "—",
+      dataIndex: "parentId",
+      render: (parentId: string) => parentId || "—",
     },
     {
       title: "Status",
       key: "status",
+      dataIndex: "status",
       width: 100,
       render: (status: string) => (
         <Tag color={getStatusColor(status)}>{status}</Tag>
@@ -95,12 +96,15 @@ const CategoryListPage = () => {
     {
       title: "Sort Order",
       key: "sortOrder",
+      dataIndex: "sortOrder",
       width: 100,
     },
     {
       title: "Created",
       key: "createdAt",
+      dataIndex: "createdAt",
       width: 160,
+      render: (v: string) => new Date(v).toLocaleDateString(),
     },
     {
       title: "Actions",
@@ -110,34 +114,9 @@ const CategoryListPage = () => {
       render: (_1: any, record: any) => (
         <Space>
           <PermissionGuard permission="categories:read">
-            <Dropdown
-              menu={{
-                items: [
-                  {
-                    label: "View",
-                    key: "view",
-                    icon: <EyeOutlined />,
-                    onClick: () => navigate(`/categories/${record._id}`),
-                  },
-                  {
-                    label: "Edit",
-                    key: "edit",
-                    icon: <EditOutlined />,
-                    onClick: () => navigate(`/categories/${record._id}/edit`),
-                  },
-                  { type: "divider" },
-                  {
-                    label: "Delete",
-                    key: "delete",
-                    icon: <DeleteOutlined />,
-                    danger: true,
-                    onClick: () => handleDelete(record._id),
-                  },
-                ],
-              }}
-            >
-              <Button type="text" icon={<DownOutlined />} />
-            </Dropdown>
+            <Button type="text" icon={<EyeOutlined />} onClick={() => navigate(`/categories/${record._id}`)} />
+            <Button type="text" icon={<EditOutlined />} onClick={() => navigate(`/categories/${record._id}/edit`)} />
+            <Button type="text" icon={<DeleteOutlined />} danger onClick={() => handleDelete(record._id)} />
           </PermissionGuard>
         </Space>
       ),

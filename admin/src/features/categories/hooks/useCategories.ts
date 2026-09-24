@@ -15,7 +15,15 @@ export const useCategoriesQuery = (filters: CategoryFilters = {}) => {
   return useQuery({
     queryKey: categoryKeys.list(filters),
     queryFn: () => categoryApi.getCategories(filters),
-    select: (response) => response.data,
+    select: (response) => ({
+      items: response.data.data,
+      pagination: {
+        page: filters.page ?? 1,
+        limit: filters.limit ?? 50,
+        total: response.data.data.length,
+        totalPages: 1,
+      },
+    }),
   });
 };
 
