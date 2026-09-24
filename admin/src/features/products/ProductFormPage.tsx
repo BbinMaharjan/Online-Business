@@ -429,12 +429,15 @@ const ProductFormPage = () => {
                     {
                       title: "Attributes",
                       key: "attributes",
-                      render: (attributes: Record<string, string>) =>
-                        Object.entries(attributes).map(([key, value]) => (
-                          <Tag key={key} color="blue">
-                            {key}: {value}
-                          </Tag>
-                        )),
+                      render: (attributes: Record<string, string>) => (
+                        <Space wrap>
+                          {Object.entries(attributes).map(([key, value]) => (
+                            <Tag key={key} color="blue">
+                              {key}: {value}
+                            </Tag>
+                          ))}
+                        </Space>
+                      ),
                     },
                     {
                       title: "Price",
@@ -548,7 +551,13 @@ const ProductFormPage = () => {
       <Modal
         title={editingVariant ? "Edit Variant" : "Add Variant"}
         open={variantModalVisible}
-        onOk={() => {}}
+        onOk={async () => {
+          try {
+            await variantFormRef.current?.validateFields();
+          } catch (error) {
+            return false;
+          }
+        }}
         onCancel={() => {
           setVariantModalVisible(false);
           setEditingVariant(null);
@@ -562,7 +571,7 @@ const ProductFormPage = () => {
           <Button
             key="submit"
             type="primary"
-            onClick={() => variantFormRef.current?.validateFields()}
+            onClick={() => variantFormRef.current?.submit()}
           >
             {editingVariant ? "Save Changes" : "Add Variant"}
           </Button>,

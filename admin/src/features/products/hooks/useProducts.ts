@@ -14,7 +14,15 @@ export const useProductsQuery = (filters: ProductFilters = {}) => {
   return useQuery({
     queryKey: productKeys.list(filters),
     queryFn: () => productApi.getProducts(filters),
-    select: (response) => response.data,
+    select: (response) => ({
+      items: response.data.data,
+      pagination: {
+        page: response.data.meta.page,
+        limit: response.data.meta.limit,
+        total: response.data.meta.total,
+        totalPages: response.data.meta.totalPages,
+      },
+    }),
   });
 };
 
