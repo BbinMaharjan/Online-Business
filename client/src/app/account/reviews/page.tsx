@@ -4,7 +4,9 @@ import { Container, Box, Typography, Paper, Grid, Button, Alert, LinearProgress,
 import { useRouter, useSearchParams } from "next/navigation";
 import { useReviews } from "@/services/api/reviews";
 import { useUser } from "@/services/api/auth";
-import { Edit, Delete, Star, Add, Visibility } from "@mui/icons-material";
+import { Icons } from "@/lib/icons";
+
+const { Edit, Delete, Star, Add, Visibility } = Icons;
 import { useState } from "react";
 import { apiClient } from "@/lib/api-client";
 

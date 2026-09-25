@@ -1,4 +1,6 @@
-import { ReactNode, ReactElement } from "react";
+"use client";
+
+import { ReactNode } from "react";
 import {
   QueryClient,
   QueryClientProvider,
@@ -10,7 +12,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000,
-      cacheTime: 30 * 60 * 1000,
+      gcTime: 30 * 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     },

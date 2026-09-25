@@ -1,12 +1,12 @@
 "use client";
 
-import { Container, Box, Typography, Paper, Button, Grid, TextField, Alert, Avatar, Input, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, CircularProgress } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { Container, Box, Typography, Paper, Button, Grid, TextField, Alert, Avatar, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, CircularProgress, InputAdornment } from "@mui/material";
 import { useUser } from "@/services/api/auth";
 import { useUpdateProfile, useChangePassword } from "@/services/api/auth";
-import { Edit, Save, Visibility, VisibilityOff, Person, Email, Lock, CameraAlt } from "@mui/icons-material";
+import { Icons } from "@/lib/icons";
+
+const { Save, Visibility, VisibilityOff, Person, Email, Lock } = Icons;
 import { useState } from "react";
-import { apiClient } from "@/lib/api-client";
 
 export default function ProfilePage() {
   const { data: userData, isLoading, refetch } = useUser();
@@ -119,7 +119,7 @@ export default function ProfilePage() {
               {(user.firstName?.[0] || user.email?.[0] || "U").toUpperCase()}
             </Avatar>
             <Box>
-              <Typography variant="h5" fontWeight={600}>
+              <Typography variant="h5" sx={{ fontWeight: 600 }}>
                 {user.firstName} {user.lastName}
               </Typography>
               <Typography variant="body1" color="text.secondary">
@@ -134,7 +134,7 @@ export default function ProfilePage() {
           {isEditing ? (
             <form onSubmit={handleProfileSubmit}>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="First Name"
@@ -144,7 +144,7 @@ export default function ProfilePage() {
                     disabled={updateProfile.isPending}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="Last Name"
@@ -154,7 +154,7 @@ export default function ProfilePage() {
                     disabled={updateProfile.isPending}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="Email"
@@ -164,11 +164,11 @@ export default function ProfilePage() {
                     required
                     disabled={updateProfile.isPending}
                     InputProps={{
-                      startAdornment: <Input startAdornment={<Email />} />,
+                      startAdornment: <InputAdornment position="start"><Email /></InputAdornment>
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="Phone (Optional)"
@@ -176,7 +176,7 @@ export default function ProfilePage() {
                     onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
                     disabled={updateProfile.isPending}
                     InputProps={{
-                      startAdornment: <Input startAdornment={<Person />} />,
+                      startAdornment: <InputAdornment position="start"><Person /></InputAdornment>
                     }}
                   />
                 </Grid>
@@ -197,7 +197,7 @@ export default function ProfilePage() {
                 <strong>Phone:</strong> {user.phone || "Not provided"}
               </Typography>
               <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
-                <Button variant="contained" onClick={handleEditClick} startIcon={<Edit />}>
+                <Button variant="contained" onClick={handleEditClick} startIcon={<Save />}>
                   Edit Profile
                 </Button>
                 <Button variant="outlined" onClick={() => setShowPasswordDialog(true)} startIcon={<Lock />}>
@@ -211,21 +211,15 @@ export default function ProfilePage() {
         <Paper elevation={1} sx={{ p: 3 }}>
           <Typography variant="h6" sx={{ mb: 3 }}>Account Information</Typography>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography variant="body2" color="text.secondary">Role</Typography>
               <Typography variant="body1">{user.role}</Typography>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography variant="body2" color="text.secondary">Account Status</Typography>
               <Typography variant="body1" color="success">Active</Typography>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="body2" color="text.secondary">Email Verified</Typography>
-              <Typography variant="body1" color={user.emailVerified ? "success" : "warning"}>
-                {user.emailVerified ? "Yes" : "No"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography variant="body2" color="text.secondary">Member Since</Typography>
               <Typography variant="body1">{new Date(user.createdAt).toLocaleDateString()}</Typography>
             </Grid>
@@ -235,9 +229,9 @@ export default function ProfilePage() {
         <Dialog open={showPasswordDialog} onClose={() => setShowPasswordDialog(false)} maxWidth="sm" fullWidth>
           <DialogTitle>Change Password</DialogTitle>
           <DialogContent>
-            <form onSubmit={handlePasswordSubmit}>
+            <form onSubmit={handlePasswordSubmit} id="password-form">
               <Grid container spacing={2} sx={{ pt: 1 }}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
                     label="Current Password"
@@ -250,11 +244,11 @@ export default function ProfilePage() {
                         <IconButton onClick={() => setShowCurrentPassword(!showCurrentPassword)} edge="end">
                           {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
-                      ),
+                      )
                     }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
                     label="New Password"
@@ -262,18 +256,18 @@ export default function ProfilePage() {
                     value={passwordData.newPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
                     required
-                    minLength={8}
+                    sx={{ minLength: 8 }}
                     helperText="Must be at least 8 characters"
                     InputProps={{
                       endAdornment: (
                         <IconButton onClick={() => setShowNewPassword(!showNewPassword)} edge="end">
                           {showNewPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
-                      ),
+                      )
                     }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
                     label="Confirm New Password"
@@ -286,7 +280,7 @@ export default function ProfilePage() {
                         <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
                           {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
-                      ),
+                      )
                     }}
                   />
                 </Grid>

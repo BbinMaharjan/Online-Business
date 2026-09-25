@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Breadcrumbs as MUIBreadcrumbs, Link as MUILink, Typography, Box } from "@mui/material";
+import { Breadcrumbs as MUIBreadcrumbs, Link as MUILink, Box } from "@mui/material";
 import { Home as HomeIcon, ChevronRight as ChevronRightIcon } from "@mui/icons-material";
 import { cn } from "@/lib/utils";
 
@@ -89,9 +89,8 @@ export function Breadcrumbs({ className, separator = <ChevronRightIcon fontSize=
       }}
       className={cn("breadcrumbs", className)}
     >
-      <MUIBreadcrumbs
-        separator={separator}
-        items={items.map((item) => (
+      <MUIBreadcrumbs separator={separator}>
+        {items.map((item) => (
           <MUILink
             key={item.href || item.label}
             component={item.href ? Link : "span"}
@@ -108,7 +107,7 @@ export function Breadcrumbs({ className, separator = <ChevronRightIcon fontSize=
             {item.label}
           </MUILink>
         ))}
-      />
+      </MUIBreadcrumbs>
     </Box>
   );
 }

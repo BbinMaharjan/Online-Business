@@ -13,7 +13,6 @@ import {
   AccordionDetails,
   Chip,
   Divider,
-  List,
   ListItem,
   ListItemText,
   Button,
@@ -49,24 +48,9 @@ export function ProductDetails({ product }: ProductDetailsProps) {
       case 1:
         return (
           <Box sx={{ py: 3 }}>
-            {product.specifications && Object.keys(product.specifications).length > 0 ? (
-              <Stack direction="column" spacing={2} sx={{ width: "100%" }}>
-                {Object.entries(product.specifications).map(([key, value]) => (
-                  <Box key={key} sx={{ display: "flex", justifyContent: "space-between", py: 1, borderBottom: 1, borderColor: "divider" }}>
-                    <Typography variant="body2" color="text.secondary" fontWeight={500}>
-                      {key}
-                    </Typography>
-                    <Typography variant="body2" sx={{ textAlign: "right" }}>
-                      {value}
-                    </Typography>
-                  </Box>
-                ))}
-              </Stack>
-            ) : (
-              <Typography variant="body2" color="text.secondary">
-                No specifications available for this product.
-              </Typography>
-            )}
+            <Typography variant="body2" color="text.secondary">
+              No specifications available for this product.
+            </Typography>
           </Box>
         );
       case 2:
@@ -78,7 +62,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                   expandIcon={<ExpandMoreIcon />}
                   sx={{ "& .MuiAccordionSummary-content": { margin: 0 } }}
                 >
-                  <Typography variant="subtitle1" fontWeight={600}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                     Shipping Information
                   </Typography>
                 </AccordionSummary>
@@ -113,7 +97,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                   expandIcon={<ExpandMoreIcon />}
                   sx={{ "& .MuiAccordionSummary-content": { margin: 0 } }}
                 >
-                  <Typography variant="subtitle1" fontWeight={600}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                     Returns & Exchanges
                   </Typography>
                 </AccordionSummary>
@@ -148,7 +132,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                   expandIcon={<ExpandMoreIcon />}
                   sx={{ "& .MuiAccordionSummary-content": { margin: 0 } }}
                 >
-                  <Typography variant="subtitle1" fontWeight={600}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                     Warranty
                   </Typography>
                 </AccordionSummary>
@@ -164,65 +148,17 @@ export function ProductDetails({ product }: ProductDetailsProps) {
       case 3:
         return (
           <Box sx={{ py: 3 }}>
-            {product.reviews && product.reviews.length > 0 ? (
-              <Stack direction="column" spacing={3}>
-                {product.reviews.map((review) => (
-                  <Box
-                    key={review._id}
-                    sx={{
-                      p: 2,
-                      border: 1,
-                      borderColor: "divider",
-                      borderRadius: 2,
-                    }}
-                  >
-                    <Stack direction="row" spacing={2} sx={{ mb: 1 }}>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <Rating name={`review-${review._id}`} value={review.rating} size="small" readOnly precision={0.5} />
-                        <Typography variant="subtitle2" fontWeight={600}>
-                          {review.userName}
-                        </Typography>
-                        {review.verifiedPurchase && (
-                          <Chip label="Verified Purchase" size="small" color="success" variant="outlined" />
-                        )}
-                      </Box>
-                      <Typography variant="caption" color="text.secondary">
-                        {new Date(review.createdAt).toLocaleDateString()}
-                      </Typography>
-                    </Stack>
-                    {review.title && (
-                      <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
-                        {review.title}
-                      </Typography>
-                    )}
-                    <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
-                      {review.comment}
-                    </Typography>
-                    {review.images && review.images.length > 0 && (
-                      <Box sx={{ mt: 2, display: "flex", gap: 1, flexWrap: "wrap" }}>
-                        {review.images.map((img, idx) => (
-                          <Box key={idx} sx={{ width: 80, height: 80, borderRadius: 1, overflow: "hidden" }}>
-                            <img src={img} alt={`Review image ${idx + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                          </Box>
-                        ))}
-                      </Box>
-                    )}
-                  </Box>
-                ))}
-              </Stack>
-            ) : (
-              <Box sx={{ textAlign: "center", py: 6 }}>
-                <Typography variant="h6" sx={{ mb: 1 }}>
-                  No reviews yet
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  Be the first to review this product!
-                </Typography>
-                <Button variant="contained" href="#write-review" component="a">
-                  Write a Review
-                </Button>
-              </Box>
-            )}
+            <Box sx={{ textAlign: "center", py: 6 }}>
+              <Typography variant="h6" sx={{ mb: 1 }}>
+                No reviews yet
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Be the first to review this product!
+              </Typography>
+              <Button variant="contained" href="#write-review" component="a">
+                Write a Review
+              </Button>
+            </Box>
           </Box>
         );
       default:

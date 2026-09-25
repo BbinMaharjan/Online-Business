@@ -1,13 +1,13 @@
 "use client";
 
-import { Container, Box, Typography, Alert, Button, CircularProgress } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Container, Box, Typography, Button, CircularProgress } from "@mui/material";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { apiClient } from "@/lib/api-client";
-import { CheckCircle, Error, Email } from "@mui/icons-material";
+import { CheckCircle, Error } from "@mui/icons-material";
+import Link from "next/link";
 
 export default function VerifyEmailPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
@@ -78,37 +78,34 @@ export default function VerifyEmailPage() {
         </Typography>
 
         {isSuccess ? (
-          <Button
-            variant="contained"
-            size="large"
-            component="a"
-            href="/login"
-            passHref
-            startIcon={<Email />}
-            sx={{ px: 4 }}
-          >
-            Continue to Login
-          </Button>
-        ) : (
-          <Box sx={{ display: "flex", gap: 2, justifyContent: "center", flexWrap: "wrap" }}>
+          <Link href="/login" passHref>
             <Button
               variant="contained"
               size="large"
-              component="a"
-              href="/register"
-              passHref
+              startIcon={<CheckCircle />}
+              sx={{ px: 4 }}
             >
-              Register Again
+              Continue to Login
             </Button>
-            <Button
-              variant="outlined"
-              size="large"
-              component="a"
-              href="/login"
-              passHref
-            >
-              Login
-            </Button>
+          </Link>
+        ) : (
+          <Box sx={{ display: "flex", gap: 2, justifyContent: "center", flexWrap: "wrap" }}>
+            <Link href="/register" passHref>
+              <Button
+                variant="contained"
+                size="large"
+              >
+                Register Again
+              </Button>
+            </Link>
+            <Link href="/login" passHref>
+              <Button
+                variant="outlined"
+                size="large"
+              >
+                Login
+              </Button>
+            </Link>
           </Box>
         )}
 

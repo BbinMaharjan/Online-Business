@@ -1,7 +1,9 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { Container, Box, Typography, Button, Link as MuiLink } from "@mui/material";
-import { Home, Search, ShoppingCart, ArrowBack } from "@mui/icons-material";
+import { Container, Box, Typography, Button, Divider } from "@mui/material";
+import { Icons } from "@/lib/icons";
+
+const { Home, Search, ShoppingCart, ArrowBack } = Icons;
 
 export const metadata: Metadata = {
   title: "Page Not Found",
@@ -35,39 +37,36 @@ export default function NotFound() {
         </Typography>
 
         <Box sx={{ display: "flex", gap: 2, justifyContent: "center", flexWrap: "wrap", mb: 6 }}>
-          <Button
-            variant="contained"
-            size="large"
-            component={Link}
-            href="/"
-            passHref
-            startIcon={<Home />}
-            sx={{ px: 4 }}
-          >
-            Go Home
-          </Button>
-          <Button
-            variant="outlined"
-            size="large"
-            component={Link}
-            href="/products"
-            passHref
-            startIcon={<Search />}
-            sx={{ px: 4 }}
-          >
-            Browse Products
-          </Button>
-          <Button
-            variant="outlined"
-            size="large"
-            component={Link}
-            href="/cart"
-            passHref
-            startIcon={<ShoppingCart />}
-            sx={{ px: 4 }}
-          >
-            View Cart
-          </Button>
+          <Link href="/" passHref>
+            <Button
+              variant="contained"
+              size="large"
+              startIcon={<Home />}
+              sx={{ px: 4 }}
+            >
+              Go Home
+            </Button>
+          </Link>
+          <Link href="/products" passHref>
+            <Button
+              variant="outlined"
+              size="large"
+              startIcon={<Search />}
+              sx={{ px: 4 }}
+            >
+              Browse Products
+            </Button>
+          </Link>
+          <Link href="/cart" passHref>
+            <Button
+              variant="outlined"
+              size="large"
+              startIcon={<ShoppingCart />}
+              sx={{ px: 4 }}
+            >
+              View Cart
+            </Button>
+          </Link>
         </Box>
 
         <Box sx={{ mb: 6 }}>
@@ -99,9 +98,9 @@ export default function NotFound() {
               { href: "/contact", label: "Contact Us" },
               { href: "/faq", label: "Help Center" },
             ].map((item) => (
-              <MuiLink key={item.href} href={item.href} sx={{ px: 2, py: 1, color: "primary.main", fontSize: "0.875rem", border: "1px solid", borderColor: "primary.light", borderRadius: 2, textDecoration: "none", "&:hover": { backgroundColor: "primary.50" } }}>
+              <Link key={item.href} href={item.href} sx={{ px: 2, py: 1, color: "primary.main", fontSize: "0.875rem", border: "1px solid", borderColor: "primary.light", borderRadius: 2, textDecoration: "none", "&:hover": { backgroundColor: "primary.50" } }}>
                 {item.label}
-              </MuiLink>
+              </Link>
             ))}
           </Box>
         </Box>

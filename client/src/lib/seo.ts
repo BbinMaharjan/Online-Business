@@ -1,7 +1,26 @@
-import { ReactNode } from "react";
-import { NextSeoProps } from "next-seo";
+import { Metadata } from "next";
 
-export const generateProductSeo = (product: any): NextSeoProps => {
+interface SEOProps {
+  title: string;
+  description: string;
+  openGraph?: {
+    title: string;
+    description: string;
+    images?: { url: string }[];
+    type?: string;
+  };
+  twitter?: {
+    card: string;
+    title: string;
+    description: string;
+    images?: string[];
+  };
+  keywords?: string[];
+  authors?: { name: string }[];
+  type?: string;
+}
+
+export const generateProductSeo = (product: any): SEOProps => {
   const {
     name,
     brand,
@@ -24,7 +43,7 @@ export const generateProductSeo = (product: any): NextSeoProps => {
     openGraph: {
       title,
       description,
-      images: product.images?.[0] ? { url: product.images[0] } : undefined,
+      images: product.images?.[0] ? [{ url: product.images[0] }] : undefined,
       type: "product",
     },
     twitter: {
@@ -43,7 +62,7 @@ export const generateProductSeo = (product: any): NextSeoProps => {
   };
 };
 
-export const generateCategorySeo = (category: any): NextSeoProps => {
+export const generateCategorySeo = (category: any): SEOProps => {
   const { name, description, slug } = category;
 
   return {
@@ -62,7 +81,7 @@ export const generateCategorySeo = (category: any): NextSeoProps => {
   };
 };
 
-export const generateBrandSeo = (brand: any): NextSeoProps => {
+export const generateBrandSeo = (brand: any): SEOProps => {
   const { name, description } = brand;
 
   return {
@@ -81,10 +100,9 @@ export const generateBrandSeo = (brand: any): NextSeoProps => {
   };
 };
 
-export const metadata = (title: string, description: string): ReactNode => {
+export const metadata = (title: string, description: string): Metadata => {
   return {
     title,
-    name: "description",
-    content: description,
+    description,
   };
 };

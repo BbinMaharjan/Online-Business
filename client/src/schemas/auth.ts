@@ -18,7 +18,7 @@ export const registerSchema = z.object({
     .regex(/[0-9]/, "Password must contain at least one number")
     .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character"),
   confirmPassword: z.string().min(1, "Please confirm your password"),
-  acceptTerms: z.literal(true, { errorMap: () => ({ message: "You must accept the terms and conditions" }) }),
+  acceptTerms: z.boolean().refine((val) => val === true, { message: "You must accept the terms and conditions" }),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],

@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { Box, Typography, Stack, Button, IconButton } from "@mui/material";
-import { Search as SearchIcon, FilterListOff as ClearFiltersIcon, ShoppingBag as ShopIcon, Home as HomeIcon } from "@mui/icons-material";
+import { Icons } from "@/lib/icons";
+
+const { Search: SearchIcon, FilterListOff: ClearFiltersIcon, Home: HomeIcon } = Icons;
 import type { ReactNode } from "react";
 
 interface EmptyStateProps {
@@ -38,36 +39,36 @@ export function EmptyState({
           mb: 4,
         }}
       >
-        {icon || <ShopIcon fontSize="large" sx={{ fontSize: 48 }} />}
+        {icon || <Box sx={{ fontSize: 48 }}>🛍️</Box>}
       </Box>
-      <Typography variant="h5" fontWeight={600} sx={{ mb: 1 }}>
+      <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
         {title}
       </Typography>
       {message && <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 400, mx: "auto" }}>{message}</Typography>}
 
-      <Stack direction="row" spacing={2} justifyContent="center" sx={{ flexWrap: "wrap", mb: 4 }}>
+      <Stack direction="row" spacing={2} sx={{ flexWrap: "wrap", mb: 4, justifyContent: "center" }}>
         {primaryAction && (
-          <Button
-            variant="contained"
-            size="large"
-            component={primaryAction.href ? Link : "button"}
-            href={primaryAction.href}
-            onClick={primaryAction.onClick}
-            startIcon={primaryAction.href === "/products" ? <SearchIcon /> : undefined}
-          >
-            {primaryAction.label}
-          </Button>
+          <Link href={primaryAction.href} passHref>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={primaryAction.onClick}
+              startIcon={primaryAction.href === "/products" ? <SearchIcon /> : undefined}
+            >
+              {primaryAction.label}
+            </Button>
+          </Link>
         )}
         {secondaryAction && (
-          <Button
-            variant="outlined"
-            size="large"
-            component={secondaryAction.href ? Link : "button"}
-            href={secondaryAction.href}
-            onClick={secondaryAction.onClick}
-          >
-            {secondaryAction.label}
-          </Button>
+          <Link href={secondaryAction.href} passHref>
+            <Button
+              variant="outlined"
+              size="large"
+              onClick={secondaryAction.onClick}
+            >
+              {secondaryAction.label}
+            </Button>
+          </Link>
         )}
       </Stack>
 
@@ -78,17 +79,16 @@ export function EmptyState({
           </Typography>
           <Stack direction="column" spacing={1}>
             {suggestions.map((suggestion, index) => (
-              <Button
-                key={index}
-                variant="text"
-                size="small"
-                component={Link}
-                href="/products"
-                startIcon={<SearchIcon fontSize="small" />}
-                sx={{ justifyContent: "flex-start", textTransform: "none", color: "text.secondary", "&:hover": { color: "primary.main" } }}
-              >
-                {suggestion}
-              </Button>
+              <Link key={index} href="/products" passHref>
+                <Button
+                  variant="text"
+                  size="small"
+                  startIcon={<SearchIcon fontSize="small" />}
+                  sx={{ justifyContent: "flex-start", textTransform: "none", color: "text.secondary", "&:hover": { color: "primary.main" } }}
+                >
+                  {suggestion}
+                </Button>
+              </Link>
             ))}
           </Stack>
         </Box>
@@ -104,7 +104,7 @@ export function EmptyStateProducts({
 }: { message?: string; onClearFilters?: () => void; onSearch?: () => void } = {}) {
   return (
     <EmptyState
-      icon={<ShopIcon fontSize="large" sx={{ fontSize: 48 }} />}
+      icon={<Box sx={{ fontSize: 48 }}>🛍️</Box>}
       title="No products found"
       message={message}
       primaryAction={{
@@ -130,7 +130,7 @@ export function EmptyStateProducts({
 export function EmptyStateCart() {
   return (
     <EmptyState
-      icon={<ShopIcon fontSize="large" sx={{ fontSize: 48 }} />}
+      icon={<Box sx={{ fontSize: 48 }}>🛍️</Box>}
       title="Your cart is empty"
       message="Looks like you haven't added any products yet."
       primaryAction={{
@@ -148,7 +148,7 @@ export function EmptyStateCart() {
 export function EmptyStateWishlist() {
   return (
     <EmptyState
-      icon={<IconButton sx={{ p: 0 }}><ShopIcon fontSize="large" sx={{ fontSize: 48 }} /></IconButton>}
+      icon={<Box sx={{ fontSize: 48 }}>🛍️</Box>}
       title="Your wishlist is empty"
       message="Save items you love for later."
       primaryAction={{
@@ -162,7 +162,7 @@ export function EmptyStateWishlist() {
 export function EmptyStateOrders() {
   return (
     <EmptyState
-      icon={<ShopIcon fontSize="large" sx={{ fontSize: 48 }} />}
+      icon={<Box sx={{ fontSize: 48 }}>🛍️</Box>}
       title="No orders yet"
       message="When you place an order, it will appear here."
       primaryAction={{
@@ -187,10 +187,10 @@ export function EmptyStateSearch({ query }: { query?: string }) {
       }}
       suggestions={query
         ? [
-            'Try a different keyword',
-            'Check spelling',
-            'Use fewer words',
-            'Browse by category',
+            "Try a different keyword",
+            "Check spelling",
+            "Use fewer words",
+            "Browse by category",
           ]
         : []}
     />

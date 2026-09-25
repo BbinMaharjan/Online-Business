@@ -6,7 +6,9 @@ import { useOrders } from "@/services/api/orders";
 import { useCancelOrder } from "@/services/api/orders";
 import { useUser } from "@/services/api/auth";
 import { formatPrice } from "@/lib/utils";
-import { Cancel, Visibility, MoreVert, Refresh } from "@mui/icons-material";
+import { Icons } from "@/lib/icons";
+
+const { Cancel, Visibility, MoreVert, Refresh } = Icons;
 import { useState } from "react";
 
 export default function OrdersPage() {

@@ -39,7 +39,7 @@ export const checkoutStep3Schema = z.object({
 
 export const checkoutStep4Schema = z.object({
   notes: z.string().max(500, "Notes too long").optional(),
-  agreeToTerms: z.literal(true, { errorMap: () => ({ message: "You must agree to the terms and conditions" }) }),
+  agreeToTerms: z.boolean().refine((val) => val === true, { message: "You must agree to the terms and conditions" }),
 });
 
 export const checkoutSchema = z.object({

@@ -5,7 +5,9 @@ import { useParams, useRouter } from "next/navigation";
 import { useOrder } from "@/services/api/orders";
 import { useCancelOrder } from "@/services/api/orders";
 import { formatPrice } from "@/lib/utils";
-import { LocalShipping, CreditCard, Person, CalendarToday, ExpandMore, Cancel, Refresh } from "@mui/icons-material";
+import { Icons } from "@/lib/icons";
+
+const { LocalShipping, CreditCard, Person, CalendarToday, ExpandMore, Cancel, Refresh } = Icons;
 import { useState } from "react";
 
 export default function OrderDetailPage() {

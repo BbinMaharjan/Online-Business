@@ -1,6 +1,6 @@
 "use client";
 
-import { Container, Box, Typography, TextField, Button, Grid, Alert } from "@mui/material";
+import { Container, Box, Typography, TextField, Button, Grid, Alert, Link } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useRegister } from "@/services/api/auth";
 import { useState } from "react";
@@ -32,24 +32,24 @@ export default function RegisterPage() {
 
   return (
     <Container sx={{ py: 8, px: 1, maxWidth: 400, margin: "0 auto" }}>
-      <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: "80vh" }}>
-        <Box sx={{ width: "100%" }}>
-          <Typography variant="h4" sx={{ mb: 4, textAlign: "center" }}>
-            Register
-          </Typography>
+      <Grid container spacing={0} sx={{ minHeight: "80vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <Grid size={12}>
+          <Box sx={{ width: "100%" }}>
+            <Typography variant="h4" sx={{ mb: 4, textAlign: "center" }}>
+              Register
+            </Typography>
 
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 4, textAlign: "center" }}>
-            Create your account
-          </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 4, textAlign: "center" }}>
+              Create your account
+            </Typography>
 
-          {error && (
-            <Alert severity="error" sx={{ mb: 3 }}>
-              {error}
-            </Alert>
-          )}
+            {error && (
+              <Alert severity="error" sx={{ mb: 3 }}>
+                {error}
+              </Alert>
+            )}
 
-          <Box sx={{ mb: 3 }}>
-            <form onSubmit={handleSubmit} sx={{ width: "100%" }}>
+            <form onSubmit={handleSubmit}>
               <TextField
                 label="Name"
                 variant="outlined"
@@ -77,7 +77,6 @@ export default function RegisterPage() {
                 sx={{ mb: 2 }}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                obscureText
                 required
               />
               <Button
@@ -85,22 +84,22 @@ export default function RegisterPage() {
                 variant="contained"
                 fullWidth
                 disabled={registerMutation.isPending}
-                sx={{ mb: 3, marginTop: 1 }}
+                sx={{ mt: 2, mb: 3 }}
               >
                 {registerMutation.isPending ? "Creating account..." : "Register"}
               </Button>
             </form>
-          </Box>
 
-          <Box sx={{ textAlign: "center" }}>
+<Box sx={{ textAlign: "center" }}>
             <Typography variant="body2" color="text.secondary">
               Already have an account?{" "}
-              <a href="/login" style={{ color: "primary.main", textDecoration: "underline" }}>
+              <Link href="/login" style={{ color: "primary.main", textDecoration: "underline" }}>
                 Login
-              </a>
+              </Link>
             </Typography>
           </Box>
-        </Box>
+          </Box>
+        </Grid>
       </Grid>
     </Container>
   );

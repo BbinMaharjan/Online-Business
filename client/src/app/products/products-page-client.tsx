@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
-import { Container, Box, Grid, Typography, Button, TextField, InputAdornment, Select, MenuItem, Paper, Chip, IconButton, Skeleton } from "@mui/material";
-import { Search, FilterList, ShoppingCart, FavoriteBorder } from "@mui/icons-material";
+import { useState } from "react";
+import { Container, Box, Grid, Typography, Button, TextField, InputAdornment, Select, MenuItem, Paper, Chip, IconButton } from "@mui/material";
+import { Icons } from "@/lib/icons";
+
+const { Search: SearchIcon } = Icons;
 import { useProducts } from "@/services/api/products";
 import { useCategories } from "@/services/api/categories";
 import { useBrands } from "@/services/api/brands";
@@ -14,13 +16,15 @@ import { PRODUCT_SORT_OPTIONS } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { useDebounce } from "@/hooks/useDebounce";
 
+type ProductSort = "featured" | "price-asc" | "price-desc" | "newest" | "rating" | "best-selling";
+
 export function ProductsPageClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch] = useDebounce(searchQuery, 300);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
-  const [sortBy, setSortBy] = useState("featured");
+  const [sortBy, setSortBy] = useState<ProductSort>("featured");
   const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
@@ -54,7 +58,7 @@ export function ProductsPageClient() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleSortChange = (newSort: string) => {
+  const handleSortChange = (newSort: ProductSort) => {
     setSortBy(newSort);
     setPage(1);
   };
@@ -83,7 +87,7 @@ export function ProductsPageClient() {
 
         <Grid container spacing={3}>
           {/* Sidebar Filters */}
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <Paper elevation={1} sx={{ p: 3, height: "fit-content", position: "sticky", top: 100 }}>
               <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                 <Typography variant="h6">Filters</Typography>
@@ -102,9 +106,7 @@ export function ProductsPageClient() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   size="small"
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start"><Search /></InputAdornment>,
-                  }}
+                  startAdornment={<InputAdornment position="start"><SearchIcon /></InputAdornment>}
                 />
               </Box>
 
@@ -148,14 +150,14 @@ export function ProductsPageClient() {
                     value={priceRange[0]}
                     onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
                     size="small"
-                    inputProps={{ min: 0, max: 1000 }}
+                    sx={{ min: 0, max: 1000 }}
                   />
                   <TextField
                     type="number"
                     value={priceRange[1]}
                     onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 1000])}
                     size="small"
-                    inputProps={{ min: 0, max: 1000 }}
+                    sx={{ min: 0, max: 1000 }}
                   />
                 </Box>
               </Box>
@@ -177,7 +179,7 @@ export function ProductsPageClient() {
           </Grid>
 
           {/* Products List */}
-          <Grid item xs={12} md={9}>
+          <Grid size={{ xs: 12, md: 9 }}>
             <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2 }}>
               <Typography variant="body1" color="text.secondary">
                 {pagination ? `Showing ${(page - 1) * 12 + 1}–${Math.min(page * 12, pagination.total)} of ${pagination.total} products` : "No products found"}
@@ -204,7 +206,7 @@ export function ProductsPageClient() {
             {productsLoading ? (
               <ProductGrid products={[]} loading={true} />
             ) : products.length > 0 ? (
-              <ProductGrid products={products} viewMode={viewMode} />
+              <ProductGrid products={products} />
             ) : (
               <Paper elevation={1} sx={{ p: 6, textAlign: "center" }}>
                 <Typography variant="h5" sx={{ mb: 2 }}>No products found</Typography>

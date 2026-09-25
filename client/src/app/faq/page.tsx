@@ -1,6 +1,8 @@
 import { Metadata } from "next";
-import { Container, Box, Typography, Accordion, AccordionSummary, AccordionDetails, Paper, Grid, TextField, Button, Alert, Link, Divider } from "@mui/material";
-import { ExpandMore, Search, Send, LocalShipping, Verified, CreditCard, Undo, Refresh, Help } from "@mui/icons-material";
+import { Container, Box, Typography, Accordion, AccordionSummary, AccordionDetails, Paper, Grid, TextField, Button, Link, Divider, InputAdornment } from "@mui/material";
+import { Icons } from "@/lib/icons";
+
+const { ExpandMore, Search, Send, LocalShipping, CreditCard, Undo, Refresh, Help } = Icons;
 
 export const metadata: Metadata = {
   title: "FAQ",
@@ -92,7 +94,7 @@ const faqCategories = [
   {
     id: "account",
     title: "Account & Security",
-    icon: <Verified />,
+    icon: <CreditCard />,
     questions: [
       {
         q: "How do I create an account?",
@@ -162,7 +164,7 @@ export default function FAQPage() {
             fullWidth
             placeholder="Search FAQs..."
             InputProps={{
-              startAdornment: <Search />,
+              startAdornment: <InputAdornment position="start"><Search /></InputAdornment>
             }}
             sx={{ maxWidth: 600 }}
           />
@@ -171,12 +173,12 @@ export default function FAQPage() {
         {/* Categories */}
         <Grid container spacing={4}>
           {faqCategories.map((category) => (
-            <Grid item xs={12} md={6} lg={3} key={category.id}>
+            <Grid size={{ xs: 12, md: 6, lg: 3 }} key={category.id}>
               <Paper elevation={1} sx={{ p: 3, height: "100%", textAlign: "center" }}>
                 <Box sx={{ display: "inline-flex", p: 1.5, backgroundColor: "primary.light", borderRadius: "50%", color: "primary.contrastText", mb: 2 }}>
                   {category.icon}
                 </Box>
-                <Typography variant="h6" fontWeight={700} sx={{ mb: 1 }}>
+                <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
                   {category.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
@@ -196,7 +198,7 @@ export default function FAQPage() {
               <Box sx={{ p: 0.75, backgroundColor: "primary.light", borderRadius: 1, color: "primary.contrastText" }}>
                 {category.icon}
               </Box>
-              <Typography variant="h4" fontWeight={700} sx={{ mb: 0 }}>
+              <Typography variant="h4" sx={{ fontWeight: 700, mb: 0 }}>
                 {category.title}
               </Typography>
             </Box>
@@ -208,12 +210,12 @@ export default function FAQPage() {
                   aria-controls={`panel-${category.id}-${index}`}
                   id={`panel-${category.id}-${index}-header`}
                 >
-                  <Typography variant="body1" fontWeight={500}>
+                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
                     {faq.q}
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography variant="body1" color="text.secondary" paragraph>
+                  <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
                     {faq.a}
                   </Typography>
                 </AccordionDetails>
@@ -231,31 +233,29 @@ export default function FAQPage() {
           <Typography variant="h6" sx={{ mb: 4, opacity: 0.9, fontWeight: 300 }}>
             Our support team is here to help you 24/7
           </Typography>
-          <Grid container spacing={2} justifyContent="center">
-            <Grid item>
-              <Button
-                variant="contained"
-                size="large"
-                component={Link}
-                href="/contact"
-                passHref
-                startIcon={<Send />}
-                sx={{ px: 4, backgroundColor: "secondary.main", "&:hover": { backgroundColor: "secondary.dark" } }}
-              >
-                Contact Support
-              </Button>
+          <Grid container spacing={2} sx={{ justifyContent: "center" }}>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <Link href="/contact">
+                <Button
+                  variant="contained"
+                  size="large"
+                  startIcon={<Send />}
+                  sx={{ px: 4, backgroundColor: "secondary.main", "&:hover": { backgroundColor: "secondary.dark" } }}
+                >
+                  Contact Support
+                </Button>
+              </Link>
             </Grid>
-            <Grid item>
-              <Button
-                variant="outlined"
-                size="large"
-                component={Link}
-                href="/account/orders"
-                passHref
-                sx={{ px: 4 }}
-              >
-                Check Order Status
-              </Button>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <Link href="/account/orders">
+                <Button
+                  variant="outlined"
+                  size="large"
+                  sx={{ px: 4 }}
+                >
+                  Check Order Status
+                </Button>
+              </Link>
             </Grid>
           </Grid>
         </Paper>

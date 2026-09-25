@@ -3,7 +3,9 @@
 import { useEffect } from "react";
 import { Container, Box, Typography, Button, Alert } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { Refresh, Home, Error as ErrorIcon, BugReport, Support } from "@mui/icons-material";
+import { Icons } from "@/lib/icons";
+
+const { Refresh, Home, Error: ErrorIcon, SupportAgent: Support } = Icons;
 
 export default function Error({
   error,
@@ -48,10 +50,10 @@ export default function Error({
         </Typography>
 
         <Alert severity="error" sx={{ mb: 4, textAlign: "left", maxWidth: 600, mx: "auto" }}>
-          <Typography variant="body2" fontWeight={600} sx={{ mb: 1 }}>
+          <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
             Error Details:
           </Typography>
-          <Typography variant="body2" fontFamily="monospace" sx={{ whiteSpace: "pre-wrap" }}>
+          <Typography variant="body2" sx={{ fontFamily: "monospace", whiteSpace: "pre-wrap" }}>
             {error.message || "Unknown error"}
             {error.digest && ` (Digest: ${error.digest})`}
           </Typography>

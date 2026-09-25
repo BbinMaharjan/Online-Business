@@ -1,6 +1,9 @@
 import { Metadata } from "next";
-import { Container, Box, Typography, Grid, Paper, TextField, Button, Alert, Link } from "@mui/material";
-import { Email, Phone, LocationOn, Support, Send, Map } from "@mui/icons-material";
+import Link from "next/link";
+import { Container, Box, Typography, Grid, Paper, TextField, Button } from "@mui/material";
+import { Icons } from "@/lib/icons";
+
+const { Email, Phone: PhoneIcon, LocationOn, SupportAgent: Support, Send, Map } = Icons;
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -19,7 +22,7 @@ const contactInfo = [
     description: "We typically respond within 24 hours",
   },
   {
-    icon: <Phone />,
+    icon: <PhoneIcon />,
     title: "Call Us",
     details: [
       "1-800-STOREFRONT (1-800-786-7337)",
@@ -64,7 +67,7 @@ export default function ContactPage() {
 
         <Grid container spacing={4}>
           {/* Contact Info */}
-          <Grid item xs={12} md={5}>
+          <Grid size={{ xs: 12, md: 5 }}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
               {contactInfo.map((item, index) => (
                 <Paper key={index} elevation={1} sx={{ p: 3, height: "100%" }}>
@@ -73,22 +76,24 @@ export default function ContactPage() {
                       {item.icon}
                     </Box>
                     <Box sx={{ flex: 1 }}>
-                      <Typography variant="h6" fontWeight={700} sx={{ mb: 1 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
                         {item.title}
                       </Typography>
                       {item.details.map((detail, i) => (
-                        <Typography key={i} variant="body2" color="text.secondary" paragraph>
+                        <Typography key={i} variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
                           {detail}
                         </Typography>
                       ))}
                       <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: "block" }}>
                         {item.description}
                       </Typography>
-                      {item.link && (
-                        <Link href={item.link} sx={{ mt: 1, display: "inline-block" }}>
+{item.link && (
+                      <Box sx={{ mt: 1 }}>
+                        <Link href={item.link} style={{ display: "inline-block" }}>
                           Visit Help Center →
                         </Link>
-                      )}
+                      </Box>
+                    )}
                     </Box>
                   </Box>
                 </Paper>
@@ -97,9 +102,9 @@ export default function ContactPage() {
           </Grid>
 
           {/* Contact Form */}
-          <Grid item xs={12} md={7}>
+          <Grid size={{ xs: 12, md: 7 }}>
             <Paper elevation={2} sx={{ p: 4 }}>
-              <Typography variant="h5" fontWeight={700} sx={{ mb: 3 }}>
+              <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
                 Send Us a Message
               </Typography>
               <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
@@ -108,42 +113,36 @@ export default function ContactPage() {
 
               <form onSubmit={(e) => { e.preventDefault(); alert("Message sent! We'll get back to you soon."); }}>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
                       fullWidth
                       label="First Name"
                       required
-                      InputProps={{
-                        startAdornment: <Phone />,
-                      }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
                       fullWidth
                       label="Last Name"
                       required
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
                       fullWidth
                       label="Email"
                       type="email"
                       required
-                      InputProps={{
-                        startAdornment: <Email />,
-                      }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
                       fullWidth
                       label="Phone (Optional)"
                       type="tel"
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <TextField
                       fullWidth
                       select
@@ -159,7 +158,7 @@ export default function ContactPage() {
                       <option value="other">Other</option>
                     </TextField>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <TextField
                       fullWidth
                       label="Message"
@@ -169,7 +168,7 @@ export default function ContactPage() {
                       placeholder="Please provide as much detail as possible..."
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <Button
                       type="submit"
                       variant="contained"
@@ -205,22 +204,22 @@ export default function ContactPage() {
           <Typography variant="h4" sx={{ mb: 3, fontWeight: 700, textAlign: "center" }}>
             Quick Help
           </Typography>
-          <Grid container spacing={3} justifyContent="center">
+          <Grid container spacing={3} sx={{ justifyContent: "center" }}>
             {[
               { title: "Track Your Order", desc: "Check order status and delivery updates", link: "/account/orders" },
               { title: "Returns & Refunds", desc: "Learn about our 30-day return policy", link: "/faq#returns" },
               { title: "Shipping Info", desc: "Delivery times, costs, and international shipping", link: "/faq#shipping" },
               { title: "Payment Methods", desc: "Accepted payment options and security", link: "/faq#payments" },
             ].map((item, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                 <Paper elevation={1} sx={{ p: 3, textAlign: "center", transition: "transform 0.2s", "&:hover": { transform: "translateY(-2px)" } }}>
-                  <Typography variant="h6" fontWeight={700} sx={{ mb: 1 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
                     {item.title}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                     {item.desc}
                   </Typography>
-                  <Link href={item.link} variant="body2" color="primary">
+                  <Link href={item.link} style={{ color: "primary.main" }}>
                     Learn More →
                   </Link>
                 </Paper>

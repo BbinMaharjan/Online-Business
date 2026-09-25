@@ -1,5 +1,4 @@
 import { Card, CardContent, Typography, Box, Link } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 
 interface CategoryCardProps {
   category: {
@@ -11,22 +10,20 @@ interface CategoryCardProps {
   };
 }
 
+const categoryIcons: Record<string, string> = {
+  electronics: "📱",
+  clothing: "👕",
+  home: "🏠",
+  sports: "⚽",
+  beauty: "💄",
+  books: "📚",
+  toys: "🧸",
+  automotive: "🚗",
+};
+
 export default function CategoryCard({ category }: CategoryCardProps) {
-  const theme = useTheme();
-
-  const categoryIcons: Record<string, string> = {
-    electronics: "📱",
-    clothing: "👕",
-    home: "🏠",
-    sports: "⚽",
-    beauty: "💄",
-    books: "📚",
-    toys: "🧸",
-    automotive: "🚗",
-  };
-
   return (
-    <Link href={`/categories/${category.slug}`} passHref style={{ textDecoration: "none", color: "inherit" }}>
+    <Link href={`/categories/${category.slug}`} style={{ textDecoration: "none", color: "inherit" }}>
       <Card sx={{ height: "100%", transition: "transform 0.2s, box-shadow 0.2s", "&:hover": { transform: "translateY(-4px)", boxShadow: 3 } }}>
         <Box
           sx={{
@@ -52,7 +49,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
           )}
         </Box>
         <CardContent>
-          <Typography variant="h6" fontWeight={600} sx={{ mb: 1 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
             {category.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">

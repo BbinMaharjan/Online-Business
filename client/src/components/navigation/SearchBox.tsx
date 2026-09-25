@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   TextField,
@@ -15,14 +15,14 @@ import {
   Skeleton,
   Divider,
 } from "@mui/material";
-import { Search as SearchIcon, Close as CloseIcon, TrendingUp as TrendingIcon } from "@mui/icons-material";
+import { Icons } from "@/lib/icons";
+
+const { Search: SearchIcon, Close: CloseIcon, TrendingUp: TrendingUpIcon } = Icons;
 import { useDebounce } from "@/hooks/useDebounce";
 import { useSearchSuggestions } from "@/services/api/search";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
 
 interface SearchBoxProps {
-  inputRef?: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
   onFocus?: () => void;
   onClose?: () => void;
   placeholder?: string;
@@ -135,14 +135,14 @@ export function SearchBox({
   }, []);
 
   return (
-    <Box position="relative" sx={{ width: "100%" }}>
+    <Box sx={{ position: "relative", width: "100%" }}>
       <form onSubmit={handleSubmit}>
         <TextField
           inputRef={inputRef}
           value={query}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          onFocus={(e) => {
+          onFocus={(_e) => {
             if (query.length >= 2 && showSuggestions) setShowDropdown(true);
             onFocus?.();
           }}
@@ -154,30 +154,6 @@ export function SearchBox({
           size="small"
           variant="outlined"
           fullWidth
-          startIcon={
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <SearchIcon color="action" />
-            </Box>
-          }
-          endIcon={
-            query ? (
-              <IconButton
-                onClick={() => setQuery("")}
-                aria-label="Clear search"
-                size="small"
-                sx={{ p: 0 }}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            ) : (
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <TrendingIcon color="action" sx={{ mr: 0.5, fontSize: 18 }} />
-                <Typography variant="caption" color="text.secondary">
-                  Trending
-                </Typography>
-              </Box>
-            )
-          }
           sx={{
             "& .MuiInputBase-root": {
               borderRadius: 24,
@@ -187,10 +163,35 @@ export function SearchBox({
               "&.Mui-focused": { boxShadow: "0 0 0 2px rgba(25, 118, 210, 0.2)" },
             },
             "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+            "& .MuiInputBase-adornedStart": { paddingLeft: 12 },
+            "& .MuiInputBase-adornedEnd": { paddingRight: 12 },
           }}
-          InputProps={{
-            ...(inputRef ? { ref: inputRef } : {}),
-          }}
+          startAdornment={
+            <Box sx={{ display: "flex", alignItems: "center", position: "absolute", left: 12, pointerEvents: "none" }}>
+              <SearchIcon color="action" />
+            </Box>
+          }
+          endAdornment={
+            query ? (
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <IconButton
+                  onClick={() => setQuery("")}
+                  aria-label="Clear search"
+                  size="small"
+                  sx={{ p: 0 }}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </Box>
+            ) : (
+              <Box sx={{ display: "flex", alignItems: "center", mr: 1 }}>
+                <TrendingUpIcon color="action" sx={{ mr: 0.5, fontSize: 18 }} />
+                <Typography variant="caption" color="text.secondary" sx={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                  Trending
+                </Typography>
+              </Box>
+            )
+          }
         />
       </form>
 
@@ -220,7 +221,7 @@ export function SearchBox({
           ) : suggestions?.data?.length ? (
             <>
               <Box sx={{ p: 1.5, borderBottom: 1, borderColor: "divider" }}>
-                <Typography variant="caption" color="text.secondary" textTransform="uppercase" letterSpacing="0.5px">
+                <Typography variant="caption" color="text.secondary" sx={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>
                   Suggestions
                 </Typography>
               </Box>
@@ -228,26 +229,26 @@ export function SearchBox({
                 {suggestions.data.map((suggestion, index) => (
                   <ListItem
                     key={`${suggestion.type}-${suggestion.value}`}
-                    button
+                    component="button"
                     onClick={() => handleSuggestionClick(suggestion)}
-                    selected={index === selectedIndex}
                     sx={{
                       px: 1.5,
                       py: 1,
                       "&:hover": { backgroundColor: "action.hover" },
-                      "&.Mui-selected": { backgroundColor: "primary.light", color: "primary.contrastText" },
+                      backgroundColor: index === selectedIndex ? "primary.light" : "transparent",
+                      color: index === selectedIndex ? "primary.contrastText" : "inherit",
                     }}
                   >
                     <ListItemIcon sx={{ minWidth: 36, color: "text.secondary" }}>
                       {suggestion.type === "product" && <SearchIcon fontSize="small" />}
-                      {suggestion.type === "category" && <Typography variant="body2">📁</Typography>}
-                      {suggestion.type === "brand" && <Typography variant="body2">🏷️</Typography>}
+                      {suggestion.type === "category" && <Typography variant="body2" sx={{ textTransform: "capitalize" }}>📁</Typography>}
+                      {suggestion.type === "brand" && <Typography variant="body2" sx={{ textTransform: "capitalize" }}>🏷️</Typography>}
                     </ListItemIcon>
                     <ListItemText
                       primary={suggestion.label}
                       secondary={
                         suggestion.type !== "product" && (
-                          <Typography variant="caption" color="text.secondary" textTransform="capitalize">
+                          <Typography variant="caption" color="text.secondary" sx={{ textTransform: "capitalize" }}>
                             {suggestion.type}
                           </Typography>
                         )
@@ -257,7 +258,7 @@ export function SearchBox({
                 ))}
               </List>
               <Divider variant="inset" component="li" />
-              <ListItem button onClick={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)} sx={{ px: 1.5, py: 1 }}>
+              <ListItem component="button" onClick={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)} sx={{ px: 1.5, py: 1 }}>
                 <ListItemIcon sx={{ minWidth: 36, color: "primary.main" }}>
                   <SearchIcon fontSize="small" />
                 </ListItemIcon>

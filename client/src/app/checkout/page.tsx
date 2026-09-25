@@ -1,9 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Container, Box, Typography, Stepper, Step, StepLabel, Button, Grid, Paper, Divider, Alert, TextField, Radio, RadioGroup, FormControlLabel, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Accordion, AccordionSummary, AccordionDetails, LinearProgress } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Container, Box, Typography, Stepper, Step, StepLabel, Button, Grid, Paper, Divider, Alert, TextField, Radio, RadioGroup, FormControlLabel, List, ListItem, ListItemText, ListItemSecondaryAction, Accordion, AccordionSummary, AccordionDetails, LinearProgress } from "@mui/material";
+import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
-import { ExpandMore, Edit, CheckCircle, LocalShipping, CreditCard, Check, ShoppingCart, Person, LocationOn } from "@mui/icons-material";
+import { Icons } from "@/lib/icons";
+
+const { CheckCircle, LocalShipping, CreditCard, Check, ShoppingCart, Person, LocationOn } = Icons;
 import { useCart, useInvalidateCart } from "@/services/api/cart";
 import { useAddresses } from "@/services/api/addresses";
 import { useCreateOrder } from "@/services/api/orders";
@@ -147,9 +150,9 @@ export default function CheckoutPage() {
           {steps.map((step, index) => (
             <Step key={step.label}>
               <StepLabel
-                StepIconProps={{
-                  icon: index < activeStep ? <CheckCircle /> : step.icon,
-                }}
+                StepIconComponent={(props: { active: boolean }) => (
+                  props.active ? <CheckCircle /> : step.icon
+                )}
               >
                 {step.label}
               </StepLabel>
@@ -206,7 +209,6 @@ function AddressStep({ addresses, selectedAddressId, onSelectAddress, newAddress
           address={newAddress}
           onChange={setNewAddress}
           onSave={() => {
-            // TODO: Create address via API
             setShowAddressForm(false);
           }}
           onCancel={() => setShowAddressForm(false)}
@@ -222,13 +224,11 @@ function AddressStep({ addresses, selectedAddressId, onSelectAddress, newAddress
               {addresses.map((address: any) => (
                 <ListItem
                   key={address._id}
-                  button
-                  selected={selectedAddressId === address._id}
                   onClick={() => onSelectAddress(address._id)}
                   sx={{ mb: 1, border: 1, borderColor: selectedAddressId === address._id ? "primary.main" : "divider", borderRadius: 1 }}
                 >
                   <ListItemText
-                    primary={<Typography variant="body1" fontWeight={600}>{address.fullName}</Typography>}
+                    primary={<Typography variant="body1" sx={{ fontWeight: 600 }}>{address.fullName}</Typography>}
                     secondary={
                       <>
                         {address.addressLine1} {address.addressLine2 && ", " + address.addressLine2}<br />
@@ -266,28 +266,28 @@ function AddressForm({ address, onChange, onSave, onCancel }: any) {
     <Box sx={{ p: 2, border: 1, borderColor: "divider", borderRadius: 2, mb: 3 }}>
       <Typography variant="subtitle1" sx={{ mb: 3 }}>Add New Address</Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField fullWidth label="Full Name" value={address.fullName} onChange={(e) => onChange({ ...address, fullName: e.target.value })} required />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField fullWidth label="Phone" value={address.phone} onChange={(e) => onChange({ ...address, phone: e.target.value })} required />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <TextField fullWidth label="Address Line 1" value={address.addressLine1} onChange={(e) => onChange({ ...address, addressLine1: e.target.value })} required />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <TextField fullWidth label="Address Line 2 (Optional)" value={address.addressLine2} onChange={(e) => onChange({ ...address, addressLine2: e.target.value })} />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField fullWidth label="City" value={address.city} onChange={(e) => onChange({ ...address, city: e.target.value })} required />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField fullWidth label="State/Province" value={address.state} onChange={(e) => onChange({ ...address, state: e.target.value })} required />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField fullWidth label="Postal Code" value={address.postalCode} onChange={(e) => onChange({ ...address, postalCode: e.target.value })} required />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField fullWidth label="Country" value={address.country} onChange={(e) => onChange({ ...address, country: e.target.value })} required />
         </Grid>
       </Grid>
@@ -314,7 +314,7 @@ function ShippingStep({ shippingMethods, selectedShippingMethodId, onSelectShipp
               control={<Radio />}
               label={
                 <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                  <Typography variant="body1" fontWeight={600}>{method.name}</Typography>
+                  <Typography variant="body1" sx={{ fontWeight: 600 }}>{method.name}</Typography>
                   <Typography variant="body2" color="text.secondary">
                     {method.description} • {method.estimatedDays} business days • {formatPrice(method.price)}
                   </Typography>
@@ -344,7 +344,7 @@ function PaymentStep({ selectedPaymentMethod, onSelectPayment, onNext, onBack }:
           control={<Radio />}
           label={
             <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-              <Typography variant="body1" fontWeight={600}>Cash on Delivery</Typography>
+              <Typography variant="body1" sx={{ fontWeight: 600 }}>Cash on Delivery</Typography>
               <Typography variant="body2" color="text.secondary">Pay when you receive your order</Typography>
             </Box>
           }
@@ -354,7 +354,7 @@ function PaymentStep({ selectedPaymentMethod, onSelectPayment, onNext, onBack }:
           control={<Radio />}
           label={
             <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-              <Typography variant="body1" fontWeight={600}>Credit/Debit Card</Typography>
+              <Typography variant="body1" sx={{ fontWeight: 600 }}>Credit/Debit Card</Typography>
               <Typography variant="body2" color="text.secondary">Secure payment via Stripe</Typography>
             </Box>
           }
@@ -374,7 +374,7 @@ function ReviewStep({ items, cart, selectedAddress, selectedShippingMethod, sele
       <Typography variant="h6" sx={{ mb: 3 }}>Review Order</Typography>
 
       <Accordion sx={{ mb: 2 }}>
-        <AccordionSummary expandIcon={<ExpandMore />}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="subtitle1">Shipping Address</Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -392,7 +392,7 @@ function ReviewStep({ items, cart, selectedAddress, selectedShippingMethod, sele
       </Accordion>
 
       <Accordion sx={{ mb: 2 }}>
-        <AccordionSummary expandIcon={<ExpandMore />}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="subtitle1">Shipping Method</Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -408,7 +408,7 @@ function ReviewStep({ items, cart, selectedAddress, selectedShippingMethod, sele
       </Accordion>
 
       <Accordion sx={{ mb: 2 }}>
-        <AccordionSummary expandIcon={<ExpandMore />}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="subtitle1">Payment Method</Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -417,7 +417,7 @@ function ReviewStep({ items, cart, selectedAddress, selectedShippingMethod, sele
       </Accordion>
 
       <Accordion sx={{ mb: 3 }}>
-        <AccordionSummary expandIcon={<ExpandMore />}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="subtitle1">Order Items</Typography>
         </AccordionSummary>
         <AccordionDetails>

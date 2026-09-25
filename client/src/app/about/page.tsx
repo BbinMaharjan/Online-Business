@@ -1,7 +1,9 @@
 import { Metadata } from "next";
 import { Container, Box, Typography, Grid, Paper, Button, Divider } from "@mui/material";
 import Link from "next/link";
-import { Support, LocalShipping, Verified, Favorite, Groups, Business, ThumbUp, Nature } from "@mui/icons-material";
+import { Icons } from "@/lib/icons";
+
+const { SupportAgent: Support, LocalShipping, VerifiedUser: Verified, Favorite, Groups, Business, ThumbUp, Nature } = Icons;
 
 export const metadata: Metadata = {
   title: "About Us",

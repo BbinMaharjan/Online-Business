@@ -4,10 +4,6 @@ import { Container, Box, Typography, LinearProgress, Grid } from "@mui/material"
 import { useCategories } from "@/services/api/categories";
 import CategoryCard from "@/components/category/CategoryCard";
 
-interface CategoryCardProps {
-  category: any;
-}
-
 export default function CategoriesPage() {
   const { data, isLoading, isError } = useCategories();
 
@@ -35,7 +31,7 @@ export default function CategoriesPage() {
 
       <Grid container spacing={3} sx={{ pt: 2 }}>
         {data.data.map((category: any) => (
-          <Grid item xs={12} md={6} lg={4} key={category._id}>
+          <Grid size={{ xs: 12, md: 6, lg: 4 }} key={category._id}>
             <CategoryCard category={category} />
           </Grid>
         ))}

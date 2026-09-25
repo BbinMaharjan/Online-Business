@@ -8,6 +8,7 @@ import ProductImages from "@/components/product/ProductImages";
 import ProductVariantSelector from "@/components/product/ProductVariantSelector";
 import ProductDetails from "@/components/product/ProductDetails";
 import { useEffect } from "react";
+import { formatPrice } from "@/lib/utils";
 
 export default function ProductDetailsPage() {
   const params = useParams();
@@ -31,15 +32,15 @@ export default function ProductDetailsPage() {
     <Container>
       <Box sx={{ py: 4 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
-          <Typography variant="h4" fontWeight={700}>
+          <Typography variant="h4" sx={{ fontWeight: 700 }}>
             {product.name}
           </Typography>
           <Alert severity="info">
-            SKU: {product.sku}
+            SKU: {product.sku || "N/A"}
           </Alert>
         </Box>
 
-        <ProductImages images={product.images} />
+        <ProductImages images={product.images || []} />
 
         <ProductVariantSelector product={product} />
 
@@ -47,14 +48,14 @@ export default function ProductDetailsPage() {
 
         <Box sx={{ mt: 4, pt: 4, borderTop: "1px solid", borderColor: "divider" }}>
           <Typography variant="h6" sx={{ mr: 2 }}>
-            Price: ${product.price.toFixed(2)}
+            Price: {formatPrice(product.price)}
           </Typography>
           {product.compareAtPrice && (
             <Typography variant="body2" color="text.secondary" sx={{ textDecoration: "line-through" }}>
-              ${product.compareAtPrice.toFixed(2)}
+              {formatPrice(product.compareAtPrice)}
             </Typography>
           )}
-          {product.stock > 0 && (
+          {product.stock && product.stock > 0 && (
             <Button variant="contained" size="large" sx={{ mt: 2, minWidth: 200 }}>
               Add to cart
             </Button>

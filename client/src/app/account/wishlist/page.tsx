@@ -6,7 +6,9 @@ import { useWishlist } from "@/services/api/wishlist";
 import { useCart, useAddToCart } from "@/services/api/cart";
 import { useUser } from "@/services/api/auth";
 import ProductCard from "@/components/product/ProductCard";
-import { FavoriteBorder, AddShoppingCart, Delete } from "@mui/icons-material";
+import { Icons } from "@/lib/icons";
+
+const { FavoriteBorder, AddShoppingCart, Delete } = Icons;
 import { formatPrice } from "@/lib/utils";
 
 export default function WishlistPage() {

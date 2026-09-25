@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -16,8 +16,11 @@ import {
   Alert,
 } from "@mui/material";
 import Image from "next/image";
+import { Icons } from "@/lib/icons";
 import { getImageUrl, formatPrice } from "@/lib/utils";
 import type { Product, Variant } from "@/types";
+
+const { CheckCircle: CheckCircleIcon, Cancel: CancelIcon } = Icons;
 
 interface ProductVariantSelectorProps {
   product: Product;
@@ -187,7 +190,7 @@ export function ProductVariantSelector({
                                 }}
                               />
                             )}
-                            <Typography variant="body2" fontWeight={isSelected === option ? 600 : 400}>
+                            <Typography variant="body2" sx={{ fontWeight: isSelected === option ? 600 : 400 }}>
                               {option}
                             </Typography>
                             {priceDelta !== 0 && (
@@ -243,7 +246,7 @@ export function ProductVariantSelector({
                   />
                 </Box>
                 <Box>
-                  <Typography variant="subtitle1" fontWeight={600}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                     {product.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -257,7 +260,7 @@ export function ProductVariantSelector({
                 </Box>
               </Box>
               <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "flex-end", minWidth: 150 }}>
-                <Typography variant="h5" fontWeight={700}>
+                <Typography variant="h5" sx={{ fontWeight: 700 }}>
                   {formatPrice(selectedVariant.price)}
                 </Typography>
                 {selectedVariant.compareAtPrice && selectedVariant.compareAtPrice > selectedVariant.price && (
@@ -269,7 +272,7 @@ export function ProductVariantSelector({
                   label={selectedVariant.stock > 0 ? `In Stock (${selectedVariant.stock})` : "Out of Stock"}
                   size="small"
                   color={selectedVariant.stock > 0 ? "success" : "error"}
-                  icon={selectedVariant.stock > 0 ? "check_circle" : "cancel"}
+                  icon={selectedVariant.stock > 0 ? <CheckCircleIcon fontSize="small" /> : <CancelIcon fontSize="small" />}
                 />
               </Box>
             </Stack>

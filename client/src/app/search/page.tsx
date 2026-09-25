@@ -4,14 +4,14 @@ import { Container, Box, Typography, LinearProgress } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useSearchProducts } from "@/services/api/search";
 import SearchBox from "@/components/navigation/SearchBox";
-import EmptyState from "@/components/common/EmptyStateProducts";
+import { EmptyStateProducts } from "@/components/common/EmptyStateProducts";
 import ProductGrid from "@/components/product/ProductGrid";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
   const query = searchParams.get("q") || "";
 
-  const { data, isLoading, isError } = useSearchProducts(query, { enabled: query.length > 0 });
+  const { data, isLoading, isError } = useSearchProducts(query, query ? {} : { enabled: false });
 
   if (isLoading) {
     return (
@@ -45,7 +45,7 @@ export default function SearchPage() {
       {data?.data?.data?.length ? (
         <ProductGrid products={data.data.data} />
       ) : (
-        <EmptyState />
+        <EmptyStateProducts message={`No results found for "${query}"`} />
       )}
     </Container>
   );

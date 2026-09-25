@@ -8,16 +8,12 @@ import {
   IconButton,
   Dialog,
   DialogContent,
-  DialogActions,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import {
-  Expand as ExpandIcon,
-  Close as CloseIcon,
-  ChevronLeft as ChevronLeftIcon,
-  ChevronRight as ChevronRightIcon,
-} from "@mui/icons-material";
+import { Icons } from "@/lib/icons";
+
+const { ExpandMore: ExpandIcon, Close: CloseIcon, ChevronLeft: ChevronLeftIcon, ChevronRight: ChevronRightIcon } = Icons;
 import { getImageUrl } from "@/lib/utils";
 
 interface ProductImagesProps {
@@ -31,16 +27,15 @@ export function ProductImages({ images, alt = "Product", priority = false }: Pro
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
-  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
   const mainImageRef = useRef<HTMLDivElement>(null);
 
   const validImages = images.filter(Boolean).length > 0 ? images : ["/placeholder-product.jpg"];
 
   const handleImageLoad = (index: number) => {
-    setLoadedImages((prev) => new Set(prev).add(index));
+    // Image loaded
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (!fullscreenOpen) return;
     if (e.key === "ArrowLeft") {
       setSelectedIndex((prev) => (prev === 0 ? validImages.length - 1 : prev - 1));
@@ -290,8 +285,10 @@ export function ProductImages({ images, alt = "Product", priority = false }: Pro
         onClose={closeFullscreen}
         fullScreen
         maxWidth={false}
-        PaperProps={{ sx: { backgroundColor: "#000", p: 0 } }}
-        BackdropProps={{ sx: { backgroundColor: "#000" } }}
+        sx={{
+          "& .MuiDialog-paper": { backgroundColor: "#000", p: 0 },
+          "& .MuiBackdrop-root": { backgroundColor: "#000" },
+        }}
       >
         <DialogContent sx={{ overflow: "hidden" }}>
           <IconButton

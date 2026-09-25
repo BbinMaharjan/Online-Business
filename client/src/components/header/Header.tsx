@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   AppBar,
   Toolbar,
@@ -13,7 +13,6 @@ import {
   Menu,
   MenuItem,
   Avatar,
-  InputBase,
   Badge,
   Drawer,
   List,
@@ -24,16 +23,9 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import {
-  Menu as MenuIcon,
-  ShoppingCart as CartIcon,
-  Favorite as WishlistIcon,
-  Search as SearchIcon,
-  Person as AccountIcon,
-  Close,
-  ExpandMore,
-  ChevronLeft,
-} from "@mui/icons-material";
+import { Icons } from "@/lib/icons";
+
+const { Menu: MenuIcon, ShoppingCart: CartIcon, Favorite: WishlistIcon, Search: SearchIcon, Person: AccountIcon, Close } = Icons;
 import { useCart } from "@/services/api/cart";
 import { useWishlist } from "@/services/api/wishlist";
 import { useUser } from "@/services/api/auth";
@@ -45,7 +37,6 @@ interface HeaderProps {
 
 export function Header({ onMobileMenuOpen }: HeaderProps) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
@@ -53,7 +44,7 @@ export function Header({ onMobileMenuOpen }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [userMenuAnchor, setUserMenuAnchor] = useState<HTMLElement | null>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   const { data: cart } = useCart();
   const { data: wishlist } = useWishlist();
@@ -141,7 +132,7 @@ export function Header({ onMobileMenuOpen }: HeaderProps) {
               </IconButton>
             )}
 
-            <Link href="/" passHref style={{ textDecoration: "none", color: "inherit" }}>
+            <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
               <Typography variant="h6" sx={{ fontWeight: 700, letterSpacing: "-0.02em" }}>
                 Storefront
               </Typography>
@@ -165,7 +156,7 @@ export function Header({ onMobileMenuOpen }: HeaderProps) {
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
             <Box sx={{ display: { xs: "none", sm: "flex" }, position: "relative" }}>
-              <Link href="/account/wishlist" passHref>
+              <Link href="/account/wishlist">
                 <IconButton
                   color="inherit"
                   aria-label="Wishlist"
@@ -186,7 +177,7 @@ export function Header({ onMobileMenuOpen }: HeaderProps) {
             </Box>
 
             <Box sx={{ position: "relative" }}>
-              <Link href="/cart" passHref>
+              <Link href="/cart">
                 <IconButton
                   color="inherit"
                   aria-label="Shopping Cart"
@@ -228,7 +219,6 @@ export function Header({ onMobileMenuOpen }: HeaderProps) {
               <Box sx={{ display: { xs: "none", md: "flex" }, ml: 2 }}>
                 <IconButton
                   onClick={handleUserMenuOpen}
-                  onClose={handleUserMenuClose}
                   aria-controls={userMenuAnchor ? "user-menu" : undefined}
                   aria-haspopup="true"
                   aria-expanded={!!userMenuAnchor}
@@ -238,9 +228,9 @@ export function Header({ onMobileMenuOpen }: HeaderProps) {
                   <Avatar
                     sx={{ width: 36, height: 36, fontSize: "0.875rem", fontWeight: 600 }}
                     src={user?.image}
-                    alt={user?.name || "User"}
+                    alt={user?.firstName || user?.email || "User"}
                   >
-                    {user?.name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U"}
+                    {user?.firstName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U"}
                   </Avatar>
                 </IconButton>
               </Box>
@@ -248,15 +238,14 @@ export function Header({ onMobileMenuOpen }: HeaderProps) {
 
             {isMobile && !userLoading && !user && (
               <Box sx={{ display: { xs: "flex", md: "none" }, ml: 1 }}>
-                <Button
-                  size="small"
-                  component={Link}
-                  href="/login"
-                  passHref
-                  sx={{ textTransform: "none", fontWeight: 600 }}
-                >
-                  Login
-                </Button>
+                <Link href="/login">
+                  <Button
+                    size="small"
+                    sx={{ textTransform: "none", fontWeight: 600 }}
+                  >
+                    Login
+                  </Button>
+                </Link>
               </Box>
             )}
           </Box>
@@ -282,14 +271,12 @@ export function Header({ onMobileMenuOpen }: HeaderProps) {
         id="user-menu"
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-        PaperProps={{
-          sx: { minWidth: 240, mt: 1, borderRadius: 2, boxShadow: 3 },
-        }}
+        sx={{ "& .MuiPaper-root": { minWidth: 240, mt: 1, borderRadius: 2, boxShadow: 3 } }}
       >
         {user && (
           <>
             <Box sx={{ px: 2, py: 1.5, borderBottom: 1, borderColor: "divider" }}>
-              <Typography variant="subtitle1" fontWeight={600}>
+              <Typography variant="body1" sx={{ fontWeight: 600 }}>
                 {user.firstName} {user.lastName}
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -303,16 +290,15 @@ export function Header({ onMobileMenuOpen }: HeaderProps) {
           return (
             <MenuItem
               key={index}
-              component={Link}
-              href={item.href}
-              passHref
               onClick={handleUserMenuClose}
               disableGutters
             >
-              <ListItemIcon sx={{ minWidth: 40, color: "text.secondary" }}>
-                {typeof item.icon === "function" ? React.createElement(item.icon, { fontSize: "small" }) : item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.label} />
+              <Link href={item.href} passHref style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", minWidth: 40 }}>
+                <Box sx={{ minWidth: 40, color: "text.secondary" }}>
+                  {typeof item.icon === "function" ? React.createElement(item.icon, { fontSize: "small" }) : item.icon}
+                </Box>
+                {item.label}
+              </Link>
             </MenuItem>
           );
         })}
@@ -335,55 +321,53 @@ export function Header({ onMobileMenuOpen }: HeaderProps) {
         </Box>
         <Divider />
         <List component="nav" aria-label="Main navigation">
-          {navigation.map((item) => (
-            <ListItem
-              key={item.name}
-              button
-              component={Link}
-              href={item.href}
-              passHref
-              onClick={handleDrawerToggle}
-              selected={pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))}
-              sx={{
-                borderRadius: 1,
-                mx: 1,
-                mb: 0.5,
-                "&.Mui-selected": {
-                  backgroundColor: "primary.main",
-                  color: "primary.contrastText",
-                  "&:hover": { backgroundColor: "primary.dark" },
-                  "& .MuiListItemIcon-root": { color: "primary.contrastText" },
-                },
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 40 }}>
-                {item.name === "Shop" && <SearchIcon />}
-                {item.name === "Categories" && <AccountIcon />}
-                {item.name === "Brands" && <WishlistIcon />}
-              </ListItemIcon>
-              <ListItemText primary={item.name} />
-            </ListItem>
-          ))}
+          {navigation.map((item) => {
+            const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+            return (
+              <Link key={item.name} href={item.href} style={{ textDecoration: "none", color: "inherit" }}>
+                <ListItem
+                  sx={{
+                    borderRadius: 1,
+                    mx: 1,
+                    mb: 0.5,
+                    backgroundColor: isActive ? "primary.main" : "transparent",
+                    color: isActive ? "primary.contrastText" : "inherit",
+                    "&:hover": {
+                      backgroundColor: isActive ? "primary.dark" : "action.hover",
+                    },
+                    "& .MuiListItemIcon-root": { color: isActive ? "primary.contrastText" : "inherit" },
+                  }}
+                  onClick={handleDrawerToggle}
+                >
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                    {item.name === "Shop" && <SearchIcon />}
+                    {item.name === "Categories" && <AccountIcon />}
+                    {item.name === "Brands" && <WishlistIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={item.name} />
+                </ListItem>
+              </Link>
+            );
+          })}
         </List>
         <Divider />
         <List component="nav" aria-label="User navigation">
           {userMenuItems.map((item, index) => {
             if (item.type === "divider") return <Divider key={`user-divider-${index}`} />;
+            if (!item.href) return null;
             return (
-              <ListItem
-                key={index}
-                button
-                component={Link}
-                href={item.href}
-                passHref
-                onClick={handleDrawerToggle}
-                disableGutters
-              >
-                <ListItemIcon sx={{ minWidth: 40 }}>
-                  {typeof item.icon === "function" ? React.createElement(item.icon, { fontSize: "small" }) : item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.label} />
-              </ListItem>
+              <Link key={index} href={item.href} style={{ textDecoration: "none", color: "inherit" }}>
+                <ListItem
+                  sx={{}}
+                  onClick={handleDrawerToggle}
+                  disableGutters
+                >
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                    {typeof item.icon === "function" ? React.createElement(item.icon, { fontSize: "small" }) : item.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={item.label} />
+                </ListItem>
+              </Link>
             );
           })}
         </List>

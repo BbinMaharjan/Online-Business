@@ -6,25 +6,6 @@ import { useCategories } from "@/services/api/categories";
 import { useProducts } from "@/services/api/products";
 import ProductGrid from "@/components/product/ProductGrid";
 
-interface CategoryCardProps {
-  category: any;
-}
-
-const CategoryCardComponent = ({ category }: CategoryCardProps) => {
-  return (
-    <Grid item xs={12} md={6} lg={4} sx={{ pb: 2 }}>
-      <Box sx={{ p: 3, borderRadius: 2, background: "#fff", transition: "transform 0.2s" }}>
-        <Typography variant="h6" component="h3" style={{ textAlign: "center" }}>
-          {category.name}
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary" style={{ textAlign: "center", mt: 2 }}>
-          {category.products?.length || 0} products
-        </Typography>
-      </Box>
-    </Grid>
-  );
-};
-
 export default function CategoriesPage() {
   const params = useParams();
   const slug = params.slug as string;
@@ -51,15 +32,21 @@ export default function CategoriesPage() {
         </Typography>
       </Box>
 
-      <Grid container sx={{ pt: 2 }}>
+      <Grid container spacing={3} sx={{ pt: 2 }}>
         {productsLoading ? (
-          <ProductGrid products={[]} loading={true} />
+          <Grid size={12}>
+            <ProductGrid products={[]} loading={true} />
+          </Grid>
         ) : productsData?.data?.data?.length ? (
-          <ProductGrid products={productsData.data.data} />
+          <Grid size={12}>
+            <ProductGrid products={productsData.data.data} />
+          </Grid>
         ) : (
-          <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", py: 8, width: "100%" }}>
-            No products in this category
-          </Typography>
+          <Grid size={12}>
+            <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", py: 8 }}>
+              No products in this category
+            </Typography>
+          </Grid>
         )}
       </Grid>
     </Container>

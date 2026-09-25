@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -15,18 +15,13 @@ import {
   Rating,
   Divider,
   IconButton,
+  Skeleton,
 } from "@mui/material";
-import {
-  ShoppingCart as CartIcon,
-  LocalShipping as ShippingIcon,
-  Verified as VerifiedIcon,
-  SupportAgent as SupportIcon,
-  KeyboardArrowLeft,
-  KeyboardArrowRight,
-} from "@mui/icons-material";
+import { Icons } from "@/lib/icons";
+
+const { ShoppingCart: CartIcon, LocalShipping: ShippingIcon, VerifiedUser: VerifiedIcon, SupportAgent: SupportIcon, KeyboardArrowLeft, KeyboardArrowRight } = Icons;
 import { useProducts, useCategories, useBrands } from "@/services/api";
-import { ProductGrid, SkeletonProductGrid } from "@/components/product/ProductGrid";
-import { ProductCard } from "@/components/product/ProductCard";
+import { ProductGrid } from "@/components/product/ProductGrid";
 import { Footer } from "@/components/footer/Footer";
 import { getImageUrl, formatPrice, calculateDiscountPrice } from "@/lib/utils";
 import type { Product, Category, Brand } from "@/types";
@@ -113,22 +108,21 @@ function HeroCarousel({ slides }: { slides: typeof heroSlides }) {
                 }}
               />
               <Box sx={{ position: "relative", zIndex: 1, px: 4, maxWidth: 600, color: "white" }}>
-                <Typography variant="h3" fontWeight={700} sx={{ mb: 2, lineHeight: 1.2 }}>
+                <Typography variant="h3" sx={{ fontWeight: 700, mb: 2, lineHeight: 1.2 }}>
                   {slide.title}
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 400 }}>
                   {slide.subtitle}
                 </Typography>
-                <Button
-                  variant="contained"
-                  size="large"
-                  component={Link}
-                  href={slide.href}
-                  passHref
-                  sx={{ px: 4, py: 1.5 }}
-                >
-                  {slide.cta}
-                </Button>
+                <Link href={slide.href} passHref>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    sx={{ px: 4, py: 1.5 }}
+                  >
+                    {slide.cta}
+                  </Button>
+                </Link>
               </Box>
             </Box>
           </Box>
@@ -235,7 +229,7 @@ export function HomepageClient() {
       <Box sx={{ mb: 6, py: 3, backgroundColor: "primary.main", color: "primary.contrastText", borderRadius: 2 }}>
         <Grid container spacing={2} sx={{ px: 4 }}>
           {features.map((feature, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 2, py: 1 }}>
                 <Box
                   sx={{
@@ -250,7 +244,7 @@ export function HomepageClient() {
                   <feature.icon fontSize="large" />
                 </Box>
                 <Box>
-                  <Typography variant="subtitle1" fontWeight={600}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                     {feature.title}
                   </Typography>
                   <Typography variant="caption" sx={{ opacity: 0.9 }}>
@@ -266,19 +260,19 @@ export function HomepageClient() {
       {/* Categories */}
       <Box sx={{ mb: 6 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
-          <Typography variant="h4" fontWeight={700}>
+          <Typography variant="h4" sx={{ fontWeight: 700 }}>
             Shop by Category
           </Typography>
-          <Button variant="text" component={Link} href="/categories" passHref>
-            View All
-          </Button>
+          <Link href="/categories" passHref>
+            <Button variant="text">View All</Button>
+          </Link>
         </Box>
         {categoriesLoading ? (
           <SkeletonCategoryGrid />
         ) : categories?.data?.length ? (
           <Grid container spacing={2}>
             {categories.data.slice(0, 8).map((category: Category) => (
-              <Grid item xs={6} sm={4} md={3} lg={2} key={category._id} xs={6} sm={4} md={3} lg={2}>
+              <Grid size={{ xs: 6, sm: 4, md: 3, lg: 2 }} key={category._id}>
                 <Link href={`/categories/${category.slug}`} passHref style={{ textDecoration: "none", color: "inherit" }}>
                   <Card sx={{ height: "100%", textAlign: "center", p: 3, transition: "all 0.2s", "&:hover": { boxShadow: 3, transform: "translateY(-4px)" } }}>
                     <Box
@@ -297,7 +291,7 @@ export function HomepageClient() {
                     >
                       {categoryIcons[category.slug] || categoryIcons[category.name.toLowerCase()] || "📦"}
                     </Box>
-                    <Typography variant="subtitle1" fontWeight={600}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                       {category.name}
                     </Typography>
                   </Card>
@@ -311,12 +305,12 @@ export function HomepageClient() {
       {/* Featured Products */}
       <Box sx={{ mb: 6 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
-          <Typography variant="h4" fontWeight={700}>
+          <Typography variant="h4" sx={{ fontWeight: 700 }}>
             Featured Products
           </Typography>
-          <Button variant="text" component={Link} href="/products" passHref>
-            View All
-          </Button>
+          <Link href="/products" passHref>
+            <Button variant="text">View All</Button>
+          </Link>
         </Box>
         <ProductGrid
           products={featuredProducts?.data?.data || []}
@@ -328,12 +322,12 @@ export function HomepageClient() {
       {/* Best Sellers */}
       <Box sx={{ mb: 6 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
-          <Typography variant="h4" fontWeight={700}>
+          <Typography variant="h4" sx={{ fontWeight: 700 }}>
             Best Sellers
           </Typography>
-          <Button variant="text" component={Link} href="/products?sort=best-selling" passHref>
-            View All
-          </Button>
+          <Link href="/products?sort=best-selling" passHref>
+            <Button variant="text">View All</Button>
+          </Link>
         </Box>
         <ProductGrid
           products={bestSellers?.data?.data || []}
@@ -344,12 +338,12 @@ export function HomepageClient() {
       {/* New Arrivals */}
       <Box sx={{ mb: 6 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
-          <Typography variant="h4" fontWeight={700}>
+          <Typography variant="h4" sx={{ fontWeight: 700 }}>
             New Arrivals
           </Typography>
-          <Button variant="text" component={Link} href="/products?sort=newest" passHref>
-            View All
-          </Button>
+          <Link href="/products?sort=newest" passHref>
+            <Button variant="text">View All</Button>
+          </Link>
         </Box>
         <ProductGrid
           products={newArrivals?.data?.data || []}
@@ -360,7 +354,7 @@ export function HomepageClient() {
       {/* Brands */}
       <Box sx={{ mb: 6, py: 4, backgroundColor: "grey.50", borderRadius: 2 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography variant="h4" fontWeight={700}>
+          <Typography variant="h4" sx={{ fontWeight: 700 }}>
             Trusted Brands
           </Typography>
           <Typography variant="body1" color="text.secondary">
@@ -378,7 +372,7 @@ export function HomepageClient() {
             {brands.data.slice(0, 10).map((brand: Brand) => (
               <Box key={brand._id} sx={{ opacity: 0.6, transition: "opacity 0.2s", "&:hover": { opacity: 1 } }}>
                 <Link href={`/brands/${brand.slug}`} passHref style={{ textDecoration: "none", color: "inherit" }}>
-                  <Typography variant="h6" fontWeight={700} sx={{ textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                  <Typography variant="h6" sx={{ fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em" }}>
                     {brand.name}
                   </Typography>
                 </Link>
@@ -390,7 +384,7 @@ export function HomepageClient() {
 
       {/* Newsletter */}
       <Box sx={{ mb: 6, py: 6, textAlign: "center", backgroundColor: "grey.900", color: "white", borderRadius: 3 }}>
-        <Typography variant="h4" fontWeight={700} sx={{ mb: 2 }}>
+        <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
           Subscribe to Our Newsletter
         </Typography>
         <Typography variant="body1" sx={{ mb: 4, maxWidth: 500, mx: "auto", color: "grey.300" }}>
@@ -409,7 +403,6 @@ export function HomepageClient() {
                 fontSize: "1rem",
                 backgroundColor: "grey.800",
                 color: "white",
-                "&::placeholder": { color: "grey.500" },
               }}
             />
           </Box>
@@ -431,7 +424,7 @@ function SkeletonCategoryGrid() {
   return (
     <Grid container spacing={2}>
       {Array.from({ length: 8 }).map((_, i) => (
-        <Grid item xs={6} sm={4} md={3} lg={2} key={i}>
+        <Grid size={{ xs: 6, sm: 4, md: 3, lg: 2 }} key={i}>
           <Card sx={{ height: "100%", textAlign: "center", p: 3 }}>
             <Skeleton variant="circular" width={80} height={80} sx={{ mx: "auto", mb: 2 }} />
             <Skeleton variant="text" width="60%" sx={{ mx: "auto" }} />

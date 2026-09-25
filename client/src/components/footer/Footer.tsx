@@ -6,36 +6,17 @@ import {
   Grid,
   Box,
   Typography,
-  Divider,
   TextField,
   Button,
   IconButton,
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
-import {
-  Facebook as FacebookIcon,
-  Twitter as TwitterIcon,
-  Instagram as InstagramIcon,
-  YouTube as YouTubeIcon,
-  Email as EmailIcon,
-  Lock as LockIcon,
-  LocalShipping as TruckIcon,
-  Support as SupportIcon,
-  Verified as VerifiedIcon,
-} from "@mui/icons-material";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { Icons } from "@/lib/icons";
+
+const { Facebook, Instagram, Email, Lock, LocalShipping: TruckIcon, SupportAgent: SupportIcon, VerifiedUser: VerifiedIcon } = Icons;
 import toast from "react-hot-toast";
 import { APP_CONFIG } from "@/constants/app-config";
-
-const newsletterSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  marketing: z.boolean().optional(),
-});
-
-type NewsletterFormData = z.infer<typeof newsletterSchema>;
 
 const footerLinks = {
   shop: [
@@ -81,50 +62,55 @@ const paymentMethods = [
 ];
 
 const trustBadges = [
-  { icon: LockIcon, label: "Secure Checkout", description: "SSL encrypted payments" },
+  { icon: Lock, label: "Secure Checkout", description: "SSL encrypted payments" },
   { icon: TruckIcon, label: "Free Shipping", description: "On orders over $50" },
   { icon: SupportIcon, label: "24/7 Support", description: "Dedicated help team" },
   { icon: VerifiedIcon, label: "Easy Returns", description: "30-day return policy" },
 ];
 
 const socialLinks = [
-  { icon: FacebookIcon, href: "https://facebook.com", label: "Facebook" },
-  { icon: TwitterIcon, href: "https://twitter.com", label: "Twitter" },
-  { icon: InstagramIcon, href: "https://instagram.com", label: "Instagram" },
+  { icon: Facebook, href: "https://facebook.com", label: "Facebook" },
+  { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
 ];
 
 export function Footer() {
   const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
+  const [email, setEmail] = useState("");
+  const [marketing, setMarketing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<NewsletterFormData>({
-    resolver: zodResolver(newsletterSchema),
-  });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEmailError("");
 
-  const onSubmit = async (data: NewsletterFormData) => {
+    if (!email || !email.includes("@")) {
+      setEmailError("Invalid email address");
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
-      // In production, call API to subscribe
       await new Promise((resolve) => setTimeout(resolve, 1000));
       toast.success("Thanks for subscribing!");
       setNewsletterSubmitted(true);
-      reset();
+      setEmail("");
+      setMarketing(false);
     } catch {
       toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer role="contentinfo" sx={{ backgroundColor: "background.default" }}>
+    <Box role="contentinfo" sx={{ backgroundColor: "background.default" }}>
       <Box sx={{ py: 4, borderBottom: 1, borderColor: "divider" }}>
         <Grid container spacing={4} sx={{ maxWidth: 1400, mx: "auto", px: 3 }}>
           {trustBadges.map((badge, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 2, py: 1 }}>
                 <Box
                   sx={{
@@ -140,7 +126,7 @@ export function Footer() {
                   <badge.icon fontSize="large" />
                 </Box>
                 <Box>
-                  <Typography variant="subtitle2" fontWeight={600}>
+                  <Typography variant="body1" sx={{ fontWeight: 600 }}>
                     {badge.label}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
@@ -155,18 +141,18 @@ export function Footer() {
 
       <Box sx={{ py: 6, borderBottom: 1, borderColor: "divider" }}>
         <Grid container spacing={6} sx={{ maxWidth: 1400, mx: "auto", px: 3 }}>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
             <Box sx={{ maxWidth: 280 }}>
               <Link href="/" passHref style={{ textDecoration: "none", color: "inherit" }}>
                 <Typography variant="h5" sx={{ fontWeight: 700, letterSpacing: "-0.02em", mb: 2 }}>
                   {APP_CONFIG.name}
                 </Typography>
               </Link>
-              <Typography variant="body2" color="text.secondary" paragraph sx={{ mb: 3 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
                 Your trusted online marketplace for quality products at great prices.
                 Fast shipping, easy returns, and exceptional customer service.
               </Typography>
-              <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 3 }}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 3 }}>
                 © {currentYear} {APP_CONFIG.name}. All rights reserved.
               </Typography>
               <Box sx={{ display: "flex", gap: 1 }}>
@@ -198,8 +184,8 @@ export function Footer() {
             </Box>
           </Grid>
 
-          <Grid item xs={12} sm={6} md={2}>
-            <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+            <Typography variant="body1" sx={{ fontWeight: 600, mb: 2 }}>
               Shop
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -213,8 +199,8 @@ export function Footer() {
             </Box>
           </Grid>
 
-          <Grid item xs={12} sm={6} md={2}>
-            <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+            <Typography variant="body1" sx={{ fontWeight: 600, mb: 2 }}>
               Company
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -228,8 +214,8 @@ export function Footer() {
             </Box>
           </Grid>
 
-          <Grid item xs={12} sm={6} md={2}>
-            <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+            <Typography variant="body1" sx={{ fontWeight: 600, mb: 2 }}>
               Support
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -243,8 +229,8 @@ export function Footer() {
             </Box>
           </Grid>
 
-          <Grid item xs={12} sm={6} md={2}>
-            <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+            <Typography variant="body1" sx={{ fontWeight: 600, mb: 2 }}>
               Legal
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -262,35 +248,31 @@ export function Footer() {
 
       <Box sx={{ py: 4 }}>
         <Grid container spacing={4} sx={{ maxWidth: 1400, mx: "auto", px: 3, alignItems: "center" }}>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             {newsletterSubmitted ? (
               <Box sx={{ textAlign: { xs: "center", md: "left" } }}>
                 <Typography variant="body2" color="success.main" sx={{ display: "flex", alignItems: "center", justifyContent: { xs: "center", md: "flex-start" }, gap: 1 }}>
-                  <EmailIcon fontSize="small" /> Thanks for subscribing! Check your inbox for updates.
+                  <Email fontSize="small" /> Thanks for subscribing! Check your inbox for updates.
                 </Typography>
               </Box>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, alignItems: "stretch" }}>
+              <form onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, alignItems: "stretch" }}>
                 <Box sx={{ flexGrow: 1 }}>
                   <TextField
-                    {...register("email")}
                     label="Email address"
                     placeholder="Enter your email"
                     size="small"
                     fullWidth
                     variant="outlined"
-                    error={!!errors.email}
-                    helperText={errors.email?.message}
-                    InputProps={{
-                      startAdornment: (
-                        <EmailIcon color="action" sx={{ mr: 1, fontSize: 20 }} />
-                      ),
-                    }}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    error={!!emailError}
+                    helperText={emailError}
                   />
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "flex-end", gap: 1.5 }}>
                   <FormControlLabel
-                    control={<Checkbox {...register("marketing")} size="small" />}
+                    control={<Checkbox checked={marketing} onChange={(e) => setMarketing(e.target.checked)} size="small" />}
                     label="Receive marketing emails"
                     labelPlacement="end"
                     sx={{ typography: { variant: "caption", color: "text.secondary" } }}
@@ -309,9 +291,9 @@ export function Footer() {
             )}
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Box sx={{ textAlign: { xs: "center", md: "right" } }}>
-              <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 1 }}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 1 }}>
                 Secure Payment Methods
               </Typography>
               <Box sx={{ display: "flex", justifyContent: { xs: "center", md: "flex-end" }, gap: 1.5, flexWrap: "wrap" }}>
@@ -344,12 +326,12 @@ export function Footer() {
 
       <Box sx={{ py: 2, borderTop: 1, borderColor: "divider" }}>
         <Grid container spacing={2} sx={{ maxWidth: 1400, mx: "auto", px: 3, alignItems: "center" }}>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="caption" color="text.secondary" sx={{ textAlign: { xs: "center", md: "left" } }}>
               Made with care for customers everywhere.
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Box sx={{ display: "flex", justifyContent: { xs: "center", md: "flex-end" }, gap: 2, flexWrap: "wrap" }}>
               {footerLinks.legal.slice(0, 3).map((link) => (
                 <Link key={link.href} href={link.href} passHref style={{ textDecoration: "none", color: "inherit" }}>
@@ -362,7 +344,7 @@ export function Footer() {
           </Grid>
         </Grid>
       </Box>
-    </footer>
+    </Box>
   );
 }
 

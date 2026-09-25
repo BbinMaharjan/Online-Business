@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { Grid, Skeleton, Box, Typography, Pagination, useMediaQuery, useTheme } from "@mui/material";
+import { Grid, Skeleton, Box, Pagination, useMediaQuery, useTheme, Button } from "@mui/material";
 import { ProductCard } from "./ProductCard";
 import { SkeletonProductCard } from "@/components/loading/SkeletonProductCard";
 import { EmptyStateProducts } from "@/components/common/EmptyStateProducts";
@@ -51,7 +50,7 @@ export function ProductGrid({
     return (
       <Grid container spacing={2}>
         {Array.from({ length: skeletonCount }).map((_, i) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={`skeleton-${i}`}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={`skeleton-${i}`}>
             <SkeletonProductCard />
           </Grid>
         ))}
@@ -67,7 +66,7 @@ export function ProductGrid({
     <Box>
       <Grid container spacing={2}>
         {products.map((product) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} xl={Math.floor(12 / cols)} key={product._id}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: Math.floor(12 / cols) }} key={product._id}>
             <ProductCard product={product} variant={variant} />
           </Grid>
         ))}

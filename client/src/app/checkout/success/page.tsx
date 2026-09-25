@@ -1,10 +1,13 @@
 "use client";
 
-import { Container, Box, Typography, Alert, Button, LinearProgress, Paper } from "@mui/material";
+import { Container, Box, Typography, Alert, Button, LinearProgress, Paper, Divider } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useOrder } from "@/services/api/orders";
-import { CheckCircle, LocalShipping, CreditCard, CalendarToday, Person } from "@mui/icons-material";
+import { Icons } from "@/lib/icons";
+
+const { CheckCircle } = Icons;
 import { formatPrice } from "@/lib/utils";
+import Link from "next/link";
 
 export default function CheckoutSuccessPage() {
   const router = useRouter();
@@ -33,9 +36,9 @@ export default function CheckoutSuccessPage() {
           <Alert severity="error" sx={{ mb: 3 }}>
             Order not found. Please check your order history in your account.
           </Alert>
-          <Button variant="contained" component="a" href="/account/orders">
-            View My Orders
-          </Button>
+          <Link href="/account/orders" passHref>
+            <Button variant="contained">View My Orders</Button>
+          </Link>
         </Box>
       </Container>
     );
@@ -106,7 +109,7 @@ export default function CheckoutSuccessPage() {
                   <Typography variant="body1">{item.productName}</Typography>
                   <Typography variant="body2" color="text.secondary">Qty: {item.quantity} × {formatPrice(item.price)}</Typography>
                 </Box>
-                <Typography variant="body1" fontWeight={600}>{formatPrice(item.subtotal)}</Typography>
+                <Typography variant="body1" sx={{ fontWeight: 600 }}>{formatPrice(item.subtotal)}</Typography>
               </Box>
             ))}
           </Box>
@@ -146,12 +149,12 @@ export default function CheckoutSuccessPage() {
         </Paper>
 
         <Box sx={{ display: "flex", gap: 2, justifyContent: "center", flexWrap: "wrap" }}>
-          <Button variant="contained" size="large" component="a" href={`/account/orders/${order._id}`}>
-            View Order Details
-          </Button>
-          <Button variant="outlined" size="large" component="a" href="/products">
-            Continue Shopping
-          </Button>
+          <Link href={`/account/orders/${order._id}`} passHref>
+            <Button variant="contained" size="large">View Order Details</Button>
+          </Link>
+          <Link href="/products" passHref>
+            <Button variant="outlined" size="large">Continue Shopping</Button>
+          </Link>
         </Box>
 
         <Typography variant="body2" color="text.secondary" sx={{ mt: 4, maxWidth: 600, mx: "auto" }}>

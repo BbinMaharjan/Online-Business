@@ -1,4 +1,4 @@
-import { Container, Box, Typography, LinearProgress, Skeleton, Grid } from "@mui/material";
+import { Container, Box, Skeleton, Grid } from "@mui/material";
 
 export default function Loading() {
   return (
@@ -13,15 +13,15 @@ export default function Loading() {
         {/* Content Skeleton */}
         <Grid container spacing={3}>
           {/* Sidebar/Filter Skeleton */}
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <Skeleton variant="rectangular" height={400} width="100%" sx={{ borderRadius: 2 }} />
           </Grid>
 
           {/* Main Content Skeleton */}
-          <Grid item xs={12} md={9}>
+          <Grid size={{ xs: 12, md: 9 }}>
             <Grid container spacing={3}>
               {Array.from({ length: 8 }).map((_, i) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={i}>
                   <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
                     <Skeleton variant="rectangular" height={200} width="100%" sx={{ mb: 2, borderRadius: 1 }} />
                     <Skeleton variant="text" width="80%" sx={{ mb: 1 }} />

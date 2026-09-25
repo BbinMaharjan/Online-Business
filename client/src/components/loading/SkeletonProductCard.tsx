@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { Box, Skeleton, Card, CardContent, Grid } from "@mui/material";
+import { Box, Skeleton, Card, CardContent, Stack, Divider, Grid } from "@mui/material";
 
 export function SkeletonProductCard({ variant = "default" }: { variant?: "default" | "compact" }) {
   if (variant === "compact") {
@@ -27,11 +26,11 @@ export function SkeletonProductCard({ variant = "default" }: { variant?: "defaul
         <Skeleton variant="text" width="40%" />
         <Skeleton variant="text" width="60%" sx={{ mt: 1, height: 24 }} />
         <Skeleton variant="text" width="80%" sx={{ mt: 1, height: 24 }} />
-        <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
+        <Stack direction="row" spacing={1} sx={{ mt: 1, alignItems: "center" }}>
           <Skeleton variant="circular" width={60} height={20} />
           <Skeleton variant="text" width="40%" />
         </Stack>
-        <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1.5 }}>
+        <Stack direction="row" spacing={1} sx={{ mt: 1.5, alignItems: "center" }}>
           <Skeleton variant="text" width="35%" height={28} />
           <Skeleton variant="text" width="30%" height={20} />
         </Stack>
@@ -47,7 +46,7 @@ export function SkeletonProductGrid({ count = 8, columns = 4 }: { count?: number
   return (
     <Grid container spacing={2}>
       {Array.from({ length: count }).map((_, i) => (
-        <Grid item xs={12} sm={6} md={4} lg={3} xl={Math.floor(12 / columns)} key={`skeleton-${i}`}>
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: Math.floor(12 / columns) }} key={`skeleton-${i}`}>
           <SkeletonProductCard />
         </Grid>
       ))}
@@ -60,7 +59,7 @@ export function SkeletonProductDetail() {
     <Box>
       <Box sx={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
         <Box sx={{ flex: "1 1 400px", maxWidth: "100%" }}>
-          <Skeleton variant="rectangular" width="100%" aspectRatio={1} sx={{ borderRadius: 2, mb: 2 }} />
+          <Skeleton variant="rectangular" width="100%" height="400" sx={{ borderRadius: 2, mb: 2 }} />
           <Box sx={{ display: "flex", gap: 1, overflowX: "auto", pb: 1 }}>
             {Array.from({ length: 5 }).map((_, i) => (
               <Skeleton key={i} variant="rectangular" width={90} height={90} sx={{ flexShrink: 0, borderRadius: 1 }} />
@@ -71,7 +70,7 @@ export function SkeletonProductDetail() {
           <Skeleton variant="text" width="30%" sx={{ mb: 1 }} />
           <Skeleton variant="text" width="60%" sx={{ mb: 2, height: 32 }} />
           <Skeleton variant="circular" width={80} height={20} sx={{ mb: 2 }} />
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+          <Stack direction="row" spacing={1} sx={{ mb: 2, alignItems: "center" }}>
             <Skeleton variant="text" width="40%" height={36} />
             <Skeleton variant="text" width="30%" height={20} />
           </Stack>
@@ -98,8 +97,8 @@ export function SkeletonCart() {
             <Skeleton variant="text" width="50%" />
             <Skeleton variant="text" width="30%" />
             <Stack direction="row" spacing={2}>
-              <Skeleton variant="text" width="60" height={20} />
-              <Skeleton variant="text" width="80" height={20} />
+              <Skeleton variant="text" width={60} height={20} />
+              <Skeleton variant="text" width={80} height={20} />
             </Stack>
           </Box>
         </Box>
@@ -123,7 +122,7 @@ export function SkeletonCategoryGrid() {
   return (
     <Grid container spacing={3}>
       {Array.from({ length: 8 }).map((_, i) => (
-        <Grid item xs={12} sm={6} md={3} key={i}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={i}>
           <Box sx={{ p: 3, borderRadius: 2, border: 1, borderColor: "divider", textAlign: "center" }}>
             <Skeleton variant="circular" width={80} height={80} sx={{ mx: "auto", mb: 2 }} />
             <Skeleton variant="text" width="60%" sx={{ mx: "auto" }} />

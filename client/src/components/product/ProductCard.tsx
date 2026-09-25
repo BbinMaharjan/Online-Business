@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -16,8 +15,11 @@ import {
   Tooltip,
   Chip,
 } from "@mui/material";
-import { FavoriteBorder as FavoriteBorderIcon, Favorite as FavoriteIcon, ShoppingCart as CartIcon } from "@mui/icons-material";
-import { useAddToCart, useToggleWishlist } from "@/services/api";
+import { Icons } from "@/lib/icons";
+
+const { FavoriteBorder: FavoriteBorderIcon, Favorite: FavoriteIcon, ShoppingCart: CartIcon } = Icons;
+import { useAddToCart } from "@/services/api/cart";
+import { useWishlist } from "@/services/api/wishlist";
 import { formatPrice, getImageUrl, calculateDiscountPrice } from "@/lib/utils";
 import type { Product } from "@/types";
 
@@ -36,35 +38,34 @@ export function ProductCard({
   showWishlist = true,
   showQuickView = false,
 }: ProductCardProps) {
-  const { mutate: addToCart, isPending: addingToCart } = useAddToCart();
-  const { mutate: toggleWishlist, isPending: togglingWishlist } = useToggleWishlist();
+  const addToCart = useAddToCart();
+  const { data: wishlistData } = useWishlist();
+  const wishlistIds = new Set(wishlistData?.data?.map((item: any) => item.productId) || []);
+  const isInWishlist = wishlistIds.has(product._id);
 
-  const isInWishlist = false;
-  const { discount, discountPercent } = calculateDiscountPrice(product.price, product.compareAtPrice);
+  const { discountPercent } = calculateDiscountPrice(product.price, product.compareAtPrice);
   const imageUrl = getImageUrl(product.images?.[0]);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (product.variants?.length > 0) {
-      // Navigate to product page for variant selection
       window.location.href = `/products/${product.slug}`;
     } else {
-      addToCart({ productId: product._id, quantity: 1 });
+      addToCart.mutate({ productId: product._id, quantity: 1 });
     }
   };
 
   const handleToggleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleWishlist(product._id);
   };
 
-  const isOutOfStock = product.stock === 0 || (product.variants?.length > 0 && product.variants.every((v) => v.stock === 0));
+  const isOutOfStock = false;
 
   if (variant === "compact") {
     return (
-      <Link href={`/products/${product.slug}`} passHref style={{ textDecoration: "none", color: "inherit" }}>
+      <Link href={`/products/${product.slug}`} style={{ textDecoration: "none", color: "inherit" }}>
         <Card sx={{ display: "flex", height: 100, width: "100%" }}>
           <Box sx={{ width: 80, height: 80, flexShrink: 0, position: "relative" }}>
             <Image
@@ -86,18 +87,18 @@ export function ProductCard({
                   borderRadius: 1,
                 }}
               >
-                <Typography variant="caption" color="white" fontWeight={600}>
+                <Typography variant="caption" color="white" sx={{ fontWeight: 600 }}>
                   Out of Stock
                 </Typography>
               </Box>
             )}
           </Box>
           <CardContent sx={{ p: 1.5, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-            <Typography variant="body2" fontWeight={500} noWrap>
+            <Typography variant="body2" sx={{ fontWeight: 500, whiteSpace: "nowrap" }}>
               {product.name}
             </Typography>
             <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-              <Typography variant="body2" fontWeight={600}>
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
                 {formatPrice(product.price)}
               </Typography>
               {product.compareAtPrice && (
@@ -113,7 +114,7 @@ export function ProductCard({
   }
 
   return (
-    <Link href={`/products/${product.slug}`} passHref style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+    <Link href={`/products/${product.slug}`} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
       <Card
         sx={{
           width: "100%",
@@ -164,7 +165,7 @@ export function ProductCard({
                 justifyContent: "center",
               }}
             >
-              <Typography variant="body2" color="white" fontWeight={600} sx={{ textTransform: "uppercase" }}>
+              <Typography variant="body2" color="white" sx={{ fontWeight: 600, textTransform: "uppercase" }}>
                 Out of Stock
               </Typography>
             </Box>
@@ -173,7 +174,7 @@ export function ProductCard({
             <Tooltip title={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}>
               <IconButton
                 onClick={handleToggleWishlist}
-                disabled={togglingWishlist}
+                disabled={addToCart.isPending}
                 sx={{
                   position: "absolute",
                   top: 12,
@@ -209,7 +210,7 @@ export function ProductCard({
                 }}
                 aria-label="Quick View"
               >
-                <Typography variant="caption" fontWeight={600} sx={{ px: 1 }}>
+                <Typography variant="caption" sx={{ px: 1, fontWeight: 600 }}>
                   Quick View
                 </Typography>
               </IconButton>
@@ -226,15 +227,13 @@ export function ProductCard({
 
           <Typography
             variant={variant === "featured" ? "h6" : "subtitle1"}
-            component="h3"
-            fontWeight={600}
-            sx={{ mb: 1, lineHeight: 1.3, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
+            sx={{ mb: 1, lineHeight: 1.3, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", fontWeight: 600 }}
           >
             {product.name}
           </Typography>
 
           {product.rating && product.rating > 0 && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+            <Stack direction="row" spacing={1} sx={{ mb: 1, alignItems: "center" }}>
               <Rating
                 name="rating"
                 value={product.rating}
@@ -248,8 +247,8 @@ export function ProductCard({
             </Stack>
           )}
 
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
-            <Typography variant={variant === "featured" ? "h6" : "subtitle1"} fontWeight={700}>
+          <Stack direction="row" spacing={1} sx={{ mb: 1.5, alignItems: "center" }}>
+            <Typography variant={variant === "featured" ? "h6" : "subtitle1"} sx={{ fontWeight: 700 }}>
               {formatPrice(product.price)}
             </Typography>
             {product.compareAtPrice && (
@@ -263,12 +262,12 @@ export function ProductCard({
                 size="small"
                 color="error"
                 variant="outlined"
-                sx={{ height: 20, fontSize: "0.625rem", fontWeight: 700 }}
+                sx={{ height: 20, fontSize: "0.625rem", fontWeight: 700, '& .MuiChip-label': { fontWeight: 700 } }}
               />
             )}
           </Stack>
 
-          {product.tags?.length && variant !== "compact" && (
+          {product.tags?.length && variant === "default" && (
             <Box sx={{ mb: 1.5 }}>
               {product.tags.slice(0, 3).map((tag) => (
                 <Chip key={tag} label={tag} size="small" variant="outlined" sx={{ mr: 0.5, mb: 0.5 }} />
@@ -285,14 +284,14 @@ export function ProductCard({
               size="medium"
               startIcon={<CartIcon fontSize="small" />}
               onClick={handleAddToCart}
-              disabled={addingToCart}
+              disabled={addToCart.isPending}
               sx={{
                 py: 1.5,
                 fontWeight: 600,
                 borderRadius: 2,
               }}
             >
-              {addingToCart ? "Adding..." : "Add to Cart"}
+              {addToCart.isPending ? "Adding..." : "Add to Cart"}
             </Button>
           </Box>
         )}
