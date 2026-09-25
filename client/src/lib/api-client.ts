@@ -163,6 +163,9 @@ export const apiClient = {
 
     refund: (id: string, reason?: string) =>
       api.post<ApiResponse<Order>>(API_ENDPOINTS.ORDERS.REFUND(id), { reason }).then((res) => res.data),
+
+    getShippingMethods: () =>
+      api.get<ApiResponse<ShippingMethod[]>>(API_ENDPOINTS.ORDERS.SHIPPING_METHODS).then((res) => res.data),
   },
 
   payments: {
@@ -187,6 +190,9 @@ export const apiClient = {
   reviews: {
     list: (productId: string, params?: { page?: number; limit?: number }) =>
       api.get<PaginatedResponse<Review>>(API_ENDPOINTS.REVIEWS.LIST, { params: { productId, ...params } }).then((res) => res.data),
+
+    listUserReviews: (params?: { page?: number; limit?: number }) =>
+      api.get<PaginatedResponse<Review>>(API_ENDPOINTS.REVIEWS.LIST, { params }).then((res) => res.data),
 
     create: (productId: string, data: { rating: number; title?: string; comment: string; images?: string[] }) =>
       api.post<ApiResponse<Review>>(API_ENDPOINTS.REVIEWS.CREATE, { productId, ...data }).then((res) => res.data),

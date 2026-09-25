@@ -1,29 +1,35 @@
-import { Container, Box, Typography, Grid } from "@mui/material";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { selectAuthUser } from "../../features/auth/authSlice";
+"use client";
 
-const AccountPage = () => {
-  const navigate = useNavigate();
-  const user = useSelector(selectAuthUser);
+import { Container, Box, Typography, Grid, Link } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/services/api/auth";
+import { useEffect } from "react";
+
+export default function AccountPage() {
+  const router = useRouter();
+  const { data: userData, isLoading } = useUser();
+  const user = userData?.data;
 
   useEffect(() => {
-    if (!user) {
-      navigate("/login", { replace: true });
+    if (!isLoading && !user) {
+      router.push("/login");
     }
-  }, [user, navigate]);
+  }, [user, isLoading, router]);
 
-  if (!user) {
+  if (isLoading) {
     return (
-      <Container sx={{ py: 8, px: 1, maxWidth: 600, margin: "0 auto" }}>
+      <Container sx={{ py: 8, px: 1, maxWidth: 800, margin: "0 auto" }}>
         <Box sx={{ textAlign: "center" }}>
           <Typography variant="h5" sx={{ mb: 2 }}>
-            Redirecting to login...
+            Loading...
           </Typography>
         </Box>
       </Container>
     );
+  }
+
+  if (!user) {
+    return null;
   }
 
   return (
@@ -46,11 +52,12 @@ const AccountPage = () => {
               borderColor: "divider",
               borderRadius: 2,
               height: "100%",
-              cursor: "pointer",
               transition: "box-shadow 0.2s",
               "&:hover": { boxShadow: 3 },
             }}
-            onClick={() => navigate("/account/orders")}
+            component={Link}
+            href="/account/orders"
+            passHref
           >
             <Typography variant="h6" sx={{ mb: 2 }}>
               My Orders
@@ -69,11 +76,12 @@ const AccountPage = () => {
               borderColor: "divider",
               borderRadius: 2,
               height: "100%",
-              cursor: "pointer",
               transition: "box-shadow 0.2s",
               "&:hover": { boxShadow: 3 },
             }}
-            onClick={() => navigate("/account/profile")}
+            component={Link}
+            href="/account/profile"
+            passHref
           >
             <Typography variant="h6" sx={{ mb: 2 }}>
               Profile Settings
@@ -92,11 +100,12 @@ const AccountPage = () => {
               borderColor: "divider",
               borderRadius: 2,
               height: "100%",
-              cursor: "pointer",
               transition: "box-shadow 0.2s",
               "&:hover": { boxShadow: 3 },
             }}
-            onClick={() => navigate("/account/addresses")}
+            component={Link}
+            href="/account/addresses"
+            passHref
           >
             <Typography variant="h6" sx={{ mb: 2 }}>
               Addresses
@@ -115,17 +124,42 @@ const AccountPage = () => {
               borderColor: "divider",
               borderRadius: 2,
               height: "100%",
-              cursor: "pointer",
               transition: "box-shadow 0.2s",
               "&:hover": { boxShadow: 3 },
             }}
-            onClick={() => navigate("/account/wishlist")}
+            component={Link}
+            href="/account/wishlist"
+            passHref
           >
             <Typography variant="h6" sx={{ mb: 2 }}>
               Wishlist
             </Typography>
             <Typography variant="body2" color="text.secondary" paragraph>
               View and manage your saved items
+            </Typography>
+          </Box>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Box
+            sx={{
+              p: 3,
+              border: "1px solid",
+              borderColor: "divider",
+              borderRadius: 2,
+              height: "100%",
+              transition: "box-shadow 0.2s",
+              "&:hover": { boxShadow: 3 },
+            }}
+            component={Link}
+            href="/account/reviews"
+            passHref
+          >
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              My Reviews
+            </Typography>
+            <Typography variant="body2" color="text.secondary" paragraph>
+              View and manage your product reviews
             </Typography>
           </Box>
         </Grid>
@@ -160,6 +194,4 @@ const AccountPage = () => {
       </Box>
     </Container>
   );
-};
-
-export default AccountPage;
+}

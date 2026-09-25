@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
-import type { Order, PaginatedResponse } from "@/types";
+import type { Order, PaginatedResponse, ShippingMethod } from "@/types";
+import { API_ENDPOINTS } from "@/constants/api-endpoints";
 import toast from "react-hot-toast";
 
 const ORDER_KEYS = {
@@ -9,6 +10,7 @@ const ORDER_KEYS = {
   list: (params?: { page?: number; limit?: number; status?: string }) => [...ORDER_KEYS.lists(), params] as const,
   details: () => [...ORDER_KEYS.all, "detail"] as const,
   detail: (id: string) => [...ORDER_KEYS.details(), id] as const,
+  shippingMethods: () => [...ORDER_KEYS.all, "shipping-methods"] as const,
 };
 
 export function useOrders(params?: { page?: number; limit?: number; status?: string }) {
@@ -25,6 +27,14 @@ export function useOrder(id: string) {
     queryFn: () => apiClient.orders.getById(id),
     enabled: !!id,
     staleTime: 30 * 1000,
+  });
+}
+
+export function useShippingMethods() {
+  return useQuery({
+    queryKey: ORDER_KEYS.shippingMethods(),
+    queryFn: () => apiClient.orders.getShippingMethods(),
+    staleTime: 10 * 60 * 1000,
   });
 }
 

@@ -1,19 +1,32 @@
-import { Container, Box, Typography, TextField, Button, Stack, Grid } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+"use client";
 
-const ForgotPasswordPage = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+import { Container, Box, Typography, TextField, Button, Grid, Alert } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { useForgotPassword } from "@/services/api/auth";
+import { useState } from "react";
+
+export default function ForgotPasswordPage() {
+  const router = useRouter();
+  const forgotPasswordMutation = useForgotPassword();
 
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement forgot password flow
-    // dispatch(forgotPassword({ email }));
-    alert("Password reset instructions sent to your email");
-    navigate("/login");
+    setError("");
+    forgotPasswordMutation.mutate(
+      email,
+      {
+        onSuccess: () => {
+          setSuccess(true);
+        },
+        onError: (err: Error) => {
+          setError(err.message || "Failed to send reset email");
+        },
+      }
+    );
   };
 
   return (
@@ -28,32 +41,48 @@ const ForgotPasswordPage = () => {
             Enter your email address to receive password reset instructions
           </Typography>
 
-          <Box sx={{ mb: 3 }}>
-            <form onSubmit={handleSubmit} sx={{ width: "100%" }}>
-              <TextField
-                label="Email"
-                type="email"
-                variant="outlined"
-                fullWidth
-                sx={{ mb: 2 }}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                sx={{ mb: 3, marginTop: 1 }}
-              >
-                Send Reset Link
-              </Button>
-            </form>
-          </Box>
+          {error && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {error}
+            </Alert>
+          )}
 
-          <Box sx={{ textAlign: "center" mt: 4 }}>
+          {success && (
+            <Alert severity="success" sx={{ mb: 3 }}>
+              Password reset instructions sent to your email. Check your inbox.
+            </Alert>
+          )}
+
+          {!success && (
+            <Box sx={{ mb: 3 }}>
+              <form onSubmit={handleSubmit} sx={{ width: "100%" }}>
+                <TextField
+                  label="Email"
+                  type="email"
+                  variant="outlined"
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  disabled={forgotPasswordMutation.isPending}
+                  sx={{ mb: 3, marginTop: 1 }}
+                >
+                  {forgotPasswordMutation.isPending ? "Sending..." : "Send Reset Link"}
+                </Button>
+              </form>
+            </Box>
+          )}
+
+          <Box sx={{ textAlign: "center", mt: 4 }}>
             <Typography variant="body2" color="text.secondary">
               Remember your password?{" "}
-              <a href="/login" style={{ color: "#1890ff", textDecoration: "underline" }}>
+              <a href="/login" style={{ color: "primary.main", textDecoration: "underline" }}>
                 Login
               </a>
             </Typography>
@@ -62,6 +91,4 @@ const ForgotPasswordPage = () => {
       </Grid>
     </Container>
   );
-};
-
-export default ForgotPasswordPage;
+}

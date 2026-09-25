@@ -20,7 +20,7 @@ import {
   YouTube as YouTubeIcon,
   Email as EmailIcon,
   Lock as LockIcon,
-  Truck as TruckIcon,
+  LocalShipping as TruckIcon,
   Support as SupportIcon,
   Verified as VerifiedIcon,
 } from "@mui/icons-material";
@@ -91,7 +91,6 @@ const socialLinks = [
   { icon: FacebookIcon, href: "https://facebook.com", label: "Facebook" },
   { icon: TwitterIcon, href: "https://twitter.com", label: "Twitter" },
   { icon: InstagramIcon, href: "https://instagram.com", label: "Instagram" },
-  { icon: YouTubeIcon, href: "https://youtube.com", label: "YouTube" },
 ];
 
 export function Footer() {

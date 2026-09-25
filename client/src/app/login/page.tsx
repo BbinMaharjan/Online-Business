@@ -1,32 +1,42 @@
-import { Container, Box, Typography, TextField, Button, Grid } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../features/auth/authSlice";
+"use client";
+
+import { Container, Box, Typography, TextField, Button, Grid, Alert } from "@mui/material";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useLogin } from "@/services/api/auth";
+import { useUser } from "@/services/api/auth";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { selectAuthUser } from "../../features/auth/authSlice";
 
-const LoginPage = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const user = useSelector(selectAuthUser);
-
-  // If already logged in, redirect to account dashboard
-  useEffect(() => {
-    if (user) {
-      navigate("/account", { replace: true });
-    }
-  }, [user]);
+export default function LoginPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/account";
+  const { data: userData } = useUser();
+  const loginMutation = useLogin();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (userData?.data) {
+      router.push(redirect);
+    }
+  }, [userData, redirect, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(login({ email, password })).unwrap()
-      .then(() => navigate("/account"))
-      .catch((err: any) => {
-        // Error handled in slice
-      });
+    setError("");
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: () => {
+          router.push(redirect);
+        },
+        onError: (err: Error) => {
+          setError(err.message || "Login failed");
+        },
+      }
+    );
   };
 
   return (
@@ -41,6 +51,12 @@ const LoginPage = () => {
             Sign in to your account
           </Typography>
 
+          {error && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {error}
+            </Alert>
+          )}
+
           <Box sx={{ mb: 3 }}>
             <form onSubmit={handleSubmit} sx={{ width: "100%" }}>
               <TextField
@@ -51,6 +67,7 @@ const LoginPage = () => {
                 sx={{ mb: 2 }}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
               />
               <TextField
                 label="Password"
@@ -61,14 +78,16 @@ const LoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 obscureText
+                required
               />
               <Button
                 type="submit"
                 variant="contained"
                 fullWidth
+                disabled={loginMutation.isPending}
                 sx={{ mb: 3, marginTop: 1 }}
               >
-                Login
+                {loginMutation.isPending ? "Logging in..." : "Login"}
               </Button>
             </form>
           </Box>
@@ -76,7 +95,7 @@ const LoginPage = () => {
           <Box sx={{ textAlign: "center" }}>
             <Typography variant="body2" color="text.secondary">
               Don't have an account?{" "}
-              <a href="/register" style={{ color: "#1890ff", textDecoration: "underline" }}>
+              <a href="/register" style={{ color: "primary.main", textDecoration: "underline" }}>
                 Register
               </a>
             </Typography>
@@ -85,6 +104,4 @@ const LoginPage = () => {
       </Grid>
     </Container>
   );
-};
-
-export default LoginPage;
+}

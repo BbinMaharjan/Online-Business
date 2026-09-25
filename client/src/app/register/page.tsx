@@ -1,23 +1,33 @@
-import { Container, Box, Typography, TextField, Button, Stack, Grid } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { register } from "../../features/auth/authSlice";
-import { useNavigate } from "react-router-dom";
+"use client";
 
-const RegisterPage = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+import { Container, Box, Typography, TextField, Button, Grid, Alert } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { useRegister } from "@/services/api/auth";
+import { useState } from "react";
+
+export default function RegisterPage() {
+  const router = useRouter();
+  const registerMutation = useRegister();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(register({ name, email, password })).unwrap()
-      .then(() => navigate("/login"))
-      .catch((err: any) => {
-        // Error handled in slice
-      });
+    setError("");
+    registerMutation.mutate(
+      { firstName: name, lastName: "", email, password },
+      {
+        onSuccess: () => {
+          router.push("/login");
+        },
+        onError: (err: Error) => {
+          setError(err.message || "Registration failed");
+        },
+      }
+    );
   };
 
   return (
@@ -32,6 +42,12 @@ const RegisterPage = () => {
             Create your account
           </Typography>
 
+          {error && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {error}
+            </Alert>
+          )}
+
           <Box sx={{ mb: 3 }}>
             <form onSubmit={handleSubmit} sx={{ width: "100%" }}>
               <TextField
@@ -41,6 +57,7 @@ const RegisterPage = () => {
                 sx={{ mb: 2 }}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                required
               />
               <TextField
                 label="Email"
@@ -50,6 +67,7 @@ const RegisterPage = () => {
                 sx={{ mb: 2 }}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
               />
               <TextField
                 label="Password"
@@ -60,14 +78,16 @@ const RegisterPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 obscureText
+                required
               />
               <Button
                 type="submit"
                 variant="contained"
                 fullWidth
+                disabled={registerMutation.isPending}
                 sx={{ mb: 3, marginTop: 1 }}
               >
-                Register
+                {registerMutation.isPending ? "Creating account..." : "Register"}
               </Button>
             </form>
           </Box>
@@ -75,7 +95,7 @@ const RegisterPage = () => {
           <Box sx={{ textAlign: "center" }}>
             <Typography variant="body2" color="text.secondary">
               Already have an account?{" "}
-              <a href="/login" style={{ color: "#1890ff", textDecoration: "underline" }}>
+              <a href="/login" style={{ color: "primary.main", textDecoration: "underline" }}>
                 Login
               </a>
             </Typography>
@@ -84,6 +104,4 @@ const RegisterPage = () => {
       </Grid>
     </Container>
   );
-};
-
-export default RegisterPage;
+}

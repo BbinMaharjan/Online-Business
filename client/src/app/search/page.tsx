@@ -1,23 +1,17 @@
-import { Container, Box, Typography, LinearProgress } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { fetchSearchResults } from "../../features/search/searchSlice";
-import { useDispatch } from "react-redux";
-import SearchBox from "../../components/navigation/SearchBox";
-import EmptyState from "../../components/common/EmptyStateProducts";
-import ProductGrid from "../../components/product/ProductGrid";
+"use client";
 
-const SearchPage = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+import { Container, Box, Typography, LinearProgress } from "@mui/material";
+import { useSearchParams } from "next/navigation";
+import { useSearchProducts } from "@/services/api/search";
+import SearchBox from "@/components/navigation/SearchBox";
+import EmptyState from "@/components/common/EmptyStateProducts";
+import ProductGrid from "@/components/product/ProductGrid";
+
+export default function SearchPage() {
+  const searchParams = useSearchParams();
   const query = searchParams.get("q") || "";
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["searchResults", query],
-    enabled: query.length > 0,
-    queryFn: () => dispatch(fetchSearchResults({ query })).unwrap?.unwrap(),
-  });
+  const { data, isLoading, isError } = useSearchProducts(query, { enabled: query.length > 0 });
 
   if (isLoading) {
     return (
@@ -48,13 +42,11 @@ const SearchPage = () => {
         </Typography>
       </Box>
 
-      {data?.data?.length > 0 ? (
-        <ProductGrid limit={10} />
+      {data?.data?.data?.length ? (
+        <ProductGrid products={data.data.data} />
       ) : (
         <EmptyState />
       )}
     </Container>
   );
-};
-
-export default SearchPage;
+}

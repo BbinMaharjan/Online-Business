@@ -1,23 +1,15 @@
+"use client";
+
 import { Container, Box, Typography, LinearProgress, Grid } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
-import { fetchCategories } from "../../features/categories/categoriesSlice";
-import { useDispatch } from "react-redux";
-import CategoryCard from "../../components/category/CategoryCard";
+import { useCategories } from "@/services/api/categories";
+import CategoryCard from "@/components/category/CategoryCard";
 
 interface CategoryCardProps {
   category: any;
 }
 
-const CategoriesPage = () => {
-  const dispatch = useDispatch();
-  const { parentId } = useParams();
-
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["categories", parentId],
-    enabled: !!parentId,
-    queryFn: () => dispatch(fetchCategories({ parentId: parentId as string })).unwrap?.unwrap(),
-  });
+export default function CategoriesPage() {
+  const { data, isLoading, isError } = useCategories();
 
   if (isLoading) return <LinearProgress />;
 
@@ -29,7 +21,7 @@ const CategoriesPage = () => {
             Categories not found
           </Typography>
         </Box>
-      </Projection>
+      </Container>
     );
   }
 
@@ -41,7 +33,7 @@ const CategoriesPage = () => {
         </Typography>
       </Box>
 
-      <Grid container sx={{ pt: 2 }}>
+      <Grid container spacing={3} sx={{ pt: 2 }}>
         {data.data.map((category: any) => (
           <Grid item xs={12} md={6} lg={4} key={category._id}>
             <CategoryCard category={category} />
@@ -50,6 +42,4 @@ const CategoriesPage = () => {
       </Grid>
     </Container>
   );
-};
-
-export default CategoriesPage;
+}

@@ -1,16 +1,16 @@
+"use client";
+
 import { Container, Box, Typography, LinearProgress, Grid } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
-import { fetchCategories } from "../../features/categories/categoriesSlice";
-import { useDispatch } from "react-redux";
-import CategoryCard from "../../components/category/CategoryCard";
-import ProductGrid from "../../components/product/ProductGrid";
+import { notFound, useParams } from "next/navigation";
+import { useCategories } from "@/services/api/categories";
+import { useProducts } from "@/services/api/products";
+import ProductGrid from "@/components/product/ProductGrid";
 
 interface CategoryCardProps {
   category: any;
 }
 
-const CategoryCard = ({ category }: CategoryCardProps) => {
+const CategoryCardComponent = ({ category }: CategoryCardProps) => {
   return (
     <Grid item xs={12} md={6} lg={4} sx={{ pb: 2 }}>
       <Box sx={{ p: 3, borderRadius: 2, background: "#fff", transition: "transform 0.2s" }}>
@@ -25,49 +25,43 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
   );
 };
 
-const CategoriesPage = () => {
-  const dispatch = useDispatch();
-  const { slug } = useParams();
+export default function CategoriesPage() {
+  const params = useParams();
+  const slug = params.slug as string;
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["categories", slug],
-    enabled: !!slug,
-    queryFn: () => dispatch(fetchCategories({ slug })).unwrap?.unwrap(),
+  const { data: categoryData, isLoading: categoryLoading, isError: categoryError } = useCategories(slug);
+  const { data: productsData, isLoading: productsLoading } = useProducts({
+    category: slug,
+    limit: 10,
   });
 
-  if (isLoading) return <LinearProgress />;
+  if (categoryLoading) return <LinearProgress />;
 
-  if (isError || !data?.data) {
-    return (
-      <Container>
-        <Box sx={{ py: 8 }}>
-          <Typography variant="h4" sx={{ textAlign: "center" }}>
-            Category not found
-          </Typography>
-        </Box>
-      </Container>
-    );
+  if (categoryError || !categoryData?.data) {
+    notFound();
   }
+
+  const category = categoryData.data;
 
   return (
     <Container>
       <Box sx={{ py: 4 }}>
         <Typography variant="h4" sx={{ mb: 4, display: "inline-block" }}>
-          {data.data.name}
+          {category.name}
         </Typography>
       </Box>
 
       <Grid container sx={{ pt: 2 }}>
-        {data.data.products?.length > 0 ? (
-          <ProductGrid limit={10} />
+        {productsLoading ? (
+          <ProductGrid products={[]} loading={true} />
+        ) : productsData?.data?.data?.length ? (
+          <ProductGrid products={productsData.data.data} />
         ) : (
-          <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", py: 8 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", py: 8, width: "100%" }}>
             No products in this category
           </Typography>
         )}
       </Grid>
     </Container>
   );
-};
-
-export default CategoriesPage;
+}

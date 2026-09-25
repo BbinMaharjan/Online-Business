@@ -1,30 +1,23 @@
-import { Container, Box, LinearProgress, Skeleton, Alert } from "@mui/material";
-import { notFound, useParams, useAir } from "next-navigation";
-import { useQuery } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
-import { fetchProductBySlug } from "../../features/products/productsSlice";
-import { useEffect, useState } from "react";
-import { generateProductSeo } from "../../lib/seo";
-import ProductImages from "../../components/product/ProductImages";
-import ProductVariantSelector from "../../components/product/ProductVariantSelector";
-import ProductDetails from "../../components/product/ProductDetails";
-import EmptyState from "../../components/common/EmptyStateProducts";
+"use client";
 
-const ProductDetailsPage = () => {
-  const { slug } = useParams();
-  const dispatch = useDispatch();
+import { Container, Box, LinearProgress, Alert, Typography, Button } from "@mui/material";
+import { notFound, useParams } from "next/navigation";
+import { useProductBySlug } from "@/services/api/products";
+import { generateProductSeo } from "@/lib/seo";
+import ProductImages from "@/components/product/ProductImages";
+import ProductVariantSelector from "@/components/product/ProductVariantSelector";
+import ProductDetails from "@/components/product/ProductDetails";
+import { useEffect } from "react";
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["product", slug],
-    enabled: !!slug,
-    queryFn: () => dispatch(fetchProductBySlug({ slug })).unwrap?.unwrap(),
-  });
+export default function ProductDetailsPage() {
+  const params = useParams();
+  const slug = params.slug as string;
+
+  const { data, isLoading, isError } = useProductBySlug(slug);
 
   useEffect(() => {
     if (data?.data) {
-      // Generate SEO metadata
       const seo = generateProductSeo(data.data);
-      // @ts-ignore - document.title assignment
       document.title = seo.title;
     }
   }, [data]);
@@ -38,9 +31,9 @@ const ProductDetailsPage = () => {
     <Container>
       <Box sx={{ py: 4 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
-          <h1 style={{ fontSize: 2, fontWeight: 700 }}>
+          <Typography variant="h4" fontWeight={700}>
             {product.name}
-          </h1>
+          </Typography>
           <Alert severity="info">
             SKU: {product.sku}
           </Alert>
@@ -52,7 +45,7 @@ const ProductDetailsPage = () => {
 
         <ProductDetails product={product} />
 
-        <Box sx={{ mt: 4, pt: 4, borderTop: "1px solid #e0e0e0" }}>
+        <Box sx={{ mt: 4, pt: 4, borderTop: "1px solid", borderColor: "divider" }}>
           <Typography variant="h6" sx={{ mr: 2 }}>
             Price: ${product.price.toFixed(2)}
           </Typography>
@@ -62,7 +55,7 @@ const ProductDetailsPage = () => {
             </Typography>
           )}
           {product.stock > 0 && (
-            <Button variant="contained" sx={{ width: "100", my: 2 }}>
+            <Button variant="contained" size="large" sx={{ mt: 2, minWidth: 200 }}>
               Add to cart
             </Button>
           )}
@@ -75,6 +68,4 @@ const ProductDetailsPage = () => {
       </Box>
     </Container>
   );
-};
-
-export default ProductDetailsPage;
+}

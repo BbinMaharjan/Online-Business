@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -14,8 +14,7 @@ import {
   Chip,
   Rating,
   Divider,
-  Carousel,
-  CarouselItem,
+  IconButton,
 } from "@mui/material";
 import {
   ShoppingCart as CartIcon,
@@ -56,6 +55,137 @@ const heroSlides = [
   },
 ];
 
+function HeroCarousel({ slides }: { slides: typeof heroSlides }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState<"left" | "right">("right");
+
+  const goToNext = useCallback(() => {
+    setDirection("right");
+    setCurrentIndex((prev) => (prev + 1) % slides.length);
+  }, [slides.length]);
+
+  const goToPrev = useCallback(() => {
+    setDirection("left");
+    setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
+  }, [slides.length]);
+
+  useEffect(() => {
+    const timer = setInterval(goToNext, 5000);
+    return () => clearInterval(timer);
+  }, [goToNext]);
+
+  return (
+    <Box sx={{ position: "relative", borderRadius: 3, overflow: "hidden" }}>
+      <Box
+        sx={{
+          display: "flex",
+          transition: "transform 0.5s ease-in-out",
+          transform: `translateX(-${currentIndex * 100}%)`,
+        }}
+      >
+        {slides.map((slide, index) => (
+          <Box key={index} sx={{ flexShrink: 0, width: "100%" }}>
+            <Box
+              sx={{
+                position: "relative",
+                height: 400,
+                backgroundColor: "grey.100",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                src={slide.image}
+                alt={slide.title}
+                fill
+                priority={index === 0}
+                sizes="100vw"
+                style={{ objectFit: "cover" }}
+                placeholder="blur"
+                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+              />
+              <Box
+                sx={{
+                  position: "absolute",
+                  inset: 0,
+                  background: "linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)",
+                }}
+              />
+              <Box sx={{ position: "relative", zIndex: 1, px: 4, maxWidth: 600, color: "white" }}>
+                <Typography variant="h3" fontWeight={700} sx={{ mb: 2, lineHeight: 1.2 }}>
+                  {slide.title}
+                </Typography>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 400 }}>
+                  {slide.subtitle}
+                </Typography>
+                <Button
+                  variant="contained"
+                  size="large"
+                  component={Link}
+                  href={slide.href}
+                  passHref
+                  sx={{ px: 4, py: 1.5 }}
+                >
+                  {slide.cta}
+                </Button>
+              </Box>
+            </Box>
+          </Box>
+        ))}
+      </Box>
+      <IconButton
+        onClick={goToPrev}
+        aria-label="Previous slide"
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: 16,
+          transform: "translateY(-50%)",
+          backgroundColor: "rgba(0,0,0,0.5)",
+          color: "white",
+          "&:hover": { backgroundColor: "rgba(0,0,0,0.7)" },
+          zIndex: 1,
+        }}
+      >
+        <KeyboardArrowLeft />
+      </IconButton>
+      <IconButton
+        onClick={goToNext}
+        aria-label="Next slide"
+        sx={{
+          position: "absolute",
+          top: "50%",
+          right: 16,
+          transform: "translateY(-50%)",
+          backgroundColor: "rgba(0,0,0,0.5)",
+          color: "white",
+          "&:hover": { backgroundColor: "rgba(0,0,0,0.7)" },
+          zIndex: 1,
+        }}
+      >
+        <KeyboardArrowRight />
+      </IconButton>
+      <Box sx={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 8, zIndex: 1 }}>
+        {slides.map((_, index) => (
+          <Box
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            sx={{
+              width: 10,
+              height: 10,
+              borderRadius: "50%",
+              backgroundColor: currentIndex === index ? "white" : "rgba(255,255,255,0.5)",
+              cursor: "pointer",
+              transition: "all 0.2s",
+            }}
+          />
+        ))}
+      </Box>
+    </Box>
+  );
+}
+
 const features = [
   { icon: ShippingIcon, title: "Free Shipping", description: "On orders over $50" },
   { icon: VerifiedIcon, title: "Easy Returns", description: "30-day return policy" },
@@ -75,8 +205,6 @@ const categoryIcons: Record<string, React.ReactNode> = {
 };
 
 export function HomepageClient() {
-  const [heroIndex, setHeroIndex] = useState(0);
-
   const { data: featuredProducts, isLoading: productsLoading } = useProducts({
     featured: true,
     limit: 8,
@@ -100,66 +228,7 @@ export function HomepageClient() {
     <Container maxWidth="xl">
       {/* Hero Carousel */}
       <Box sx={{ mb: 6, borderRadius: 3, overflow: "hidden", position: "relative" }}>
-        <Carousel
-          autoPlay
-          interval={5000}
-          showArrows
-          showIndicators={false}
-          selectedIndex={heroIndex}
-          onChangeIndex={setHeroIndex}
-          sx={{ borderRadius: 3 }}
-        >
-          {heroSlides.map((slide, index) => (
-            <CarouselItem key={index}>
-              <Box
-                sx={{
-                  position: "relative",
-                  height: 400,
-                  backgroundColor: "grey.100",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Image
-                  src={slide.image}
-                  alt={slide.title}
-                  fill
-                  priority={index === 0}
-                  sizes="100vw"
-                  style={{ objectFit: "cover" }}
-                  placeholder="blur"
-                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
-                />
-                <Box
-                  sx={{
-                    position: "absolute",
-                    inset: 0,
-                    background: "linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)",
-                  }}
-                />
-                <Box sx={{ position: "relative", zIndex: 1, px: 4, maxWidth: 600, color: "white" }}>
-                  <Typography variant="h3" fontWeight={700} sx={{ mb: 2, lineHeight: 1.2 }}>
-                    {slide.title}
-                  </Typography>
-                  <Typography variant="h6" sx={{ mb: 3, fontWeight: 400 }}>
-                    {slide.subtitle}
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    component={Link}
-                    href={slide.href}
-                    passHref
-                    sx={{ px: 4, py: 1.5 }}
-                  >
-                    {slide.cta}
-                  </Button>
-                </Box>
-              </Box>
-            </CarouselItem>
-          ))}
-        </Carousel>
+        <HeroCarousel slides={heroSlides} />
       </Box>
 
       {/* Features Bar */}

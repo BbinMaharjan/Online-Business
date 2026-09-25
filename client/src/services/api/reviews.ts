@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 const REVIEW_KEYS = {
   all: ["reviews"] as const,
   lists: (productId: string) => [...REVIEW_KEYS.all, "list", productId] as const,
+  userReviews: () => [...REVIEW_KEYS.all, "user-reviews"] as const,
   details: () => [...REVIEW_KEYS.all, "detail"] as const,
   detail: (id: string) => [...REVIEW_KEYS.details(), id] as const,
 };
@@ -15,6 +16,14 @@ export function useProductReviews(productId: string, params?: { page?: number; l
     queryKey: REVIEW_KEYS.lists(productId),
     queryFn: () => apiClient.reviews.list(productId, params),
     enabled: !!productId,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useReviews(params?: { page?: number; limit?: number }) {
+  return useQuery({
+    queryKey: REVIEW_KEYS.userReviews(),
+    queryFn: () => apiClient.reviews.listUserReviews(params),
     staleTime: 5 * 60 * 1000,
   });
 }
