@@ -1,39 +1,24 @@
 "use client";
 
-import { Container, Box, Typography, Paper, Grid, Button, IconButton, Alert, LinearProgress, Skeleton } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { Container, Box, Typography, Paper, Grid, Button } from "@mui/material";
 import { useWishlist } from "@/services/api/wishlist";
-import { useCart, useAddToCart } from "@/services/api/cart";
 import { useUser } from "@/services/api/auth";
+import { useAddToCart } from "@/services/api/cart";
 import ProductCard from "@/components/product/ProductCard";
 import { Icons } from "@/lib/icons";
 
-const { FavoriteBorder, AddShoppingCart, Delete } = Icons;
-import { formatPrice } from "@/lib/utils";
+const { FavoriteBorder, AddShoppingCart } = Icons;
 
 export default function WishlistPage() {
-  const router = useRouter();
   const { data: userData } = useUser();
-  const { data: wishlistData, isLoading, refetch } = useWishlist();
-  const { data: cartData } = useCart();
+  const { data: wishlistData, isLoading } = useWishlist();
   const addToCart = useAddToCart();
 
   const wishlist = wishlistData?.data || [];
-  const cartItems = cartData?.data?.items || [];
-  const cartProductIds = new Set(cartItems.map((item: any) => item.productId));
 
   const handleAddToCart = (product: any) => {
     const variantId = product.variants?.[0]?._id;
     addToCart.mutate({ productId: product._id, variantId, quantity: 1 });
-  };
-
-  const handleRemoveFromWishlist = async (productId: string) => {
-    try {
-      await apiClient.wishlist.remove(productId);
-      refetch();
-    } catch (error: any) {
-      alert(error.message || "Failed to remove from wishlist");
-    }
   };
 
   if (isLoading) {
@@ -43,8 +28,8 @@ export default function WishlistPage() {
           <Typography variant="h4" sx={{ mb: 4 }}>My Wishlist</Typography>
           <Grid container spacing={2}>
             {Array.from({ length: 4 }).map((_, i) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
-                <Skeleton variant="rectangular" height={350} />
+              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={i}>
+                <Paper elevation={0} sx={{ height: 350, backgroundColor: "grey.100" }} />
               </Grid>
             ))}
           </Grid>
@@ -57,9 +42,7 @@ export default function WishlistPage() {
     return (
       <Container maxWidth="xl">
         <Box sx={{ py: 8, textAlign: "center" }}>
-          <Alert severity="info" sx={{ mb: 3 }}>
-            Please log in to view your wishlist
-          </Alert>
+          <Typography variant="h5" sx={{ mb: 2 }}>Please log in to view your wishlist</Typography>
           <Button variant="contained" component="a" href="/login?redirect=/account/wishlist">
             Log In
           </Button>
@@ -96,14 +79,11 @@ export default function WishlistPage() {
             </Box>
             <Grid container spacing={3}>
               {wishlist.map((item: any) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={item._id}>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={item._id}>
                   <ProductCard
                     product={item.product}
                     showWishlist={true}
-                    onWishlistToggle={() => handleRemoveFromWishlist(item.product._id)}
-                    inWishlist={true}
-                    inCart={cartProductIds.has(item.product._id)}
-                    onAddToCart={handleAddToCart}
+                    showAddToCart={true}
                   />
                 </Grid>
               ))}
@@ -114,5 +94,3 @@ export default function WishlistPage() {
     </Container>
   );
 }
-
-import { apiClient } from "@/lib/api-client";

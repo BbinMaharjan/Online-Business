@@ -1,20 +1,18 @@
 "use client";
 
-import { Container, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, Chip, LinearProgress, Alert, IconButton, Menu, MenuItem, ListItemIcon, Avatar } from "@mui/material";
+import { Container, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, Chip, LinearProgress, Alert, IconButton, Menu, MenuItem, ListItemIcon, Button } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useOrders } from "@/services/api/orders";
 import { useCancelOrder } from "@/services/api/orders";
-import { useUser } from "@/services/api/auth";
 import { formatPrice } from "@/lib/utils";
 import { Icons } from "@/lib/icons";
 
-const { Cancel, Visibility, MoreVert, Refresh } = Icons;
+const { Cancel, Visibility, MoreVert } = Icons;
 import { useState } from "react";
 
 export default function OrdersPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { data: userData } = useUser();
   const page = parseInt(searchParams.get("page") || "1", 10);
   const status = searchParams.get("status") || undefined;
 
@@ -45,8 +43,8 @@ export default function OrdersPage() {
     handleMenuClose();
   };
 
-  const orders = data?.data?.data || [];
-  const pagination = data?.data?.meta?.pagination;
+  const orders = data?.data || [];
+  const pagination = data?.meta?.pagination;
 
   if (isLoading) {
     return (
@@ -78,8 +76,6 @@ export default function OrdersPage() {
       default: return "default";
     }
   };
-
-  const canCancel = (status: string) => ["PENDING", "CONFIRMED"].includes(status);
 
   return (
     <Container maxWidth="xl">
@@ -149,7 +145,7 @@ export default function OrdersPage() {
                   {orders.map((order: any) => (
                     <TableRow key={order._id} hover>
                       <TableCell>
-                        <Typography variant="body1" fontWeight={600}>{order.orderNumber}</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 600 }}>{order.orderNumber}</Typography>
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2" color="text.secondary">
@@ -160,7 +156,7 @@ export default function OrdersPage() {
                         <Typography variant="body2">{order.items?.length || 0} item(s)</Typography>
                       </TableCell>
                       <TableCell align="right">
-                        <Typography variant="body1" fontWeight={600}>{formatPrice(order.total)}</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 600 }}>{formatPrice(order.total)}</Typography>
                       </TableCell>
                       <TableCell align="center">
                         <Chip

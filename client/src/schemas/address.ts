@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const addressSchema = z.object({
-  type: z.enum(["SHIPPING", "BILLING"], { errorMap: () => ({ message: "Address type is required" }) }),
+  type: z.enum({ SHIPPING: "SHIPPING", BILLING: "BILLING" }, { message: "Address type is required" }),
   fullName: z.string().min(1, "Full name is required").max(100, "Name too long"),
   phone: z.string().min(1, "Phone number is required").regex(/^\+?[\d\s\-\(\)]{10,}$/, "Invalid phone number"),
   addressLine1: z.string().min(1, "Address is required").max(200, "Address too long"),

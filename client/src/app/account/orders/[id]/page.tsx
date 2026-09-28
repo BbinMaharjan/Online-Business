@@ -1,14 +1,13 @@
 "use client";
 
-import { Container, Box, Typography, Paper, Divider, Table, TableBody, TableCell, TableHead, TableRow, Chip, LinearProgress, Alert, Button, Accordion, AccordionSummary, AccordionDetails, Avatar } from "@mui/material";
+import { Container, Box, Typography, Paper, Divider, Table, TableBody, TableCell, TableHead, TableRow, Chip, LinearProgress, Alert, Button, TableContainer, Grid } from "@mui/material";
 import { useParams, useRouter } from "next/navigation";
 import { useOrder } from "@/services/api/orders";
 import { useCancelOrder } from "@/services/api/orders";
 import { formatPrice } from "@/lib/utils";
 import { Icons } from "@/lib/icons";
 
-const { LocalShipping, CreditCard, Person, CalendarToday, ExpandMore, Cancel, Refresh } = Icons;
-import { useState } from "react";
+const { LocalShipping, CreditCard, Person, CalendarToday, Cancel, Refresh } = Icons;
 
 export default function OrderDetailPage() {
   const params = useParams();
@@ -17,18 +16,8 @@ export default function OrderDetailPage() {
 
   const { data: orderData, isLoading, isError } = useOrder(orderId);
   const cancelOrder = useCancelOrder();
-  const [showCancelDialog, setShowCancelDialog] = useState(false);
 
   const order = orderData?.data;
-
-  const handleCancel = async () => {
-    try {
-      await cancelOrder.mutateAsync(orderId);
-      setShowCancelDialog(false);
-    } catch (error) {
-      // Error handled in mutation
-    }
-  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -77,13 +66,13 @@ export default function OrderDetailPage() {
           <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
             <Chip
               label={order.orderStatus}
-              size="large"
+              size="medium"
               color={getStatusColor(order.orderStatus) as any}
               variant="filled"
             />
             <Chip
               label={order.paymentStatus}
-              size="large"
+              size="medium"
               color={order.paymentStatus === "PAID" ? "success" : order.paymentStatus === "PENDING" ? "warning" : "error"}
               variant="outlined"
             />
@@ -91,13 +80,13 @@ export default function OrderDetailPage() {
         </Box>
 
         <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
+          <Grid size={{ xs: 12, md: 8 }}>
             <Paper elevation={1} sx={{ p: 3, mb: 3 }}>
               <Typography variant="h6" sx={{ mb: 3, display: "flex", alignItems: "center", gap: 1 }}>
                 <LocalShipping /> Shipping Address
               </Typography>
               <Box>
-                <Typography variant="body1" fontWeight={600}>{order.shippingAddress?.fullName}</Typography>
+                <Typography variant="body1" sx={{ fontWeight: 600 }}>{order.shippingAddress?.fullName}</Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ display: "block" }}>
                   {order.shippingAddress?.addressLine1}{" "}
                   {order.shippingAddress?.addressLine2 && ", " + order.shippingAddress?.addressLine2}
@@ -124,7 +113,7 @@ export default function OrderDetailPage() {
                 </Typography>
                 {order.paymentMethod !== "cod" && order.paymentStatus === "PAID" && (
                   <Typography>
-                    <strong>Paid on:</strong> {order.paidAt ? new Date(order.paidAt).toLocaleString() : "N/A"}
+                    <strong>Paid on:</strong> {order.updatedAt ? new Date(order.updatedAt).toLocaleString() : "N/A"}
                   </Typography>
                 )}
               </Box>
@@ -157,12 +146,12 @@ export default function OrderDetailPage() {
                       </TableRow>
                     ))}
                   </TableBody>
-                </Table>
+</Table>
               </TableContainer>
-              </Paper>
-            </Grid>
+            </Paper>
+          </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Paper elevation={1} sx={{ p: 3, mb: 3, height: "fit-content", position: "sticky", top: 100 }}>
               <Typography variant="h6" sx={{ mb: 3, borderBottom: 1, borderColor: "divider", pb: 2 }}>
                 Order Summary
@@ -211,7 +200,13 @@ export default function OrderDetailPage() {
                     fullWidth
                     color="error"
                     startIcon={<Cancel />}
-                    onClick={() => setShowCancelDialog(true)}
+                    onClick={async () => {
+                      try {
+                        await cancelOrder.mutateAsync(orderId);
+                      } catch (error) {
+                        // Error handled in mutation
+                      }
+                    }}
                     disabled={cancelOrder.isPending}
                   >
                     Cancel Order
@@ -300,7 +295,7 @@ function TimelineItem({ label, time, active, completed, color = "primary" }: any
         {completed && "✓"}
       </Box>
       <Box sx={{ ml: 3, flex: 1 }}>
-        <Typography variant="body1" fontWeight={completed || active ? 600 : 400} color={completed || active ? "text.primary" : "text.secondary"}>
+        <Typography variant="body1" sx={{ fontWeight: completed || active ? 600 : 400, color: completed || active ? "text.primary" : "text.secondary" }}>
           {label}
         </Typography>
         {time && (

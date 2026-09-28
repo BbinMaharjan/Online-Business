@@ -1,11 +1,11 @@
 "use client";
 
-import { Container, Box, Typography, Paper, Button, Grid, TextField, Alert, Avatar, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, CircularProgress, InputAdornment } from "@mui/material";
+import { Container, Box, Typography, Paper, Button, Grid, TextField, Alert, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, CircularProgress } from "@mui/material";
 import { useUser } from "@/services/api/auth";
 import { useUpdateProfile, useChangePassword } from "@/services/api/auth";
 import { Icons } from "@/lib/icons";
 
-const { Save, Visibility, VisibilityOff, Person, Email, Lock } = Icons;
+const { Save, Lock } = Icons;
 import { useState } from "react";
 
 export default function ProfilePage() {
@@ -14,9 +14,6 @@ export default function ProfilePage() {
   const changePassword = useChangePassword();
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [profileData, setProfileData] = useState({
     firstName: "",
@@ -163,9 +160,6 @@ export default function ProfilePage() {
                     onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
                     required
                     disabled={updateProfile.isPending}
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start"><Email /></InputAdornment>
-                    }}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -175,9 +169,6 @@ export default function ProfilePage() {
                     value={profileData.phone}
                     onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
                     disabled={updateProfile.isPending}
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start"><Person /></InputAdornment>
-                    }}
                   />
                 </Grid>
               </Grid>
@@ -235,53 +226,32 @@ export default function ProfilePage() {
                   <TextField
                     fullWidth
                     label="Current Password"
-                    type={showCurrentPassword ? "text" : "password"}
+                    type="password"
                     value={passwordData.currentPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
                     required
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton onClick={() => setShowCurrentPassword(!showCurrentPassword)} edge="end">
-                          {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      )
-                    }}
                   />
                 </Grid>
                 <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
                     label="New Password"
-                    type={showNewPassword ? "text" : "password"}
+                    type="password"
                     value={passwordData.newPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
                     required
                     sx={{ minLength: 8 }}
                     helperText="Must be at least 8 characters"
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton onClick={() => setShowNewPassword(!showNewPassword)} edge="end">
-                          {showNewPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      )
-                    }}
                   />
                 </Grid>
                 <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
                     label="Confirm New Password"
-                    type={showConfirmPassword ? "text" : "password"}
+                    type="password"
                     value={passwordData.confirmPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
                     required
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
-                          {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      )
-                    }}
                   />
                 </Grid>
               </Grid>

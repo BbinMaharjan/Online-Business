@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { Container, Box, Typography, Grid, Paper, Button, Divider } from "@mui/material";
+import { Container, Box, Typography, Grid, Paper, Button, Avatar } from "@mui/material";
 import Link from "next/link";
 import { Icons } from "@/lib/icons";
 
@@ -55,30 +55,30 @@ export default function AboutPage() {
             Our Mission & Vision
           </Typography>
           <Grid container spacing={4}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Paper elevation={1} sx={{ p: 4, height: "100%" }}>
                 <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
                   <Box sx={{ p: 1.5, backgroundColor: "primary.light", borderRadius: 2, color: "primary.contrastText", mr: 2 }}>
                     <Groups fontSize="large" />
                   </Box>
-                  <Typography variant="h5" fontWeight={700}>Our Mission</Typography>
+                  <Typography variant="h5" sx={{ fontWeight: 700 }}>Our Mission</Typography>
                 </Box>
-                <Typography variant="body1" paragraph>
+                <Typography variant="body1" sx={{ lineHeight: 1.8 }}>
                   To make quality products accessible to everyone by providing a seamless, secure,
                   and enjoyable online shopping experience. We strive to be the go-to destination
                   for smart shoppers who value quality, affordability, and convenience.
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Paper elevation={1} sx={{ p: 4, height: "100%" }}>
                 <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
                   <Box sx={{ p: 1.5, backgroundColor: "secondary.light", borderRadius: 2, color: "secondary.contrastText", mr: 2 }}>
                     <Business fontSize="large" />
                   </Box>
-                  <Typography variant="h5" fontWeight={700}>Our Vision</Typography>
+                  <Typography variant="h5" sx={{ fontWeight: 700 }}>Our Vision</Typography>
                 </Box>
-                <Typography variant="body1" paragraph>
+                <Typography variant="body1" sx={{ lineHeight: 1.8 }}>
                   To become the world's most customer-centric online marketplace, where anyone can
                   find and discover anything they might want to buy online. We aim to set new
                   standards for transparency, sustainability, and customer satisfaction in e-commerce.
@@ -95,12 +95,12 @@ export default function AboutPage() {
           </Typography>
           <Grid container spacing={3}>
             {values.map((value, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                 <Paper elevation={1} sx={{ p: 3, height: "100%", textAlign: "center", transition: "transform 0.2s, box-shadow 0.2s", "&:hover": { transform: "translateY(-4px)", boxShadow: 4 } }}>
                   <Box sx={{ display: "inline-flex", p: 1, backgroundColor: "primary.light", borderRadius: "50%", color: "primary.contrastText", mb: 2 }}>
                     {value.icon}
                   </Box>
-                  <Typography variant="h6" fontWeight={700} sx={{ mb: 1 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
                     {value.title}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -117,10 +117,10 @@ export default function AboutPage() {
           <Typography variant="h3" sx={{ mb: 4, textAlign: "center", fontWeight: 700 }}>
             By The Numbers
           </Typography>
-          <Grid container spacing={3} justifyContent="center">
+          <Grid container spacing={3} sx={{ justifyContent: "center" }}>
             {stats.map((stat, index) => (
-              <Grid item xs={6} md={3} key={index} sx={{ textAlign: "center" }}>
-                <Typography variant="h2" fontWeight={800} color="primary.main">
+              <Grid size={{ xs: 6, md: 3 }} key={index} sx={{ textAlign: "center" }}>
+                <Typography variant="h2" sx={{ fontWeight: 800, color: "primary.main" }}>
                   {stat.value}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
@@ -138,12 +138,12 @@ export default function AboutPage() {
           </Typography>
           <Grid container spacing={4}>
             {team.map((member, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                 <Paper elevation={1} sx={{ p: 3, textAlign: "center", height: "100%" }}>
                   <Avatar sx={{ width: 80, height: 80, mx: "auto", mb: 2, fontSize: "2rem", backgroundColor: "primary.main" }}>
                     {member.name.split(" ").map(n => n[0]).join("")}
                   </Avatar>
-                  <Typography variant="h6" fontWeight={700}>{member.name}</Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 700 }}>{member.name}</Typography>
                   <Typography variant="subtitle1" color="primary.main" sx={{ mb: 1, display: "block" }}>
                     {member.role}
                   </Typography>
@@ -170,12 +170,12 @@ export default function AboutPage() {
               { icon: <ThumbUp />, title: "Quality Guaranteed", desc: "Every product is vetted for quality before it reaches you." },
               { icon: <Nature />, title: "Eco-Friendly", desc: "Sustainable packaging and carbon-neutral shipping options." },
             ].map((item, index) => (
-              <Grid item xs={12} md={4} key={index}>
+              <Grid size={{ xs: 12, md: 4 }} key={index}>
                 <Paper elevation={1} sx={{ p: 3, height: "100%", textAlign: "center" }}>
                   <Box sx={{ display: "inline-flex", p: 1, backgroundColor: "primary.light", borderRadius: "50%", color: "primary.contrastText", mb: 2 }}>
                     {item.icon}
                   </Box>
-                  <Typography variant="h6" fontWeight={700} sx={{ mb: 1 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
                     {item.title}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">

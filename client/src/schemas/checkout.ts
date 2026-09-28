@@ -10,7 +10,7 @@ export const shippingMethodSchema = z.object({
 });
 
 export const paymentMethodSchema = z.object({
-  type: z.enum(["COD", "CARD", "WALLET"], { errorMap: () => ({ message: "Payment method is required" }) }),
+  type: z.enum({ COD: "COD", CARD: "CARD", WALLET: "WALLET" }, { message: "Payment method is required" }),
   provider: z.string().optional(),
 });
 

@@ -1,9 +1,7 @@
 "use client";
 
-import { Container, Box, Typography, Paper, Button, Grid, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Alert, Dialog, DialogTitle, DialogContent, DialogActions, TextField, LinearProgress, Chip } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { Container, Box, Typography, Paper, Button, Grid, Dialog, DialogTitle, DialogContent, DialogActions, TextField, LinearProgress, Chip } from "@mui/material";
 import { useAddresses } from "@/services/api/addresses";
-import { useUser } from "@/services/api/auth";
 import { Icons } from "@/lib/icons";
 
 const { Edit, Delete, Add, LocationOn, CheckCircle } = Icons;
@@ -11,8 +9,6 @@ import { useState } from "react";
 import { apiClient } from "@/lib/api-client";
 
 export default function AddressesPage() {
-  const router = useRouter();
-  const { data: userData } = useUser();
   const { data: addressesData, isLoading, refetch } = useAddresses();
   const [openDialog, setOpenDialog] = useState(false);
   const [editingAddress, setEditingAddress] = useState<any>(null);
@@ -133,20 +129,18 @@ export default function AddressesPage() {
         ) : (
           <Grid container spacing={3}>
             {addresses.map((address: any) => (
-              <Grid item xs={12} md={6} lg={4} key={address._id}>
+              <Grid size={{ xs: 12, md: 6, lg: 4 }} key={address._id}>
                 <Paper elevation={1} sx={{ p: 3, height: "100%", border: address.isDefault ? "2px solid" : 1, borderColor: address.isDefault ? "primary.main" : "divider" }}>
                   <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}>
-                    <Typography variant="h6" fontWeight={600}>{address.fullName}</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>{address.fullName}</Typography>
                     {address.isDefault && (
                       <Chip icon={<CheckCircle />} label="Default" size="small" color="primary" variant="outlined" />
                     )}
                   </Box>
-                  <Typography variant="body2" color="text.secondary" paragraph>
+                  <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.8, whiteSpace: "pre-line" }}>
                     {address.addressLine1}
                     {address.addressLine2 && ", " + address.addressLine2}
-                    <br />
                     {address.city}, {address.state} {address.postalCode}, {address.country}
-                    <br />
                     Phone: {address.phone}
                   </Typography>
                   <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
@@ -168,7 +162,7 @@ export default function AddressesPage() {
           <DialogContent>
             <form onSubmit={handleSubmit}>
               <Grid container spacing={2} sx={{ pt: 1 }}>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="Full Name"
@@ -177,7 +171,7 @@ export default function AddressesPage() {
                     required
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="Phone"
@@ -186,7 +180,7 @@ export default function AddressesPage() {
                     required
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
                     label="Address Line 1"
@@ -195,7 +189,7 @@ export default function AddressesPage() {
                     required
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
                     label="Address Line 2 (Optional)"
@@ -203,7 +197,7 @@ export default function AddressesPage() {
                     onChange={(e) => setFormData({ ...formData, addressLine2: e.target.value })}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="City"
@@ -212,7 +206,7 @@ export default function AddressesPage() {
                     required
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="State/Province"
@@ -221,7 +215,7 @@ export default function AddressesPage() {
                     required
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="Postal Code"
@@ -230,7 +224,7 @@ export default function AddressesPage() {
                     required
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="Country"
@@ -239,7 +233,7 @@ export default function AddressesPage() {
                     required
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Box sx={{ display: "flex", gap: 3, alignItems: "center", flexWrap: "wrap" }}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <input

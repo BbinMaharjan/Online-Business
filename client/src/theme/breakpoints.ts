@@ -9,7 +9,7 @@ export const breakpoints = {
   unit: "px",
   step: 5,
   keys: ["xs", "sm", "md", "lg", "xl"] as const,
-};
+} as const;
 
 export const spacing = 8;
 

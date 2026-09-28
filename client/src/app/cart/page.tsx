@@ -1,8 +1,7 @@
 "use client";
 
-import { Container, Box, Typography, LinearProgress, Table, TableBody, TableCell, TableContainer, TableRow, Button, IconButton, Link } from "@mui/material";
+import { Container, Box, Typography, LinearProgress, Table, TableCell, TableContainer, TableRow, Button, IconButton, Link } from "@mui/material";
 import { useCart, useUpdateCartItem, useRemoveFromCart, useInvalidateCart } from "@/services/api/cart";
-import EmptyState from "@/components/common/EmptyStateProducts";
 
 export default function CartPage() {
   const { data: cartData, isLoading } = useCart();
@@ -10,8 +9,9 @@ export default function CartPage() {
   const removeFromCart = useRemoveFromCart();
   const invalidateCart = useInvalidateCart();
 
-  const items = cartData?.data?.items || [];
-  const { subtotal, tax, shipping, total, discount, coupon } = cartData?.data || {};
+  const cart = cartData?.data;
+  const items = cart?.items || [];
+  const { subtotal, tax, shipping, total, discount, coupon } = cart || {};
 
   if (isLoading) {
     return (
@@ -23,7 +23,7 @@ export default function CartPage() {
     );
   }
 
-  if (!cartData?.data || items.length === 0) {
+  if (!cart || items.length === 0) {
     return (
       <Container>
         <Box sx={{ py: 8 }}>
@@ -63,7 +63,7 @@ export default function CartPage() {
                   <img
                     src={item.image || "/placeholder-product.jpg"}
                     alt={item.productName}
-                    style={{ width: 50, height: 50, objectFit: "cover", mr: 2 }}
+                    style={{ width: 50, height: 50, objectFit: "cover", marginRight: 8 }}
                   />
                   <Typography variant="body2">{item.productName}</Typography>
                 </Box>
@@ -74,7 +74,7 @@ export default function CartPage() {
                   type="number"
                   min="1"
                   value={item.quantity}
-                  sx={{ width: 60, textAlign: "center" }}
+                  style={{ width: 60, textAlign: "center" }}
                   onChange={(e) => updateCartItem.mutate({ itemId: item._id, quantity: Number(e.target.value) })}
                 />
               </TableCell>

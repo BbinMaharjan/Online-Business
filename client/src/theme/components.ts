@@ -276,22 +276,6 @@ export const components: Components = {
           fontSize: 20,
         },
       },
-      standardSuccess: {
-        backgroundColor: "#e8f5e9",
-        color: "#1b5e20",
-      },
-      standardError: {
-        backgroundColor: "#fdeaea",
-        color: "#b71c1c",
-      },
-      standardWarning: {
-        backgroundColor: "#fff8e1",
-        color: "#e65100",
-      },
-      standardInfo: {
-        backgroundColor: "#e3f2fd",
-        color: "#0d47a1",
-      },
     },
   },
   MuiDialog: {
@@ -357,10 +341,10 @@ export const components: Components = {
       },
     },
   },
-  MuiBreadcrumb: {
+  MuiBreadcrumbs: {
     styleOverrides: {
       root: {
-        "& .MuiBreadcrumb-separator": {
+        "& .MuiBreadcrumbs-separator": {
           color: "#9e9e9e",
         },
       },

@@ -1,6 +1,7 @@
 import {
   AccountCircle as Person,
   AddShoppingCart,
+  Add as AddIcon,
   ArrowBack,
   ArrowForward,
   Business,
@@ -12,6 +13,7 @@ import {
   ChevronRight,
   Close,
   CreditCard,
+  Edit as EditIcon,
   Email,
   Error as ErrorIcon,
   ExpandMore,
@@ -113,6 +115,8 @@ export const Icons = {
   VerifiedUser,
   Shield,
   Description,
+  Edit: EditIcon,
+  Add: AddIcon,
   
   // Communication
   Email,
@@ -168,8 +172,8 @@ export const Icons = {
   VisibilityIcon: Visibility,
   VisibilityOffIcon: VisibilityOff,
   StarIcon: Star,
-  AddIcon: AddShoppingCart,
-  EditIcon: Save,
+  AddIcon: AddIcon,
+  EditIcon: EditIcon,
   DeleteIcon: Cancel,
   SearchIcon: Search,
   FilterIcon: FilterList,

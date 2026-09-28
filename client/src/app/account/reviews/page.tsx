@@ -1,12 +1,12 @@
 "use client";
 
-import { Container, Box, Typography, Paper, Grid, Button, Alert, LinearProgress, Avatar, Rating, Chip, Divider, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from "@mui/material";
+import { Container, Box, Typography, Paper, Grid, Button, Alert, LinearProgress, Rating, Chip, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useReviews } from "@/services/api/reviews";
 import { useUser } from "@/services/api/auth";
 import { Icons } from "@/lib/icons";
 
-const { Edit, Delete, Star, Add, Visibility } = Icons;
+const { Edit, Delete, Star, Add } = Icons;
 import { useState } from "react";
 import { apiClient } from "@/lib/api-client";
 
@@ -27,8 +27,8 @@ export default function ReviewsPage() {
     comment: "",
   });
 
-  const reviews = reviewsData?.data?.data || [];
-  const pagination = reviewsData?.data?.meta?.pagination;
+  const reviews = reviewsData?.data || [];
+  const pagination = reviewsData?.meta?.pagination;
 
   const handleOpenDialog = (review?: any) => {
     if (review) {
@@ -125,7 +125,7 @@ export default function ReviewsPage() {
           <>
             <Box sx={{ mb: 3 }}>
               <Typography variant="body1" color="text.secondary">
-                You have {reviewsData?.data?.meta?.pagination?.total || 0} review{reviewsData?.data?.meta?.pagination?.total !== 1 ? "s" : ""}
+                You have {reviewsData?.meta?.pagination?.total || 0} review{reviewsData?.meta?.pagination?.total !== 1 ? "s" : ""}
               </Typography>
             </Box>
 
@@ -152,7 +152,7 @@ export default function ReviewsPage() {
                       )}
                     </Box>
                     <Box>
-                      <Typography variant="h6" fontWeight={600} sx={{ mb: 0.5 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
                         {review.product?.name || "Unknown Product"}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
@@ -179,7 +179,7 @@ export default function ReviewsPage() {
                 />
 
                 {review.title && (
-                  <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 1 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
                     {review.title}
                   </Typography>
                 )}
@@ -244,9 +244,9 @@ export default function ReviewsPage() {
         <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
           <DialogTitle>{editingReview ? "Edit Review" : "Write Review"}</DialogTitle>
           <DialogContent>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} id="review-form">
               <Grid container spacing={2} sx={{ pt: 1 }}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>Your Rating</Typography>
                   <Rating
                     value={formData.rating}
@@ -255,7 +255,7 @@ export default function ReviewsPage() {
                     name="rating"
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
                     label="Title (Optional)"
@@ -263,7 +263,7 @@ export default function ReviewsPage() {
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
                     label="Your Review"

@@ -10,6 +10,7 @@ import {
   Close as CloseIcon,
   ExpandMore as ExpandMoreIcon,
   ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
   KeyboardArrowRight as KeyboardArrowRightIcon,
   LocalShipping as LocalShippingIcon,
