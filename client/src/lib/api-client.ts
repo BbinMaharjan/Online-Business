@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from "ax
 import { API_ENDPOINTS } from "@/constants/api-endpoints";
 import type { ApiResponse, PaginatedResponse, ProductFilters, Product, Category, Brand, Cart, Order, Address, Customer, Review, Payment, ShippingMethod, WishlistItem, Notification, SearchSuggestion, PaymentIntent } from "@/types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api/v1";
 
 const api: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,

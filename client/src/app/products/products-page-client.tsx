@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Container, Box, Grid, Typography, Button, TextField, InputAdornment, Select, MenuItem, Paper, Chip, IconButton } from "@mui/material";
 import { Icons } from "@/lib/icons";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const { Search: SearchIcon } = Icons;
 import { useProducts } from "@/services/api/products";
@@ -18,15 +19,54 @@ import { useDebounce } from "@/hooks/useDebounce";
 
 type ProductSort = "featured" | "price-asc" | "price-desc" | "newest" | "rating" | "best-selling";
 
-export function ProductsPageClient() {
-  const [searchQuery, setSearchQuery] = useState("");
+interface InitialSearchParams {
+  sort?: string;
+  page?: string;
+  limit?: string;
+  category?: string;
+  brand?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  search?: string;
+}
+
+interface ProductsPageClientProps {
+  initialSearchParams?: InitialSearchParams;
+}
+
+export function ProductsPageClient({ initialSearchParams }: ProductsPageClientProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  const [searchQuery, setSearchQuery] = useState(initialSearchParams?.search || "");
   const [debouncedSearch] = useDebounce(searchQuery, 300);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedBrand, setSelectedBrand] = useState("");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
-  const [sortBy, setSortBy] = useState<ProductSort>("featured");
-  const [page, setPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState(initialSearchParams?.category || "");
+  const [selectedBrand, setSelectedBrand] = useState(initialSearchParams?.brand || "");
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    initialSearchParams?.minPrice ? parseInt(initialSearchParams.minPrice) : 0,
+    initialSearchParams?.maxPrice ? parseInt(initialSearchParams.maxPrice) : 1000,
+  ]);
+  const [sortBy, setSortBy] = useState<ProductSort>(
+    (initialSearchParams?.sort as ProductSort) || "featured"
+  );
+  const [page, setPage] = useState(initialSearchParams?.page ? parseInt(initialSearchParams.page) : 1);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  // Sync URL with state
+  useEffect(() => {
+    if (searchParams) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("sort", sortBy);
+      params.set("page", page.toString());
+      params.set("limit", "12");
+      if (selectedCategory) params.set("category", selectedCategory);
+      if (selectedBrand) params.set("brand", selectedBrand);
+      if (priceRange[0] > 0) params.set("minPrice", priceRange[0].toString());
+      if (priceRange[1] < 1000) params.set("maxPrice", priceRange[1].toString());
+      if (searchQuery) params.set("search", searchQuery);
+      router.replace(`/products?${params.toString()}`, { scroll: false });
+    }
+  }, [sortBy, page, selectedCategory, selectedBrand, priceRange, searchQuery, router, searchParams]);
 
   const { data: productsData, isLoading: productsLoading } = useProducts({
     search: debouncedSearch,
