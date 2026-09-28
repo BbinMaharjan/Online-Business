@@ -3,9 +3,10 @@
 import React, { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ThemeProvider as MUIThemeProvider, CssBaseline } from "@mui/material";
+import { ThemeProvider as MUIThemeProvider, CssBaseline, Box } from "@mui/material";
 import { theme } from "@/theme";
 import { Toaster } from "react-hot-toast";
+import { Header } from "@/components/header/Header";
 
 function getQueryClient() {
   return new QueryClient({
@@ -39,7 +40,10 @@ export function Providers({ children }: { children: ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <MUIThemeProvider theme={theme}>
         <CssBaseline />
-        {children}
+        <Header />
+        <Box component="main" sx={{ pt: 8, minHeight: "100vh" }}>
+          {children}
+        </Box>
         <Toaster
           position="top-right"
           toastOptions={{

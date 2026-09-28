@@ -9,22 +9,14 @@ import {
   Grid,
   Typography,
   Button,
-  Card,
-  CardContent,
-  Chip,
-  Rating,
-  Divider,
   IconButton,
-  Skeleton,
 } from "@mui/material";
 import { Icons } from "@/lib/icons";
 
 const { ShoppingCart: CartIcon, LocalShipping: ShippingIcon, VerifiedUser: VerifiedIcon, SupportAgent: SupportIcon, KeyboardArrowLeft, KeyboardArrowRight } = Icons;
-import { useProducts, useCategories, useBrands } from "@/services/api";
+import { useProducts } from "@/services/api";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { Footer } from "@/components/footer/Footer";
-import { getImageUrl, formatPrice, calculateDiscountPrice } from "@/lib/utils";
-import type { Product, Category, Brand } from "@/types";
 
 const heroSlides = [
   {
@@ -52,15 +44,12 @@ const heroSlides = [
 
 function HeroCarousel({ slides }: { slides: typeof heroSlides }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState<"left" | "right">("right");
 
   const goToNext = useCallback(() => {
-    setDirection("right");
     setCurrentIndex((prev) => (prev + 1) % slides.length);
   }, [slides.length]);
 
   const goToPrev = useCallback(() => {
-    setDirection("left");
     setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
   }, [slides.length]);
 
@@ -187,36 +176,16 @@ const features = [
   { icon: CartIcon, title: "Secure Checkout", description: "SSL encrypted payments" },
 ];
 
-const categoryIcons: Record<string, React.ReactNode> = {
-  electronics: "📱",
-  clothing: "👕",
-  home: "🏠",
-  sports: "⚽",
-  beauty: "💄",
-  books: "📚",
-  toys: "🧸",
-  automotive: "🚗",
-};
-
 export function HomepageClient() {
   const { data: featuredProducts, isLoading: productsLoading } = useProducts({
-    featured: true,
     limit: 8,
     sort: "featured",
-  });
-
-  const { data: bestSellers, isLoading: bestSellersLoading } = useProducts({
-    limit: 8,
-    sort: "best-selling",
   });
 
   const { data: newArrivals, isLoading: newArrivalsLoading } = useProducts({
     limit: 8,
     sort: "newest",
   });
-
-  const { data: categories, isLoading: categoriesLoading } = useCategories();
-  const { data: brands, isLoading: brandsLoading } = useBrands();
 
   return (
     <Container maxWidth="xl">
@@ -257,51 +226,6 @@ export function HomepageClient() {
         </Grid>
       </Box>
 
-      {/* Categories */}
-      <Box sx={{ mb: 6 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
-          <Typography variant="h4" sx={{ fontWeight: 700 }}>
-            Shop by Category
-          </Typography>
-          <Link href="/categories" passHref>
-            <Button variant="text">View All</Button>
-          </Link>
-        </Box>
-        {categoriesLoading ? (
-          <SkeletonCategoryGrid />
-        ) : categories?.data?.length ? (
-          <Grid container spacing={2}>
-            {categories.data.slice(0, 8).map((category: Category) => (
-              <Grid size={{ xs: 6, sm: 4, md: 3, lg: 2 }} key={category._id}>
-                <Link href={`/categories/${category.slug}`} passHref style={{ textDecoration: "none", color: "inherit" }}>
-                  <Card sx={{ height: "100%", textAlign: "center", p: 3, transition: "all 0.2s", "&:hover": { boxShadow: 3, transform: "translateY(-4px)" } }}>
-                    <Box
-                      sx={{
-                        width: 80,
-                        height: 80,
-                        borderRadius: "50%",
-                        backgroundColor: "primary.50",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        mx: "auto",
-                        mb: 2,
-                        fontSize: 32,
-                      }}
-                    >
-                      {categoryIcons[category.slug] || categoryIcons[category.name.toLowerCase()] || "📦"}
-                    </Box>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                      {category.name}
-                    </Typography>
-                  </Card>
-                </Link>
-              </Grid>
-            ))}
-          </Grid>
-        ) : null}
-      </Box>
-
       {/* Featured Products */}
       <Box sx={{ mb: 6 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
@@ -313,25 +237,9 @@ export function HomepageClient() {
           </Link>
         </Box>
         <ProductGrid
-          products={featuredProducts?.data?.data || []}
+          products={featuredProducts?.data || []}
           loading={productsLoading}
           variant="featured"
-        />
-      </Box>
-
-      {/* Best Sellers */}
-      <Box sx={{ mb: 6 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
-          <Typography variant="h4" sx={{ fontWeight: 700 }}>
-            Best Sellers
-          </Typography>
-          <Link href="/products?sort=best-selling" passHref>
-            <Button variant="text">View All</Button>
-          </Link>
-        </Box>
-        <ProductGrid
-          products={bestSellers?.data?.data || []}
-          loading={bestSellersLoading}
         />
       </Box>
 
@@ -346,91 +254,12 @@ export function HomepageClient() {
           </Link>
         </Box>
         <ProductGrid
-          products={newArrivals?.data?.data || []}
+          products={newArrivals?.data || []}
           loading={newArrivalsLoading}
         />
       </Box>
 
-      {/* Brands */}
-      <Box sx={{ mb: 6, py: 4, backgroundColor: "grey.50", borderRadius: 2 }}>
-        <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography variant="h4" sx={{ fontWeight: 700 }}>
-            Trusted Brands
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            We partner with the best brands to bring you quality products
-          </Typography>
-        </Box>
-        {brandsLoading ? (
-          <Box sx={{ display: "flex", justifyContent: "center", gap: 4, flexWrap: "wrap" }}>
-            {Array.from({ length: 8 }).map((_, i) => (
-              <Skeleton key={i} variant="rectangular" width={120} height={50} />
-            ))}
-          </Box>
-        ) : brands?.data?.length ? (
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 4, flexWrap: "wrap", py: 2 }}>
-            {brands.data.slice(0, 10).map((brand: Brand) => (
-              <Box key={brand._id} sx={{ opacity: 0.6, transition: "opacity 0.2s", "&:hover": { opacity: 1 } }}>
-                <Link href={`/brands/${brand.slug}`} passHref style={{ textDecoration: "none", color: "inherit" }}>
-                  <Typography variant="h6" sx={{ fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em" }}>
-                    {brand.name}
-                  </Typography>
-                </Link>
-              </Box>
-            ))}
-          </Box>
-        ) : null}
-      </Box>
-
-      {/* Newsletter */}
-      <Box sx={{ mb: 6, py: 6, textAlign: "center", backgroundColor: "grey.900", color: "white", borderRadius: 3 }}>
-        <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
-          Subscribe to Our Newsletter
-        </Typography>
-        <Typography variant="body1" sx={{ mb: 4, maxWidth: 500, mx: "auto", color: "grey.300" }}>
-          Get the latest updates on new products and upcoming sales
-        </Typography>
-        <Box sx={{ display: "flex", justifyContent: "center", gap: 2, maxWidth: 400, mx: "auto", flexWrap: "wrap" }}>
-          <Box sx={{ flexGrow: 1, minWidth: 250 }}>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              style={{
-                width: "100%",
-                padding: "14px 20px",
-                borderRadius: 8,
-                border: "none",
-                fontSize: "1rem",
-                backgroundColor: "grey.800",
-                color: "white",
-              }}
-            />
-          </Box>
-          <Button variant="contained" size="large" sx={{ px: 4, backgroundColor: "secondary.main", "&:hover": { backgroundColor: "secondary.dark" } }}>
-            Subscribe
-          </Button>
-        </Box>
-        <Typography variant="caption" sx={{ mt: 2, color: "grey.500" }}>
-          By subscribing, you agree to our Privacy Policy. Unsubscribe anytime.
-        </Typography>
-      </Box>
-
       <Footer />
     </Container>
-  );
-}
-
-function SkeletonCategoryGrid() {
-  return (
-    <Grid container spacing={2}>
-      {Array.from({ length: 8 }).map((_, i) => (
-        <Grid size={{ xs: 6, sm: 4, md: 3, lg: 2 }} key={i}>
-          <Card sx={{ height: "100%", textAlign: "center", p: 3 }}>
-            <Skeleton variant="circular" width={80} height={80} sx={{ mx: "auto", mb: 2 }} />
-            <Skeleton variant="text" width="60%" sx={{ mx: "auto" }} />
-          </Card>
-        </Grid>
-      ))}
-    </Grid>
   );
 }
