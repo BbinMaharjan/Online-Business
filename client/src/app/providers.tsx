@@ -6,7 +6,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider as MUIThemeProvider, CssBaseline, Box } from "@mui/material";
 import { theme } from "@/theme";
 import { Toaster } from "react-hot-toast";
-import { Header } from "@/components/header/Header";
+import Header from "@/components/header/Header";
 
 function getQueryClient() {
   return new QueryClient({
