@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Media from "./media.model";
+import { cloudflareService } from "../../services/cloudflare.service";
 
 export const uploadMedia = async (req: Request, res: Response) => {
   try {
@@ -21,14 +22,20 @@ export const uploadMedia = async (req: Request, res: Response) => {
       });
     }
 
+    const { url, publicId } = await cloudflareService.uploadImage(
+      req.file.buffer,
+      req.file.originalname,
+      req.file.mimetype
+    );
+
     const media = new Media({
-      url: req.file.path,
-      filename: req.file.filename,
+      url,
+      filename: publicId,
       type: type as "PRODUCT_IMAGE" | "CATEGORY_IMAGE" | "AVATAR" | "GENERIC",
       referenceId,
-      referenceType: referenceType as "PRODUCT" | "CATEGORY" | "USER",
+      referenceType: referenceType as "PRODUCT" | "CATEGORY" | "USER" | "SETTINGS",
       size: req.file.size,
-      mimeType: req.file.mimeType,
+      mimeType: req.file.mimetype,
     });
 
     await media.save();
@@ -41,7 +48,7 @@ export const uploadMedia = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: error.message || "Internal server error",
       error: { code: "INTERNAL_ERROR" },
     });
   }
@@ -61,7 +68,11 @@ export const deleteMedia = async (req: Request, res: Response) => {
       });
     }
 
-    // TODO: Delete the actual file from storage (S3, Cloudinary, etc.)
+    try {
+      await cloudflareService.deleteImage(media.filename);
+    } catch (cloudflareError) {
+      console.error("Cloudflare delete error:", cloudflareError);
+    }
 
     return res.json({
       success: true,

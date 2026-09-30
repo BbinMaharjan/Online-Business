@@ -3,27 +3,31 @@ import {
   Form,
   Input,
   InputNumber,
-  Select,
   Switch,
   Card,
   Button,
   Row,
   Col,
   message,
+  Upload,
 } from "antd";
+import { PictureOutlined } from "@ant-design/icons";
 import { useAppDispatch } from "../../store/hooks";
 import { setBreadcrumbs } from "../../store/uiSlice";
 import {
   useSettingsQuery,
   useUpdateSettingsMutation,
 } from "./hooks/useSettings";
+import { useUploadMediaMutation } from "../media/hooks/useMedia";
 import styles from "./SettingsPage.module.css";
 
 const SettingsPage = () => {
   const dispatch = useAppDispatch();
   const { data: settings, isLoading } = useSettingsQuery();
   const updateMutation = useUpdateSettingsMutation();
+  const uploadMutation = useUploadMediaMutation();
   const [form] = Form.useForm();
+  const [logoPreview, setLogoPreview] = useState<string | null>(settings?.storeLogo || null);
 
   const onFinish = async (values: any) => {
     try {
@@ -32,6 +36,39 @@ const SettingsPage = () => {
     } catch {
       message.error("Failed to save");
     }
+  };
+
+  const handleLogoUpload = async (file: File) => {
+    try {
+      const res = await uploadMutation.mutateAsync({
+        file,
+        referenceId: "store-settings",
+        referenceType: "SETTINGS",
+      });
+      const url = res.data.data.url;
+      form.setFieldValue("storeLogo", url);
+      setLogoPreview(url);
+      message.success("Logo uploaded successfully");
+    } catch {
+      message.error("Logo upload failed");
+    }
+  };
+
+  const handleLogoRemove = () => {
+    form.setFieldValue("storeLogo", "");
+    setLogoPreview(null);
+    message.success("Logo removed");
+  };
+
+  const getLogoProps = () => {
+    if (logoPreview) {
+      return {
+        src: logoPreview,
+        alt: "Store Logo",
+        style: { maxHeight: 120, maxWidth: 200 },
+      };
+    }
+    return null;
   };
 
   return (
@@ -66,77 +103,33 @@ const SettingsPage = () => {
                 </Form.Item>
               </Col>
               <Col xs={24} sm={12}>
-                <Form.Item name="currency" label="Currency">
-                  <Select
-                    options={["USD", "EUR", "GBP", "INR"].map((v) => ({
-                      value: v,
-                      label: v,
-                    }))}
-                    placeholder="Select currency"
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Form.Item name="timezone" label="Timezone">
-                  <Select
-                    options={[
-                      "UTC",
-                      "America/New_York",
-                      "Europe/London",
-                      "Asia/Tokyo",
-                    ].map((v) => ({ value: v, label: v }))}
-                    placeholder="Select timezone"
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Form.Item name="language" label="Language">
-                  <Select
-                    options={["en", "es", "fr", "de"].map((v) => ({
-                      value: v,
-                      label: v,
-                    }))}
-                    placeholder="Select language"
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Card>
-          <Card title="Tax & Shipping">
-            <Row gutter={16}>
-              <Col xs={24} sm={12}>
-                <Form.Item
-                  name="taxEnabled"
-                  label="Enable Tax"
-                  valuePropName="checked"
-                >
-                  <Switch />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Form.Item name="taxRate" label="Tax Rate (%)">
-                  <InputNumber min={0} max={100} precision={2} />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Form.Item
-                  name="shippingEnabled"
-                  label="Enable Shipping"
-                  valuePropName="checked"
-                >
-                  <Switch />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Form.Item
-                  name="freeShippingThreshold"
-                  label="Free Shipping Threshold"
-                >
-                  <InputNumber
-                    min={0}
-                    precision={2}
-                    placeholder="0 for no threshold"
-                  />
+                <Form.Item name="storeLogo" label="Store Logo" valuePropName="url">
+                  <Upload
+                    name="file"
+                    action="/api/upload"
+                    listType="picture"
+                    showUploadList={false}
+                    beforeUpload={handleLogoUpload}
+                    maxCount={1}
+                  >
+                    {logoPreview ? (
+                      <div className={styles.logoPreview}>
+                        <img src={logoPreview} alt="Store Logo" />
+                        <div className={styles.logoActions}>
+                          <Button type="text" onClick={handleLogoRemove} danger>
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <PictureOutlined />
+                        <div className={styles.uploadHint}>
+                          Click to upload store logo
+                        </div>
+                      </>
+                    )}
+                  </Upload>
                 </Form.Item>
               </Col>
             </Row>

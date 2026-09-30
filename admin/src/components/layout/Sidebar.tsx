@@ -24,6 +24,7 @@ import {
   ShoppingCartOutlined,
   TruckOutlined,
   BarChartOutlined,
+  LayoutOutlined,
 } from "@ant-design/icons";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { toggleSidebar } from "../../store/uiSlice";
@@ -187,6 +188,13 @@ const menuItems: MenuItem[] = [
     icon: <PictureOutlined />,
     path: "/media",
     permission: "media:read",
+  },
+  {
+    key: "banners",
+    label: "Banners",
+    icon: <LayoutOutlined />,
+    path: "/banners",
+    permission: "banners:read",
   },
   {
     key: "administration",

@@ -234,7 +234,7 @@ export interface Media {
   _id: string;
   url: string;
   referenceId: string;
-  referenceType: "PRODUCT" | "CATEGORY" | "BRAND" | "USER" | "BLOG";
+  referenceType: "PRODUCT" | "CATEGORY" | "BRAND" | "USER" | "BLOG" | "SETTINGS" | "BANNER";
   mimeType: string;
   size: number;
   alt?: string;
@@ -359,15 +359,26 @@ export interface AuditLog {
 export interface Settings {
   siteName: string;
   siteDescription: string;
-  currency: string;
-  timezone: string;
-  language: string;
+  storeLogo?: string;
   taxEnabled: boolean;
   taxRate: number;
   shippingEnabled: boolean;
   freeShippingThreshold?: number;
   maintenanceMode: boolean;
   maintenanceMessage?: string;
+}
+
+export interface Banner {
+  _id: string;
+  title: string;
+  description?: string;
+  buttonText?: string;
+  buttonLink?: string;
+  image: string;
+  status: "ACTIVE" | "INACTIVE";
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AdminFilters {

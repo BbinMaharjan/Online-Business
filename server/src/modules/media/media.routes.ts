@@ -1,4 +1,5 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
+import { upload } from "../../middlewares/upload.middleware";
 import {
   uploadMediaCtrl,
   deleteMediaCtrl,
@@ -9,7 +10,7 @@ import {
 const router = Router();
 
 // Media routes
-router.post("/upload", uploadMediaCtrl);
+router.post("/upload", upload.single("file"), uploadMediaCtrl);
 router.delete("/:mediaId", deleteMediaCtrl);
 router.get("/:mediaId", getMediaByIdCtrl);
 router.get("/reference/:referenceId/:referenceType", getMediaByReferenceCtrl);

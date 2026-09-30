@@ -5,7 +5,7 @@ export interface IMedia extends Document {
   filename: string;
   type: "PRODUCT_IMAGE" | "CATEGORY_IMAGE" | "AVATAR" | "GENERIC";
   referenceId: string; // ID of the product, category, etc.
-  referenceType: "PRODUCT" | "CATEGORY" | "USER";
+  referenceType: "PRODUCT" | "CATEGORY" | "USER" | "SETTINGS" | "BANNER";
   size?: number;
   width?: number;
   height?: number;
@@ -35,7 +35,7 @@ const mediaSchema = new Schema<IMedia>(
     },
     referenceType: {
       type: String,
-      enum: ["PRODUCT", "CATEGORY", "USER"],
+      enum: ["PRODUCT", "CATEGORY", "USER", "SETTINGS", "BANNER"],
       required: true,
     },
     size: {

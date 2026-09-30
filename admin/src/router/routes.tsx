@@ -45,6 +45,8 @@ const PaymentListPage = lazy(
 );
 const ShippingPage = lazy(() => import("../features/shipping/ShippingPage"));
 const MediaPage = lazy(() => import("../features/media/MediaPage"));
+const BannerListPage = lazy(() => import("../features/banners/BannerListPage"));
+const BannerFormPage = lazy(() => import("../features/banners/BannerFormPage"));
 const SalesReportPage = lazy(
   () => import("../features/reports/SalesReportPage"),
 );
@@ -137,6 +139,9 @@ export const AppRoutes = () => (
           <Route path="payments" element={<PaymentListPage />} />
           <Route path="shipping" element={<ShippingPage />} />
           <Route path="media" element={<MediaPage />} />
+          <Route path="banners" element={<BannerListPage />} />
+          <Route path="banners/create" element={<BannerFormPage />} />
+          <Route path="banners/:id/edit" element={<BannerFormPage />} />
           <Route path="reports/sales" element={<SalesReportPage />} />
           <Route path="reports/products" element={<ProductReportPage />} />
           <Route path="reports/customers" element={<CustomerReportPage />} />

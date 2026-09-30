@@ -26,6 +26,8 @@ import shippingRoutes from "./modules/shipping/shipping.routes";
 import notificationRoutes from "./modules/notifications/notification.routes";
 import mediaRoutes from "./modules/media/media.routes";
 import inventoryRoutes from "./modules/inventory/inventory.routes";
+import bannerRoutes from "./modules/banners/banner.routes";
+import settingsRoutes from "./modules/settings/settings.routes";
 import { errorHandler } from "./middlewares/errorHandler";
 import { swaggerDocs } from "./swagger";
 
@@ -101,6 +103,8 @@ app.use("/api/v1/shipping", shippingRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/media", mediaRoutes);
 app.use("/api/v1/inventory", inventoryRoutes);
+app.use("/api/v1/banners", bannerRoutes);
+app.use("/api/v1/settings", settingsRoutes);
 
 app.use((req: Request, res: Response) => {
   res.status(404).json({
