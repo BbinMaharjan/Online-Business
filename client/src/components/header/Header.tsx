@@ -19,7 +19,7 @@ const navItems = [
 
 function Header() {
   return (
-    <AppBar position="sticky" color="default" elevation={1}>
+    <AppBar position="fixed" color="default" elevation={1}>
       <Toolbar sx={{ position: "relative" }}>
         {/* Left: icon + title */}
         <Box

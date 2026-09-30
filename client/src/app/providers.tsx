@@ -3,10 +3,15 @@
 import React, { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ThemeProvider as MUIThemeProvider, CssBaseline, Box } from "@mui/material";
+import {
+  ThemeProvider as MUIThemeProvider,
+  CssBaseline,
+  Box,
+} from "@mui/material";
 import { theme } from "@/theme";
 import { Toaster } from "react-hot-toast";
 import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 
 function getQueryClient() {
   return new QueryClient({
@@ -18,8 +23,13 @@ function getQueryClient() {
         refetchOnReconnect: false,
         retry: (failureCount, error: unknown) => {
           if (error && typeof error === "object" && "response" in error) {
-            const response = (error as { response?: { status?: number } }).response;
-            if (response?.status && response.status >= 400 && response.status < 500) {
+            const response = (error as { response?: { status?: number } })
+              .response;
+            if (
+              response?.status &&
+              response.status >= 400 &&
+              response.status < 500
+            ) {
               return false;
             }
           }
@@ -68,6 +78,7 @@ export function Providers({ children }: { children: ReactNode }) {
             },
           }}
         />
+        <Footer />
         <ReactQueryDevtools initialIsOpen={false} />
       </MUIThemeProvider>
     </QueryClientProvider>

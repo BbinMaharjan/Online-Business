@@ -1,22 +1,28 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import {
-  Container,
-  Box,
-  Grid,
-  Typography,
-  Button,
-  IconButton,
-} from "@mui/material";
-import { Icons } from "@/lib/icons";
-
-const { ShoppingCart: CartIcon, LocalShipping: ShippingIcon, VerifiedUser: VerifiedIcon, SupportAgent: SupportIcon, KeyboardArrowLeft, KeyboardArrowRight } = Icons;
-import { useProducts } from "@/services/api";
 import { ProductGrid } from "@/components/product/ProductGrid";
-import { Footer } from "@/components/footer/Footer";
+import { Icons } from "@/lib/icons";
+import { useProducts } from "@/services/api";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  Typography,
+} from "@mui/material";
+import Image from "next/image";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+
+const {
+  ShoppingCart: CartIcon,
+  LocalShipping: ShippingIcon,
+  VerifiedUser: VerifiedIcon,
+  SupportAgent: SupportIcon,
+  KeyboardArrowLeft,
+  KeyboardArrowRight,
+} = Icons;
 
 const heroSlides = [
   {
@@ -93,11 +99,23 @@ function HeroCarousel({ slides }: { slides: typeof heroSlides }) {
                 sx={{
                   position: "absolute",
                   inset: 0,
-                  background: "linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)",
+                  background:
+                    "linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)",
                 }}
               />
-              <Box sx={{ position: "relative", zIndex: 1, px: 4, maxWidth: 600, color: "white" }}>
-                <Typography variant="h3" sx={{ fontWeight: 700, mb: 2, lineHeight: 1.2 }}>
+              <Box
+                sx={{
+                  position: "relative",
+                  zIndex: 1,
+                  px: 4,
+                  maxWidth: 600,
+                  color: "white",
+                }}
+              >
+                <Typography
+                  variant="h3"
+                  sx={{ fontWeight: 700, mb: 2, lineHeight: 1.2 }}
+                >
                   {slide.title}
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 400 }}>
@@ -149,7 +167,17 @@ function HeroCarousel({ slides }: { slides: typeof heroSlides }) {
       >
         <KeyboardArrowRight />
       </IconButton>
-      <Box sx={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 8, zIndex: 1 }}>
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: 16,
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          gap: 8,
+          zIndex: 1,
+        }}
+      >
         {slides.map((_, index) => (
           <Box
             key={index}
@@ -158,7 +186,8 @@ function HeroCarousel({ slides }: { slides: typeof heroSlides }) {
               width: 10,
               height: 10,
               borderRadius: "50%",
-              backgroundColor: currentIndex === index ? "white" : "rgba(255,255,255,0.5)",
+              backgroundColor:
+                currentIndex === index ? "white" : "rgba(255,255,255,0.5)",
               cursor: "pointer",
               transition: "all 0.2s",
             }}
@@ -170,10 +199,26 @@ function HeroCarousel({ slides }: { slides: typeof heroSlides }) {
 }
 
 const features = [
-  { icon: ShippingIcon, title: "Free Shipping", description: "On orders over $50" },
-  { icon: VerifiedIcon, title: "Easy Returns", description: "30-day return policy" },
-  { icon: SupportIcon, title: "24/7 Support", description: "Dedicated help team" },
-  { icon: CartIcon, title: "Secure Checkout", description: "SSL encrypted payments" },
+  {
+    icon: ShippingIcon,
+    title: "Free Shipping",
+    description: "On orders over $50",
+  },
+  {
+    icon: VerifiedIcon,
+    title: "Easy Returns",
+    description: "30-day return policy",
+  },
+  {
+    icon: SupportIcon,
+    title: "24/7 Support",
+    description: "Dedicated help team",
+  },
+  {
+    icon: CartIcon,
+    title: "Secure Checkout",
+    description: "SSL encrypted payments",
+  },
 ];
 
 export function HomepageClient() {
@@ -182,24 +227,37 @@ export function HomepageClient() {
     sort: "featured",
   });
 
-  const { data: newArrivals, isLoading: newArrivalsLoading } = useProducts({
-    limit: 8,
-    sort: "newest",
-  });
-
   return (
     <Container maxWidth="xl">
       {/* Hero Carousel */}
-      <Box sx={{ mb: 6, borderRadius: 3, overflow: "hidden", position: "relative" }}>
+      <Box
+        sx={{
+          mb: 2,
+          borderRadius: 3,
+          overflow: "hidden",
+          position: "relative",
+          mt: 2,
+        }}
+      >
         <HeroCarousel slides={heroSlides} />
       </Box>
 
       {/* Features Bar */}
-      <Box sx={{ mb: 6, py: 3, backgroundColor: "primary.main", color: "primary.contrastText", borderRadius: 2 }}>
+      <Box
+        sx={{
+          mb: 6,
+          py: 3,
+          backgroundColor: "primary.main",
+          color: "primary.contrastText",
+          borderRadius: 2,
+        }}
+      >
         <Grid container spacing={2} sx={{ px: 4 }}>
           {features.map((feature, index) => (
             <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2, py: 1 }}>
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 2, py: 1 }}
+              >
                 <Box
                   sx={{
                     p: 1,
@@ -228,7 +286,14 @@ export function HomepageClient() {
 
       {/* Featured Products */}
       <Box sx={{ mb: 6 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 4,
+          }}
+        >
           <Typography variant="h4" sx={{ fontWeight: 700 }}>
             Featured Products
           </Typography>
@@ -242,24 +307,6 @@ export function HomepageClient() {
           variant="featured"
         />
       </Box>
-
-      {/* New Arrivals */}
-      <Box sx={{ mb: 6 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
-          <Typography variant="h4" sx={{ fontWeight: 700 }}>
-            New Arrivals
-          </Typography>
-          <Link href="/products?sort=newest" passHref>
-            <Button variant="text">View All</Button>
-          </Link>
-        </Box>
-        <ProductGrid
-          products={newArrivals?.data || []}
-          loading={newArrivalsLoading}
-        />
-      </Box>
-
-      <Footer />
     </Container>
   );
 }

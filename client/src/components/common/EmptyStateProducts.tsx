@@ -1,11 +1,15 @@
 "use client";
 
-import Link from "next/link";
-import { Box, Typography, Stack, Button, IconButton } from "@mui/material";
 import { Icons } from "@/lib/icons";
-
-const { Search: SearchIcon, FilterListOff: ClearFiltersIcon, Home: HomeIcon } = Icons;
+import { Box, Button, Stack, Typography } from "@mui/material";
+import Link from "next/link";
 import type { ReactNode } from "react";
+
+const {
+  Search: SearchIcon,
+  FilterListOff: ClearFiltersIcon,
+  Home: HomeIcon,
+} = Icons;
 
 interface EmptyStateProps {
   icon?: ReactNode;
@@ -16,14 +20,7 @@ interface EmptyStateProps {
   suggestions?: string[];
 }
 
-export function EmptyState({
-  icon,
-  title,
-  message,
-  primaryAction,
-  secondaryAction,
-  suggestions,
-}: EmptyStateProps) {
+export function EmptyState({ icon, title, secondaryAction }: EmptyStateProps) {
   return (
     <Box sx={{ textAlign: "center", py: 10, px: 4 }}>
       <Box
@@ -44,21 +41,12 @@ export function EmptyState({
       <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
         {title}
       </Typography>
-      {message && <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 400, mx: "auto" }}>{message}</Typography>}
 
-      <Stack direction="row" spacing={2} sx={{ flexWrap: "wrap", mb: 4, justifyContent: "center" }}>
-        {primaryAction && (
-          <Link href={primaryAction.href} passHref>
-            <Button
-              variant="contained"
-              size="large"
-              onClick={primaryAction.onClick}
-              startIcon={primaryAction.href === "/products" ? <SearchIcon /> : undefined}
-            >
-              {primaryAction.label}
-            </Button>
-          </Link>
-        )}
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ flexWrap: "wrap", mb: 4, justifyContent: "center" }}
+      >
         {secondaryAction && (
           <Link href={secondaryAction.href} passHref>
             <Button
@@ -71,28 +59,6 @@ export function EmptyState({
           </Link>
         )}
       </Stack>
-
-      {suggestions && suggestions.length > 0 && (
-        <Box sx={{ mt: 4, textAlign: "left", maxWidth: 400, mx: "auto" }}>
-          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, display: "block" }}>
-            Try:
-          </Typography>
-          <Stack direction="column" spacing={1}>
-            {suggestions.map((suggestion, index) => (
-              <Link key={index} href="/products" passHref>
-                <Button
-                  variant="text"
-                  size="small"
-                  startIcon={<SearchIcon fontSize="small" />}
-                  sx={{ justifyContent: "flex-start", textTransform: "none", color: "text.secondary", "&:hover": { color: "primary.main" } }}
-                >
-                  {suggestion}
-                </Button>
-              </Link>
-            ))}
-          </Stack>
-        </Box>
-      )}
     </Box>
   );
 }
@@ -101,7 +67,11 @@ export function EmptyStateProducts({
   message = "We couldn't find any products matching your criteria.",
   onClearFilters,
   onSearch,
-}: { message?: string; onClearFilters?: () => void; onSearch?: () => void } = {}) {
+}: {
+  message?: string;
+  onClearFilters?: () => void;
+  onSearch?: () => void;
+} = {}) {
   return (
     <EmptyState
       icon={<Box sx={{ fontSize: 48 }}>🛍️</Box>}
@@ -176,23 +146,32 @@ export function EmptyStateOrders() {
 export function EmptyStateSearch({ query }: { query?: string }) {
   return (
     <EmptyState
-      icon={<SearchIcon fontSize="large" sx={{ fontSize: 48, color: "primary.main" }} />}
+      icon={
+        <SearchIcon
+          fontSize="large"
+          sx={{ fontSize: 48, color: "primary.main" }}
+        />
+      }
       title={query ? `No results for "${query}"` : "No search results"}
-      message={query
-        ? "Try adjusting your search or browse our categories."
-        : "Enter a search term to find products."}
+      message={
+        query
+          ? "Try adjusting your search or browse our categories."
+          : "Enter a search term to find products."
+      }
       primaryAction={{
         label: "Browse All Products",
         href: "/products",
       }}
-      suggestions={query
-        ? [
-            "Try a different keyword",
-            "Check spelling",
-            "Use fewer words",
-            "Browse by category",
-          ]
-        : []}
+      suggestions={
+        query
+          ? [
+              "Try a different keyword",
+              "Check spelling",
+              "Use fewer words",
+              "Browse by category",
+            ]
+          : []
+      }
     />
   );
 }
