@@ -81,13 +81,18 @@ const RegisterPage = () => {
         message.success("Registration successful! Welcome to Admin Portal.");
         navigate("/dashboard");
       } else {
-        setError(loginResponse.data.message || "Auto-login failed. Please sign in manually.");
+        setError(
+          loginResponse.data.message ||
+            "Auto-login failed. Please sign in manually.",
+        );
         setTimeout(() => {
           navigate("/login");
         }, 2000);
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || "An error occurred during registration");
+      setError(
+        err.response?.data?.message || "An error occurred during registration",
+      );
     } finally {
       setLoading(false);
     }
@@ -95,9 +100,9 @@ const RegisterPage = () => {
 
   return (
     <div className={styles.container}>
-      <Card className={styles.card} title="Create Admin Account" bordered={false}>
+      <Card className={styles.card} bordered={false}>
         <div className={styles.logo}>
-          <UserOutlined style={{ fontSize: 48 }} />
+          <img src="/images/B-Cube-Horizontal.png" alt="Logo" />
         </div>
         <p className={styles.subtitle}>Register for admin portal access</p>
 
@@ -126,7 +131,9 @@ const RegisterPage = () => {
         <Form onFinish={onFinish} layout="vertical" className={styles.form}>
           <Form.Item
             name="firstName"
-            rules={[{ required: true, message: "Please input your first name" }]}
+            rules={[
+              { required: true, message: "Please input your first name" },
+            ]}
           >
             <Input
               prefix={<UserOutlined className={styles.inputIcon} />}

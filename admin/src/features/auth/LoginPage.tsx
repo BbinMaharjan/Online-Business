@@ -82,9 +82,9 @@ const LoginPage = () => {
 
   return (
     <div className={styles.container}>
-      <Card className={styles.card} title="Admin Portal" bordered={false}>
+      <Card className={styles.card} bordered={false}>
         <div className={styles.logo}>
-          <span>🛍️</span>
+          <img src="/images/B-Cube-Horizontal.png" alt="Logo" />
         </div>
         <p className={styles.subtitle}>Sign in to your admin account</p>
 

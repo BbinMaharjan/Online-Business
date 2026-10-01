@@ -21,6 +21,11 @@
   margin-bottom: 16px;
 }
 
+.logo img {
+  max-width: 300px;
+  height: auto;
+}
+
 .subtitle {
   text-align: center;
   color: #8c8c8c;

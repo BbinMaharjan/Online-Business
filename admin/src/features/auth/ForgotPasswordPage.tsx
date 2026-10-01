@@ -38,9 +38,9 @@ const ForgotPasswordPage = () => {
 
   return (
     <div className={styles.container}>
-      <Card className={styles.card} title="Reset Password" bordered={false}>
+      <Card className={styles.card} bordered={false}>
         <div className={styles.logo}>
-          <UnlockOutlined style={{ fontSize: 48 }} />
+          <img src="/images/B-Cube-Horizontal.png" alt="Logo" />
         </div>
         <p className={styles.subtitle}>
           Enter your email to receive a password reset link

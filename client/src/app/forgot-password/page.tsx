@@ -34,6 +34,9 @@ export default function ForgotPasswordPage() {
       <Grid container spacing={0} sx={{ minHeight: "80vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <Grid size={12}>
           <Box sx={{ width: "100%" }}>
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
+              <img src="/images/B-Cube-Horizontal.png" alt="Logo" sx={{ maxWidth: 180, height: "auto" }} />
+            </Box>
             <Typography variant="h4" sx={{ mb: 4, textAlign: "center" }}>
               Forgot Password
             </Typography>
