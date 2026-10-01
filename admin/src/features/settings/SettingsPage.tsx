@@ -31,27 +31,27 @@ const SettingsPage = () => {
   useEffect(() => {
     if (settings && !isLoading) {
       form.setFieldsValue(settings);
-      if (settings?.storeLogo) {
+      if (settings?.data?.storeLogo) {
         setLogoFileList([
           {
             uid: "logo",
             name: "store-logo",
-            url: settings?.storeLogo,
+            url: settings?.data?.storeLogo,
             status: "done",
           },
         ]);
-        setLogoPreview(settings?.storeLogo);
+        setLogoPreview(settings?.data?.storeLogo);
       }
-      if (settings?.favicon) {
+      if (settings?.data?.favicon) {
         setFaviconFileList([
           {
             uid: "favicon",
             name: "favicon",
-            url: settings?.favicon,
+            url: settings?.data?.favicon,
             status: "done",
           },
         ]);
-        setFaviconPreview(settings?.favicon);
+        setFaviconPreview(settings?.data?.favicon);
       }
     }
   }, [settings, form, isLoading]);
@@ -93,7 +93,10 @@ const SettingsPage = () => {
 
       formData.append("siteName", values.siteName);
       formData.append("siteDescription", values.siteDescription || "");
-      formData.append("maintenanceMode", values.maintenanceMode ? "true" : "false");
+      formData.append(
+        "maintenanceMode",
+        values.maintenanceMode ? "true" : "false",
+      );
       formData.append("maintenanceMessage", values.maintenanceMessage || "");
 
       if (logoFile) {
@@ -133,8 +136,8 @@ const SettingsPage = () => {
           layout="vertical"
           onFinish={onFinish}
           initialValues={{
-            storeLogo: settings?.storeLogo ?? "",
-            favicon: settings?.favicon ?? "",
+            storeLogo: settings?.data?.storeLogo ?? "",
+            favicon: settings?.data?.favicon ?? "",
           }}
         >
           <Card title="General">
