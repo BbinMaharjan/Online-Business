@@ -25,3 +25,42 @@
   color: #8c8c8c;
   font-size: 12px;
 }
+
+.logoUploadWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.logoPreview {
+  position: relative;
+  display: inline-block;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fafafa;
+  max-width: 200px;
+  max-height: 120px;
+}
+
+.logoPreview img {
+  display: block;
+  max-width: 100%;
+  max-height: 120px;
+}
+
+.logoActions {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}

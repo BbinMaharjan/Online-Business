@@ -357,6 +357,7 @@ export interface AuditLog {
 }
 
 export interface Settings {
+  _id: string;
   siteName: string;
   siteDescription: string;
   storeLogo?: string;
@@ -366,6 +367,9 @@ export interface Settings {
   freeShippingThreshold?: number;
   maintenanceMode: boolean;
   maintenanceMessage?: string;
+  createdAt: string;
+  updatedAt: string;
+  __v?: number;
 }
 
 export interface Banner {

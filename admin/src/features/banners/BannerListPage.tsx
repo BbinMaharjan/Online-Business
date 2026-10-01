@@ -7,7 +7,6 @@ import {
   Tag,
   Input,
   Select,
-  IconButton,
   message,
   Card,
   Row,
@@ -49,7 +48,11 @@ const BannerListPage = () => {
       key: "image",
       width: 100,
       render: (image: string) => (
-        <img src={image} alt="Banner" style={{ width: 80, height: 40, objectFit: "cover" }} />
+        <img
+          src={image}
+          alt="Banner"
+          style={{ width: 80, height: 40, objectFit: "cover" }}
+        />
       ),
     },
     {
@@ -61,7 +64,8 @@ const BannerListPage = () => {
       title: "Description",
       dataIndex: "description",
       key: "description",
-      render: (text: string) => text?.substring(0, 50) + (text?.length > 50 ? "..." : ""),
+      render: (text: string) =>
+        text?.substring(0, 50) + (text?.length > 50 ? "..." : ""),
     },
     {
       title: "Button",
@@ -74,9 +78,7 @@ const BannerListPage = () => {
       dataIndex: "status",
       key: "status",
       render: (status: string) => (
-        <Tag color={status === "ACTIVE" ? "success" : "default"}>
-          {status}
-        </Tag>
+        <Tag color={status === "ACTIVE" ? "success" : "default"}>{status}</Tag>
       ),
     },
     {
@@ -93,18 +95,15 @@ const BannerListPage = () => {
         <Space>
           <PermissionGuard permission="banners:update" fallback={null}>
             <Link to={`/banners/${record._id}/edit`}>
-              <IconButton>
+              <Button>
                 <EditOutlined />
-              </IconButton>
+              </Button>
             </Link>
           </PermissionGuard>
           <PermissionGuard permission="banners:delete" fallback={null}>
-            <IconButton
-              danger
-              onClick={() => handleDelete(record._id)}
-            >
+            <Button danger onClick={() => handleDelete(record._id)}>
               <DeleteOutlined />
-            </IconButton>
+            </Button>
           </PermissionGuard>
         </Space>
       ),

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Media from "./media.model";
-import { cloudflareService } from "../../services/cloudflare.service";
+import { localFileService } from "../../services/localFile.service";
 
 export const uploadMedia = async (req: Request, res: Response) => {
   try {
@@ -22,7 +22,7 @@ export const uploadMedia = async (req: Request, res: Response) => {
       });
     }
 
-    const { url, publicId } = await cloudflareService.uploadImage(
+    const { url, publicId } = await localFileService.uploadImage(
       req.file.buffer,
       req.file.originalname,
       req.file.mimetype
@@ -69,9 +69,9 @@ export const deleteMedia = async (req: Request, res: Response) => {
     }
 
     try {
-      await cloudflareService.deleteImage(media.filename);
-    } catch (cloudflareError) {
-      console.error("Cloudflare delete error:", cloudflareError);
+      await localFileService.deleteImage(media.filename);
+    } catch (localError) {
+      console.error("Local file delete error:", localError);
     }
 
     return res.json({

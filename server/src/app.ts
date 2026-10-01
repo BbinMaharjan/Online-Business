@@ -6,6 +6,7 @@ import rateLimit from "express-rate-limit";
 import mongoSanitize from "express-mongo-sanitize";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import path from "path";
 
 dotenv.config();
 
@@ -84,6 +85,8 @@ app.get("/health", (req: Request, res: Response) => {
 });
 
 swaggerDocs(app);
+
+app.use("/uploads", express.static(path.join(process.cwd(), "public/uploads")));
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
