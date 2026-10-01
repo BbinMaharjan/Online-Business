@@ -1,34 +1,30 @@
-import { NavLink, useLocation } from "react-router-dom";
-import { Menu, Layout, Avatar, Dropdown, Tooltip } from "antd";
 import {
-  DashboardOutlined,
-  BoxPlotOutlined,
   AppstoreOutlined,
-  TagsOutlined,
-  ShoppingOutlined,
-  TeamOutlined,
-  DollarCircleOutlined,
-  StarOutlined,
   AuditOutlined,
-  SettingOutlined,
-  SafetyOutlined,
-  FileTextOutlined,
-  PictureOutlined,
-  NotificationOutlined,
-  UsergroupAddOutlined,
-  UnorderedListOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  LogoutOutlined,
-  UserOutlined,
-  ShoppingCartOutlined,
-  TruckOutlined,
   BarChartOutlined,
+  BoxPlotOutlined,
+  DashboardOutlined,
+  DollarCircleOutlined,
+  FileTextOutlined,
   LayoutOutlined,
+  LogoutOutlined,
+  NotificationOutlined,
+  PictureOutlined,
+  SafetyOutlined,
+  SettingOutlined,
+  ShoppingCartOutlined,
+  ShoppingOutlined,
+  StarOutlined,
+  TagsOutlined,
+  TeamOutlined,
+  TruckOutlined,
+  UsergroupAddOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
-import { useAppSelector, useAppDispatch } from "../../store/hooks";
-import { toggleSidebar } from "../../store/uiSlice";
+import { Avatar, Dropdown, Layout, Menu } from "antd";
+import { NavLink, useLocation } from "react-router-dom";
 import { clearAuth } from "../../store/authSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { setSidebarCollapsed } from "../../store/uiSlice";
 import { PermissionGuard } from "../common/PermissionGuard";
 import styles from "./Sidebar.module.css";
@@ -338,7 +334,11 @@ export const Sidebar = () => {
       onCollapse={(collapsed) => dispatch(setSidebarCollapsed(collapsed))}
     >
       <div className={styles.logo}>
-        {collapsed ? <AppstoreOutlined /> : <span>Admin Portal</span>}
+        {collapsed ? (
+          <img src="/images/B-Cube-Icon.png" alt="Logo" />
+        ) : (
+          <img src="/images/B-Cube-Horizontal.png" alt="Logo" />
+        )}
       </div>
       <div className={styles.menuWrapper}>
         <Menu

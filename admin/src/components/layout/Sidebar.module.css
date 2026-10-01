@@ -20,6 +20,14 @@
   flex-shrink: 0;
 }
 
+.logo img {
+  max-width: 300px;
+  max-height: 40px;
+  height: auto;
+  width: auto;
+  object-fit: contain;
+}
+
 .menuWrapper {
   flex: 1;
   overflow-y: auto;
