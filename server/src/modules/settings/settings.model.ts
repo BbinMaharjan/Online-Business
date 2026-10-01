@@ -4,10 +4,6 @@ export interface ISettings extends Document {
   siteName: string;
   siteDescription: string;
   storeLogo?: string;
-  taxEnabled: boolean;
-  taxRate: number;
-  shippingEnabled: boolean;
-  freeShippingThreshold?: number;
   maintenanceMode: boolean;
   maintenanceMessage?: string;
   createdAt: Date;
@@ -30,25 +26,6 @@ const settingsSchema = new Schema<ISettings>(
     storeLogo: {
       type: String,
       trim: true,
-    },
-    taxEnabled: {
-      type: Boolean,
-      default: false,
-    },
-    taxRate: {
-      type: Number,
-      default: 0,
-      min: 0,
-      max: 100,
-    },
-    shippingEnabled: {
-      type: Boolean,
-      default: false,
-    },
-    freeShippingThreshold: {
-      type: Number,
-      default: 0,
-      min: 0,
     },
     maintenanceMode: {
       type: Boolean,

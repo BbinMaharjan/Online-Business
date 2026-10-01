@@ -1,6 +1,4 @@
-import {
-  PlusOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import {
   Button,
   Card,
@@ -33,27 +31,27 @@ const SettingsPage = () => {
   useEffect(() => {
     if (settings && !isLoading) {
       form.setFieldsValue(settings);
-      if (settings.storeLogo) {
+      if (settings?.storeLogo) {
         setLogoFileList([
           {
             uid: "logo",
             name: "store-logo",
-            url: settings.storeLogo,
+            url: settings?.storeLogo,
             status: "done",
           },
         ]);
-        setLogoPreview(settings.storeLogo);
+        setLogoPreview(settings?.storeLogo);
       }
-      if (settings.favicon) {
+      if (settings?.favicon) {
         setFaviconFileList([
           {
             uid: "favicon",
             name: "favicon",
-            url: settings.favicon,
+            url: settings?.favicon,
             status: "done",
           },
         ]);
-        setFaviconPreview(settings.favicon);
+        setFaviconPreview(settings?.favicon);
       }
     }
   }, [settings, form, isLoading]);

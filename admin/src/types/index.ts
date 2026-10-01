@@ -362,10 +362,6 @@ export interface Settings {
   siteDescription: string;
   storeLogo?: string;
   favicon?: string;
-  taxEnabled: boolean;
-  taxRate: number;
-  shippingEnabled: boolean;
-  freeShippingThreshold?: number;
   maintenanceMode: boolean;
   maintenanceMessage?: string;
   createdAt: string;
