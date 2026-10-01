@@ -143,6 +143,12 @@ class ApiClient {
       headers: { "Content-Type": "multipart/form-data" },
     });
   }
+
+  patchFormData<T>(url: string, formData: FormData) {
+    return this.client.patch<T>(url, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  }
 }
 
 export const apiClient = new ApiClient();

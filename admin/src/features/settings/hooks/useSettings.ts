@@ -18,7 +18,7 @@ export const useSettingsQuery = () => {
 export const useUpdateSettingsMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: Partial<Settings>) => settingsApi.updateSettings(data),
+    mutationFn: (data: Partial<Settings> | FormData) => settingsApi.updateSettings(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: settingsKeys.detail() });
     },

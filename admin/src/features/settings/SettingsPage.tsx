@@ -1,11 +1,18 @@
 import {
-  DeleteOutlined,
-  PictureOutlined,
-  UploadOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Col, Form, Input, message, Row, Switch } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Input,
+  message,
+  Row,
+  Switch,
+  Upload,
+} from "antd";
 import { useEffect, useState } from "react";
-import { useUploadMediaMutation } from "../media/hooks/useMedia";
 import {
   useSettingsQuery,
   useUpdateSettingsMutation,
@@ -16,65 +23,102 @@ const SettingsPage = () => {
   const { data: settings, isLoading } = useSettingsQuery();
   const updateMutation = useUpdateSettingsMutation();
   const [form] = Form.useForm();
-  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string>("");
+  const [faviconFile, setFaviconFile] = useState<File | null>(null);
+  const [faviconPreview, setFaviconPreview] = useState<string>("");
+  const [logoFileList, setLogoFileList] = useState<any[]>([]);
+  const [faviconFileList, setFaviconFileList] = useState<any[]>([]);
 
   useEffect(() => {
     if (settings && !isLoading) {
       form.setFieldsValue(settings);
       if (settings.storeLogo) {
+        setLogoFileList([
+          {
+            uid: "logo",
+            name: "store-logo",
+            url: settings.storeLogo,
+            status: "done",
+          },
+        ]);
         setLogoPreview(settings.storeLogo);
+      }
+      if (settings.favicon) {
+        setFaviconFileList([
+          {
+            uid: "favicon",
+            name: "favicon",
+            url: settings.favicon,
+            status: "done",
+          },
+        ]);
+        setFaviconPreview(settings.favicon);
       }
     }
   }, [settings, form, isLoading]);
 
-  const uploadMutation = useUploadMediaMutation({
-    onSuccess: (res) => {
-      const url = res.data.data.url;
-      form.setFieldValue("storeLogo", url);
-      setLogoPreview(url);
-      message.success("Logo uploaded successfully");
-    },
-    onError: () => {
-      message.error("Logo upload failed");
-    },
-  });
+  const handleLogoChange = (info: any) => {
+    const file = info.file?.originFileObj || info.file;
+    if (file) {
+      setLogoFile(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setLogoPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+    if (info.fileList) {
+      setLogoFileList(info.fileList);
+    }
+  };
 
-  const onFinish = async (values: any) => {
+  const handleFaviconChange = (info: any) => {
+    const file = info.file?.originFileObj || info.file;
+    if (file) {
+      setFaviconFile(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setFaviconPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+    if (info.fileList) {
+      setFaviconFileList(info.fileList);
+    }
+  };
+
+  const onFinish = async () => {
     try {
-      await updateMutation.mutateAsync(values);
+      const values = await form.validateFields();
+      const formData = new FormData();
+
+      formData.append("siteName", values.siteName);
+      formData.append("siteDescription", values.siteDescription || "");
+      formData.append("maintenanceMode", values.maintenanceMode ? "true" : "false");
+      formData.append("maintenanceMessage", values.maintenanceMessage || "");
+
+      if (logoFile) {
+        formData.append("storeLogo", logoFile);
+      }
+      if (faviconFile) {
+        formData.append("favicon", faviconFile);
+      }
+
+      await updateMutation.mutateAsync(formData);
       message.success("Settings saved");
-    } catch {
+    } catch (error) {
+      console.error("Form validation failed:", error);
       message.error("Failed to save settings");
     }
   };
 
-  const handleLogoRemove = () => {
-    form.setFieldValue("storeLogo", "");
-    setLogoPreview(null);
-    message.success("Logo removed");
-  };
-
-  const handleLogoFileSelect = (file: File | undefined) => {
-    if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      message.error("Please select an image file");
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const previewUrl = e.target?.result as string;
-      setLogoPreview(previewUrl);
-    };
-    reader.readAsDataURL(file);
-
-    uploadMutation.mutate({
-      file,
-      referenceId: "store-settings",
-      referenceType: "SETTINGS",
-    });
-  };
+  const uploadButton = (
+    <button style={{ border: 0, background: "none" }} type="button">
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </button>
+  );
 
   return (
     <div className={styles.container}>
@@ -86,7 +130,15 @@ const SettingsPage = () => {
       </div>
       {isLoading && <div>Loading settings...</div>}
       <Card>
-        <Form form={form} layout="vertical" onFinish={onFinish}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          initialValues={{
+            storeLogo: settings?.storeLogo ?? "",
+            favicon: settings?.favicon ?? "",
+          }}
+        >
           <Card title="General">
             <Row gutter={16}>
               <Col xs={24} sm={12}>
@@ -106,61 +158,45 @@ const SettingsPage = () => {
                 </Form.Item>
               </Col>
               <Col xs={24} sm={12}>
-                {/* Hidden input to keep storeLogo registered in Ant Design Form */}
-                <Form.Item name="storeLogo" hidden>
-                  <Input />
-                </Form.Item>
-
                 <Form.Item label="Store Logo">
-                  <div className={styles.logoUploadWrapper}>
-                    <input
-                      type="file"
-                      id="logo-upload"
-                      accept="image/*"
-                      className={styles.hiddenInput}
-                      onChange={(e) =>
-                        handleLogoFileSelect(e.target.files?.[0])
-                      }
-                    />
-                    {logoPreview ? (
-                      <div className={styles.logoPreview}>
-                        <img src={logoPreview} alt="Store Logo" />
-                        <div className={styles.logoActions}>
-                          <Button
-                            type="text"
-                            onClick={handleLogoRemove}
-                            danger
-                            icon={<DeleteOutlined />}
-                          >
-                            Remove
-                          </Button>
-                          <Button
-                            type="text"
-                            onClick={() =>
-                              document.getElementById("logo-upload")?.click()
-                            }
-                            icon={<UploadOutlined />}
-                            loading={uploadMutation.isPending}
-                          >
-                            Change
-                          </Button>
-                        </div>
-                      </div>
+                  <Upload
+                    listType="picture-circle"
+                    fileList={logoFileList}
+                    onChange={handleLogoChange}
+                    beforeUpload={() => false}
+                    maxCount={1}
+                  >
+                    {logoFileList.length >= 1 ? (
+                      <img
+                        src={logoPreview}
+                        alt="preview"
+                        style={{ width: "100%" }}
+                      />
                     ) : (
-                      <Button
-                        type="dashed"
-                        icon={<UploadOutlined />}
-                        block
-                        loading={uploadMutation.isPending}
-                        onClick={() =>
-                          document.getElementById("logo-upload")?.click()
-                        }
-                      >
-                        <PictureOutlined style={{ marginRight: 8 }} />
-                        Click to upload store logo
-                      </Button>
+                      uploadButton
                     )}
-                  </div>
+                  </Upload>
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12}>
+                <Form.Item label="Favicon">
+                  <Upload
+                    listType="picture-circle"
+                    fileList={faviconFileList}
+                    onChange={handleFaviconChange}
+                    beforeUpload={() => false}
+                    maxCount={1}
+                  >
+                    {faviconFileList.length >= 1 ? (
+                      <img
+                        src={faviconPreview}
+                        alt="preview"
+                        style={{ width: "100%" }}
+                      />
+                    ) : (
+                      uploadButton
+                    )}
+                  </Upload>
                 </Form.Item>
               </Col>
             </Row>
