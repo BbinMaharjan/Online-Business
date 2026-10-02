@@ -7,6 +7,7 @@ import {
   Input,
   message,
   Row,
+  Skeleton,
   Switch,
   Upload,
 } from "antd";
@@ -143,119 +144,123 @@ const SettingsPage = () => {
           <p className={styles.subtitle}>Configure store settings</p>
         </div>
       </div>
-      {isLoading && <div>Loading settings...</div>}
-      <Card>
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={onFinish}
-          initialValues={{
-            siteName: settings?.data?.siteName ?? "",
-            siteDescription: settings?.data?.siteDescription ?? "",
-            maintenanceMode: settings?.data?.maintenanceMode ?? false,
-            maintenanceMessage: settings?.data?.maintenanceMessage ?? "",
-            storeLogo: settings?.data?.storeLogo ?? "",
-            favicon: settings?.data?.favicon ?? "",
-          }}
-        >
-          <Card title="General">
-            <Row gutter={16}>
-              <Col xs={24} sm={12}>
-                <Form.Item
-                  name="siteName"
-                  label="Store Name"
-                  rules={[
-                    { required: true, message: "Please enter store name" },
-                  ]}
-                >
-                  <Input placeholder="Store Name" />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Form.Item name="siteDescription" label="Store Description">
-                  <Input.TextArea rows={3} placeholder="Store Description" />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Form.Item label="Store Logo" name="storeLogo">
-                  <Upload
-                    listType="picture-circle"
-                    fileList={logoFileList}
-                    onChange={handleLogoChange}
-                    beforeUpload={() => false}
-                    maxCount={1}
+      {isLoading ? (
+        <Skeleton active paragraph={{ rows: 10 }} />
+      ) : (
+        <Card>
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={onFinish}
+            disabled={updateMutation.isPending}
+            initialValues={{
+              siteName: settings?.data?.siteName ?? "",
+              siteDescription: settings?.data?.siteDescription ?? "",
+              maintenanceMode: settings?.data?.maintenanceMode ?? false,
+              maintenanceMessage: settings?.data?.maintenanceMessage ?? "",
+              storeLogo: settings?.data?.storeLogo ?? "",
+              favicon: settings?.data?.favicon ?? "",
+            }}
+          >
+            <Card title="General">
+              <Row gutter={16}>
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    name="siteName"
+                    label="Store Name"
+                    rules={[
+                      { required: true, message: "Please enter store name" },
+                    ]}
                   >
-                    {logoFileList.length >= 1 ? (
-                      <img
-                        src={logoPreview}
-                        alt="preview"
-                        style={{ width: "100%" }}
-                      />
-                    ) : (
-                      uploadButton
-                    )}
-                  </Upload>
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Form.Item label="Favicon" name="favicon">
-                  <Upload
-                    listType="picture-circle"
-                    fileList={faviconFileList}
-                    onChange={handleFaviconChange}
-                    beforeUpload={() => false}
-                    maxCount={1}
+                    <Input placeholder="Store Name" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item name="siteDescription" label="Store Description">
+                    <Input.TextArea rows={3} placeholder="Store Description" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item label="Store Logo" name="storeLogo">
+                    <Upload
+                      listType="picture-circle"
+                      fileList={logoFileList}
+                      onChange={handleLogoChange}
+                      beforeUpload={() => false}
+                      maxCount={1}
+                    >
+                      {logoFileList.length >= 1 ? (
+                        <img
+                          src={logoPreview}
+                          alt="preview"
+                          style={{ width: "100%" }}
+                        />
+                      ) : (
+                        uploadButton
+                      )}
+                    </Upload>
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item label="Favicon" name="favicon">
+                    <Upload
+                      listType="picture-circle"
+                      fileList={faviconFileList}
+                      onChange={handleFaviconChange}
+                      beforeUpload={() => false}
+                      maxCount={1}
+                    >
+                      {faviconFileList.length >= 1 ? (
+                        <img
+                          src={faviconPreview}
+                          alt="preview"
+                          style={{ width: "100%" }}
+                        />
+                      ) : (
+                        uploadButton
+                      )}
+                    </Upload>
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Card>
+            <Card title="Maintenance" style={{ marginTop: 16 }}>
+              <Row gutter={16}>
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    name="maintenanceMode"
+                    label="Maintenance Mode"
+                    valuePropName="checked"
                   >
-                    {faviconFileList.length >= 1 ? (
-                      <img
-                        src={faviconPreview}
-                        alt="preview"
-                        style={{ width: "100%" }}
-                      />
-                    ) : (
-                      uploadButton
-                    )}
-                  </Upload>
-                </Form.Item>
-              </Col>
-            </Row>
-          </Card>
-          <Card title="Maintenance" style={{ marginTop: 16 }}>
-            <Row gutter={16}>
-              <Col xs={24} sm={12}>
-                <Form.Item
-                  name="maintenanceMode"
-                  label="Maintenance Mode"
-                  valuePropName="checked"
-                >
-                  <Switch />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Form.Item
-                  name="maintenanceMessage"
-                  label="Maintenance Message"
-                >
-                  <Input.TextArea
-                    rows={3}
-                    placeholder="Message to display during maintenance"
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Card>
-          <Form.Item style={{ marginTop: 24 }}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              size="large"
-              loading={updateMutation.isPending}
-            >
-              Save Settings
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
+                    <Switch />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    name="maintenanceMessage"
+                    label="Maintenance Message"
+                  >
+                    <Input.TextArea
+                      rows={3}
+                      placeholder="Message to display during maintenance"
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Card>
+            <Form.Item style={{ marginTop: 24 }}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                size="large"
+                loading={updateMutation.isPending}
+              >
+                Save Settings
+              </Button>
+            </Form.Item>
+          </Form>
+        </Card>
+      )}
     </div>
   );
 };
