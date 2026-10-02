@@ -136,6 +136,10 @@ const SettingsPage = () => {
           layout="vertical"
           onFinish={onFinish}
           initialValues={{
+            siteName: settings?.data?.siteName ?? "",
+            siteDescription: settings?.data?.siteDescription ?? "",
+            maintenanceMode: settings?.data?.maintenanceMode ?? false,
+            maintenanceMessage: settings?.data?.maintenanceMessage ?? "",
             storeLogo: settings?.data?.storeLogo ?? "",
             favicon: settings?.data?.favicon ?? "",
           }}
@@ -159,7 +163,7 @@ const SettingsPage = () => {
                 </Form.Item>
               </Col>
               <Col xs={24} sm={12}>
-                <Form.Item label="Store Logo">
+                <Form.Item label="Store Logo" name="storeLogo">
                   <Upload
                     listType="picture-circle"
                     fileList={logoFileList}
@@ -180,7 +184,7 @@ const SettingsPage = () => {
                 </Form.Item>
               </Col>
               <Col xs={24} sm={12}>
-                <Form.Item label="Favicon">
+                <Form.Item label="Favicon" name="favicon">
                   <Upload
                     listType="picture-circle"
                     fileList={faviconFileList}
