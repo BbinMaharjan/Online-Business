@@ -15,18 +15,19 @@ import {
   useSettingsQuery,
   useUpdateSettingsMutation,
 } from "./hooks/useSettings";
+import { settingsApi } from "./api/settingsApi";
 import styles from "./SettingsPage.module.css";
 
 const SettingsPage = () => {
   const { data: settings, isLoading } = useSettingsQuery();
   const updateMutation = useUpdateSettingsMutation();
   const [form] = Form.useForm();
-  const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>("");
-  const [faviconFile, setFaviconFile] = useState<File | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string>("");
   const [logoFileList, setLogoFileList] = useState<any[]>([]);
   const [faviconFileList, setFaviconFileList] = useState<any[]>([]);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [uploadingFavicon, setUploadingFavicon] = useState(false);
 
   useEffect(() => {
     if (settings && !isLoading) {
@@ -56,57 +57,70 @@ const SettingsPage = () => {
     }
   }, [settings, form, isLoading]);
 
-  const handleLogoChange = (info: any) => {
+  const handleLogoChange = async (info: any) => {
     const file = info.file?.originFileObj || info.file;
-    if (file) {
-      setLogoFile(file);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setLogoPreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setLogoPreview(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+
     if (info.fileList) {
       setLogoFileList(info.fileList);
     }
+
+    setUploadingLogo(true);
+    try {
+      const response = await settingsApi.uploadImage(file, "storeLogo");
+      const imageUrl = response.data?.url;
+      if (imageUrl) {
+        form.setFieldValue("storeLogo", imageUrl);
+        setLogoPreview(imageUrl);
+      }
+    } catch (error) {
+      console.error("Logo upload failed:", error);
+      message.error("Failed to upload logo");
+    } finally {
+      setUploadingLogo(false);
+    }
   };
 
-  const handleFaviconChange = (info: any) => {
+  const handleFaviconChange = async (info: any) => {
     const file = info.file?.originFileObj || info.file;
-    if (file) {
-      setFaviconFile(file);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setFaviconPreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setFaviconPreview(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+
     if (info.fileList) {
       setFaviconFileList(info.fileList);
+    }
+
+    setUploadingFavicon(true);
+    try {
+      const response = await settingsApi.uploadImage(file, "favicon");
+      const imageUrl = response.data?.url;
+      if (imageUrl) {
+        form.setFieldValue("favicon", imageUrl);
+        setFaviconPreview(imageUrl);
+      }
+    } catch (error) {
+      console.error("Favicon upload failed:", error);
+      message.error("Failed to upload favicon");
+    } finally {
+      setUploadingFavicon(false);
     }
   };
 
   const onFinish = async () => {
     try {
       const values = await form.validateFields();
-      const formData = new FormData();
-
-      formData.append("siteName", values.siteName);
-      formData.append("siteDescription", values.siteDescription || "");
-      formData.append(
-        "maintenanceMode",
-        values.maintenanceMode ? "true" : "false",
-      );
-      formData.append("maintenanceMessage", values.maintenanceMessage || "");
-
-      if (logoFile) {
-        formData.append("storeLogo", logoFile);
-      }
-      if (faviconFile) {
-        formData.append("favicon", faviconFile);
-      }
-
-      await updateMutation.mutateAsync(formData);
+      await updateMutation.mutateAsync(values);
       message.success("Settings saved");
     } catch (error) {
       console.error("Form validation failed:", error);
