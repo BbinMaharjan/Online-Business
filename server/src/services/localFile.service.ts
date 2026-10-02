@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 
 const UPLOAD_DIR = path.resolve(process.cwd(), "public/uploads");
+const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
 
 if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
@@ -20,7 +21,7 @@ export class LocalFileService {
 
     await fs.promises.writeFile(filePath, fileBuffer);
 
-    const url = `/uploads/${publicId}`;
+    const url = `${BASE_URL}/uploads/${publicId}`;
 
     return { url, publicId };
   }
@@ -38,7 +39,7 @@ export class LocalFileService {
   }
 
   getSignedUrl(publicId: string, expirySeconds = 3600): string {
-    return `/uploads/${publicId}`;
+    return `${BASE_URL}/uploads/${publicId}`;
   }
 
   private getExtensionFromMimeType(mimeType: string): string {

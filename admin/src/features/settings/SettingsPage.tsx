@@ -75,7 +75,7 @@ const SettingsPage = () => {
     setUploadingLogo(true);
     try {
       const response = await settingsApi.uploadImage(file, "storeLogo");
-      const imageUrl = response.data?.url;
+      const imageUrl = response.data?.data?.url;
       if (imageUrl) {
         form.setFieldValue("storeLogo", imageUrl);
         setLogoPreview(imageUrl);
@@ -105,7 +105,7 @@ const SettingsPage = () => {
     setUploadingFavicon(true);
     try {
       const response = await settingsApi.uploadImage(file, "favicon");
-      const imageUrl = response.data?.url;
+      const imageUrl = response.data?.data?.url;
       if (imageUrl) {
         form.setFieldValue("favicon", imageUrl);
         setFaviconPreview(imageUrl);

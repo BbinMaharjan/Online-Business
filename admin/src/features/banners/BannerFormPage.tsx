@@ -150,7 +150,7 @@ const BannerFormPage = () => {
             <Form.Item name="image" label="Image" valuePropName="url">
               <Upload
                 name="file"
-                action="/api/upload"
+                action="/api/v1/media/upload"
                 listType="picture"
                 showUploadList={false}
                 beforeUpload={handleImageUpload}

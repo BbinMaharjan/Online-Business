@@ -45,7 +45,7 @@ const MediaPage = () => {
       <Card className={styles.uploadCard}>
         <PermissionGuard permission="media:create">
           <Upload
-            action="/api/upload"
+            action="/api/v1/media/upload"
             listType="picture-card"
             fileList={files}
             beforeUpload={handleUpload}

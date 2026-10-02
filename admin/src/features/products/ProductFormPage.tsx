@@ -367,7 +367,7 @@ const ProductFormPage = () => {
           <TabPane tab="Images" key="images">
             <Card>
               <Upload
-                action="/api/upload"
+                action="/api/v1/media/upload"
                 listType="picture-card"
                 fileList={images.map((url, index) => ({
                   uid: index.toString(),
@@ -612,6 +612,7 @@ const ProductFormPage = () => {
           <Divider>Images</Divider>
           <Form.Item name="images" label="Variant Images">
             <Upload
+              action="/api/v1/media/upload"
               listType="picture-card"
               maxCount={5}
               beforeUpload={handleImageUpload}

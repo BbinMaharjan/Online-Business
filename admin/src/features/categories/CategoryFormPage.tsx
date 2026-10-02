@@ -154,6 +154,7 @@ const CategoryFormPage = () => {
         </Form.Item>
         <Form.Item name="image" label="Image">
           <Upload
+            action="/api/v1/media/upload"
             listType="picture-card"
             beforeUpload={handleImageUpload}
             onRemove={() => {
