@@ -204,6 +204,7 @@ const SettingsPage = () => {
                       onChange={handleLogoChange}
                       beforeUpload={() => false}
                       maxCount={1}
+                      showUploadList={false}
                     >
                       {logoFileList.length >= 1 ? (
                         <img
@@ -225,6 +226,7 @@ const SettingsPage = () => {
                       onChange={handleFaviconChange}
                       beforeUpload={() => false}
                       maxCount={1}
+                      showUploadList={false}
                     >
                       {faviconFileList.length >= 1 ? (
                         <img
