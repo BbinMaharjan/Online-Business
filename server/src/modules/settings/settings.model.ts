@@ -4,6 +4,7 @@ export interface ISettings extends Document {
   siteName: string;
   siteDescription: string;
   storeLogo?: string;
+  favicon?: string;
   maintenanceMode: boolean;
   maintenanceMessage?: string;
   createdAt: Date;
@@ -24,6 +25,10 @@ const settingsSchema = new Schema<ISettings>(
       maxlength: [500, "Site description cannot exceed 500 characters"],
     },
     storeLogo: {
+      type: String,
+      trim: true,
+    },
+    favicon: {
       type: String,
       trim: true,
     },

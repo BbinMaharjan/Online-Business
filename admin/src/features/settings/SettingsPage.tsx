@@ -79,6 +79,14 @@ const SettingsPage = () => {
       if (imageUrl) {
         form.setFieldValue("storeLogo", imageUrl);
         setLogoPreview(imageUrl);
+        setLogoFileList([
+          {
+            uid: "logo",
+            name: "store-logo",
+            url: imageUrl,
+            status: "done",
+          },
+        ]);
       }
     } catch (error) {
       console.error("Logo upload failed:", error);
@@ -109,6 +117,14 @@ const SettingsPage = () => {
       if (imageUrl) {
         form.setFieldValue("favicon", imageUrl);
         setFaviconPreview(imageUrl);
+        setFaviconFileList([
+          {
+            uid: "favicon",
+            name: "favicon",
+            url: imageUrl,
+            status: "done",
+          },
+        ]);
       }
     } catch (error) {
       console.error("Favicon upload failed:", error);

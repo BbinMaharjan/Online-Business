@@ -36,7 +36,11 @@ const app = express();
 
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
@@ -84,9 +88,9 @@ app.get("/health", (req: Request, res: Response) => {
   });
 });
 
-swaggerDocs(app);
-
 app.use("/uploads", express.static(path.join(process.cwd(), "public/uploads")));
+
+swaggerDocs(app);
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
