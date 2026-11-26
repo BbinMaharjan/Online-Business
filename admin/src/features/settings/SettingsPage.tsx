@@ -5,7 +5,6 @@ import {
   Col,
   Form,
   Input,
-  message,
   Row,
   Skeleton,
   Switch,
@@ -16,7 +15,7 @@ import {
   useSettingsQuery,
   useUpdateSettingsMutation,
 } from "./hooks/useSettings";
-import { settingsApi } from "./api/settingsApi";
+import { useImageUpload } from "@/hooks/useImageUpload";
 import styles from "./SettingsPage.module.css";
 
 const SettingsPage = () => {
@@ -27,36 +26,40 @@ const SettingsPage = () => {
   const [faviconPreview, setFaviconPreview] = useState<string>("");
   const [logoFileList, setLogoFileList] = useState<any[]>([]);
   const [faviconFileList, setFaviconFileList] = useState<any[]>([]);
-  const [uploadingLogo, setUploadingLogo] = useState(false);
-  const [uploadingFavicon, setUploadingFavicon] = useState(false);
 
-  useEffect(() => {
-    if (settings && !isLoading) {
-      form.setFieldsValue(settings);
-      if (settings?.data?.storeLogo) {
-        setLogoFileList([
-          {
-            uid: "logo",
-            name: "store-logo",
-            url: settings?.data?.storeLogo,
-            status: "done",
-          },
-        ]);
-        setLogoPreview(settings?.data?.storeLogo);
-      }
-      if (settings?.data?.favicon) {
-        setFaviconFileList([
-          {
-            uid: "favicon",
-            name: "favicon",
-            url: settings?.data?.favicon,
-            status: "done",
-          },
-        ]);
-        setFaviconPreview(settings?.data?.favicon);
-      }
-    }
-  }, [settings, form, isLoading]);
+  const logoUpload = useImageUpload({
+    type: "settings",
+    settingsType: "storeLogo",
+    onSuccess: (url) => {
+      form.setFieldValue("storeLogo", url);
+      setLogoPreview(url);
+      setLogoFileList([
+        {
+          uid: "logo",
+          name: "store-logo",
+          url,
+          status: "done",
+        },
+      ]);
+    },
+  });
+
+  const faviconUpload = useImageUpload({
+    type: "settings",
+    settingsType: "favicon",
+    onSuccess: (url) => {
+      form.setFieldValue("favicon", url);
+      setFaviconPreview(url);
+      setFaviconFileList([
+        {
+          uid: "favicon",
+          name: "favicon",
+          url,
+          status: "done",
+        },
+      ]);
+    },
+  });
 
   const handleLogoChange = async (info: any) => {
     const file = info.file?.originFileObj || info.file;
@@ -72,28 +75,7 @@ const SettingsPage = () => {
       setLogoFileList(info.fileList);
     }
 
-    setUploadingLogo(true);
-    try {
-      const response = await settingsApi.uploadImage(file, "storeLogo");
-      const imageUrl = response.data?.data?.url;
-      if (imageUrl) {
-        form.setFieldValue("storeLogo", imageUrl);
-        setLogoPreview(imageUrl);
-        setLogoFileList([
-          {
-            uid: "logo",
-            name: "store-logo",
-            url: imageUrl,
-            status: "done",
-          },
-        ]);
-      }
-    } catch (error) {
-      console.error("Logo upload failed:", error);
-      message.error("Failed to upload logo");
-    } finally {
-      setUploadingLogo(false);
-    }
+    await logoUpload.upload(file);
   };
 
   const handleFaviconChange = async (info: any) => {
@@ -110,28 +92,7 @@ const SettingsPage = () => {
       setFaviconFileList(info.fileList);
     }
 
-    setUploadingFavicon(true);
-    try {
-      const response = await settingsApi.uploadImage(file, "favicon");
-      const imageUrl = response.data?.data?.url;
-      if (imageUrl) {
-        form.setFieldValue("favicon", imageUrl);
-        setFaviconPreview(imageUrl);
-        setFaviconFileList([
-          {
-            uid: "favicon",
-            name: "favicon",
-            url: imageUrl,
-            status: "done",
-          },
-        ]);
-      }
-    } catch (error) {
-      console.error("Favicon upload failed:", error);
-      message.error("Failed to upload favicon");
-    } finally {
-      setUploadingFavicon(false);
-    }
+    await faviconUpload.upload(file);
   };
 
   const onFinish = async () => {
