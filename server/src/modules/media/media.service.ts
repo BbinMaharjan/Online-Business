@@ -33,7 +33,7 @@ export const uploadMedia = async (req: Request, res: Response) => {
       filename: publicId,
       type: type as "PRODUCT_IMAGE" | "CATEGORY_IMAGE" | "AVATAR" | "GENERIC",
       referenceId,
-      referenceType: referenceType as "PRODUCT" | "CATEGORY" | "USER" | "SETTINGS",
+      referenceType: referenceType as "PRODUCT" | "CATEGORY" | "USER" | "SETTINGS" | "BANNER",
       size: req.file.size,
       mimeType: req.file.mimetype,
     });

@@ -4,7 +4,6 @@ import {
   Form,
   Input,
   InputNumber,
-  Select,
   Switch,
   Card,
   Button,
@@ -33,11 +32,11 @@ const BannerFormPage = () => {
   const createMutation = useCreateBannerMutation();
   const updateMutation = useUpdateBannerMutation();
   const [form] = Form.useForm();
+  const [image, setImage] = useState<string | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const { data: banner, isLoading } = useBannerQuery(id || "", {
-    enabled: isEditing,
-  });
+  const { data: bannerResponse, isLoading } = useBannerQuery(isEditing ? id || "" : "");
+  const banner = bannerResponse?.data;
 
   useEffect(() => {
     if (isEditing && banner) {
@@ -46,21 +45,30 @@ const BannerFormPage = () => {
         description: banner.description,
         buttonText: banner.buttonText,
         buttonLink: banner.buttonLink,
-        image: banner.image,
-        status: banner.status,
+        status: banner.status === "ACTIVE",
         sortOrder: banner.sortOrder,
       });
-      setImagePreview(banner.image);
+      setImage(banner.image || null);
+      setImagePreview(banner.image || null);
     }
   }, [isEditing, banner, form]);
 
   const onFinish = async (values: any) => {
     try {
+      if (!image) {
+        message.error("Please upload a banner image");
+        return;
+      }
+      const payload = {
+        ...values,
+        image,
+        status: values.status ? "ACTIVE" : "INACTIVE",
+      };
       if (isEditing) {
-        await updateMutation.mutateAsync({ id: id!, data: values });
+        await updateMutation.mutateAsync({ id: id!, data: payload });
         message.success("Banner updated");
       } else {
-        await createMutation.mutateAsync(values);
+        await createMutation.mutateAsync(payload);
         message.success("Banner created");
       }
       navigate("/banners");
@@ -73,20 +81,22 @@ const BannerFormPage = () => {
     try {
       const res = await uploadMutation.mutateAsync({
         file,
-        referenceId: "banner",
+        referenceId: id || "banner",
         referenceType: "BANNER",
       });
       const url = res.data.data.url;
-      form.setFieldValue("image", url);
+      setImage(url);
       setImagePreview(url);
       message.success("Image uploaded successfully");
+      return false;
     } catch {
       message.error("Image upload failed");
+      return false;
     }
   };
 
   const handleImageRemove = () => {
-    form.setFieldValue("image", "");
+    setImage(null);
     setImagePreview(null);
     message.success("Image removed");
   };
@@ -109,7 +119,7 @@ const BannerFormPage = () => {
           layout="vertical"
           onFinish={onFinish}
           initialValues={{
-            status: "ACTIVE",
+            status: true,
             sortOrder: 0,
           }}
         >
@@ -147,13 +157,17 @@ const BannerFormPage = () => {
             </Row>
           </Card>
           <Card title="Banner Image">
-            <Form.Item name="image" label="Image" valuePropName="url">
+            <Form.Item label="Image">
               <Upload
                 name="file"
                 action="/api/v1/media/upload"
                 listType="picture"
                 showUploadList={false}
                 beforeUpload={handleImageUpload}
+                onRemove={() => {
+                  handleImageRemove();
+                  return false;
+                }}
                 maxCount={1}
               >
                 {imagePreview ? (

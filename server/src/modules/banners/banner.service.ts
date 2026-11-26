@@ -13,13 +13,28 @@ export const createBanner = async (req: Request, res: Response) => {
       });
     }
 
+    // Normalize status so boolean values from the admin UI are accepted
+    let normalizedStatus = status;
+    if (typeof status === "boolean") {
+      normalizedStatus = status ? "ACTIVE" : "INACTIVE";
+    } else if (!status) {
+      normalizedStatus = "ACTIVE";
+    }
+    if (!["ACTIVE", "INACTIVE"].includes(normalizedStatus)) {
+      return res.status(400).json({
+        success: false,
+        message: "Status must be ACTIVE or INACTIVE",
+        error: { code: "INVALID_STATUS" },
+      });
+    }
+
     const banner = new Banner({
       title,
       description,
       buttonText,
       buttonLink,
       image,
-      status: status || "ACTIVE",
+      status: normalizedStatus,
       sortOrder: sortOrder || 0,
     });
 
@@ -31,10 +46,21 @@ export const createBanner = async (req: Request, res: Response) => {
       data: banner,
     });
   } catch (error: any) {
+    console.error("CREATE BANNER ERROR:", error);
+    if (error?.name === "ValidationError" || error?.name === "CastError") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+        error: { code: "VALIDATION_ERROR" },
+      });
+    }
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      error: { code: "INTERNAL_ERROR" },
+      error: {
+        code: "INTERNAL_ERROR",
+        ...(process.env.NODE_ENV === "development" && { details: error?.message }),
+      },
     });
   }
 };
@@ -81,7 +107,10 @@ export const getBanners = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      error: { code: "INTERNAL_ERROR" },
+      error: {
+        code: "INTERNAL_ERROR",
+        ...(process.env.NODE_ENV === "development" && { details: error?.message }),
+      },
     });
   }
 };
@@ -102,7 +131,10 @@ export const getPublicBanners = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      error: { code: "INTERNAL_ERROR" },
+      error: {
+        code: "INTERNAL_ERROR",
+        ...(process.env.NODE_ENV === "development" && { details: error?.message }),
+      },
     });
   }
 };
@@ -130,7 +162,10 @@ export const getBannerById = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      error: { code: "INTERNAL_ERROR" },
+      error: {
+        code: "INTERNAL_ERROR",
+        ...(process.env.NODE_ENV === "development" && { details: error?.message }),
+      },
     });
   }
 };
@@ -140,9 +175,24 @@ export const updateBanner = async (req: Request, res: Response) => {
     const { bannerId } = req.params;
     const { title, description, buttonText, buttonLink, image, status, sortOrder } = req.body;
 
+    // Normalize status so boolean values from the admin UI are accepted
+    let normalizedStatus = status;
+    if (status !== undefined) {
+      if (typeof status === "boolean") {
+        normalizedStatus = status ? "ACTIVE" : "INACTIVE";
+      }
+      if (normalizedStatus !== undefined && !["ACTIVE", "INACTIVE"].includes(normalizedStatus)) {
+        return res.status(400).json({
+          success: false,
+          message: "Status must be ACTIVE or INACTIVE",
+          error: { code: "INVALID_STATUS" },
+        });
+      }
+    }
+
     const banner = await Banner.findByIdAndUpdate(
       bannerId,
-      { title, description, buttonText, buttonLink, image, status, sortOrder },
+      { title, description, buttonText, buttonLink, image, status: normalizedStatus, sortOrder },
       { new: true, runValidators: true }
     );
 
@@ -160,10 +210,21 @@ export const updateBanner = async (req: Request, res: Response) => {
       data: banner,
     });
   } catch (error: any) {
+    console.error("UPDATE BANNER ERROR:", error);
+    if (error?.name === "ValidationError" || error?.name === "CastError") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+        error: { code: "VALIDATION_ERROR" },
+      });
+    }
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      error: { code: "INTERNAL_ERROR" },
+      error: {
+        code: "INTERNAL_ERROR",
+        ...(process.env.NODE_ENV === "development" && { details: error?.message }),
+      },
     });
   }
 };
@@ -190,7 +251,10 @@ export const deleteBanner = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      error: { code: "INTERNAL_ERROR" },
+      error: {
+        code: "INTERNAL_ERROR",
+        ...(process.env.NODE_ENV === "development" && { details: error?.message }),
+      },
     });
   }
 };
