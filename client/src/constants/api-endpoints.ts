@@ -71,4 +71,9 @@ export const API_ENDPOINTS = {
     MARK_READ: (id: string) => `/notifications/${id}/read`,
     MARK_ALL_READ: "/notifications/read-all",
   },
+  BANNERS: {
+    LIST: "/banners/public",
+    PUBLIC: "/banners/public",
+    DETAIL: (id: string) => `/banners/${id}`,
+  },
 } as const;

@@ -2,7 +2,7 @@
 
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { Icons } from "@/lib/icons";
-import { useProducts } from "@/services/api";
+import { useProducts, useBanners } from "@/services/api";
 import {
   Box,
   Button,
@@ -24,7 +24,15 @@ const {
   KeyboardArrowRight,
 } = Icons;
 
-const heroSlides = [
+type HeroSlide = {
+  title: string;
+  subtitle: string;
+  cta: string;
+  href: string;
+  image: string;
+};
+
+const fallbackHeroSlides: HeroSlide[] = [
   {
     title: "Summer Collection 2024",
     subtitle: "Up to 50% off on selected items",
@@ -48,7 +56,7 @@ const heroSlides = [
   },
 ];
 
-function HeroCarousel({ slides }: { slides: typeof heroSlides }) {
+function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToNext = useCallback(() => {
@@ -226,6 +234,21 @@ export function HomepageClient() {
     limit: 8,
     sort: "featured",
   });
+
+  const { data: bannersResponse } = useBanners();
+
+  const bannerList = bannersResponse?.data;
+
+  const heroSlides: HeroSlide[] =
+    bannerList && bannerList.length
+      ? bannerList.map((banner) => ({
+          title: banner.title,
+          subtitle: banner.description || "",
+          cta: banner.buttonText || "Shop Now",
+          href: banner.buttonLink || "/products",
+          image: banner.image,
+        }))
+      : fallbackHeroSlides;
 
   return (
     <Container maxWidth="xl">

@@ -53,6 +53,19 @@ export interface Brand {
   status: "ACTIVE" | "INACTIVE";
 }
 
+export interface Banner {
+  _id: string;
+  title: string;
+  description?: string;
+  buttonText?: string;
+  buttonLink?: string;
+  image: string;
+  status?: "ACTIVE" | "INACTIVE";
+  sortOrder?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface CartItem {
   _id: string;
   productId: string;

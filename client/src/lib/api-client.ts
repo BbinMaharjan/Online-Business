@@ -1,8 +1,11 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from "axios";
 import { API_ENDPOINTS } from "@/constants/api-endpoints";
-import type { ApiResponse, PaginatedResponse, ProductFilters, Product, Category, Brand, Cart, Order, Address, Customer, Review, Payment, ShippingMethod, WishlistItem, Notification, SearchSuggestion, PaymentIntent } from "@/types";
+import type { ApiResponse, PaginatedResponse, ProductFilters, Product, Category, Brand, Banner, Cart, Order, Address, Customer, Review, Payment, ShippingMethod, WishlistItem, Notification, SearchSuggestion, PaymentIntent } from "@/types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api/v1";
+const rawApiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
+const API_BASE_URL = rawApiBaseUrl.endsWith("/api/v1")
+  ? rawApiBaseUrl
+  : `${rawApiBaseUrl.replace(/\/+$/, "")}/api/v1`;
 
 const api: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -202,6 +205,20 @@ export const apiClient = {
 
     delete: (id: string) =>
       api.delete<ApiResponse<void>>(API_ENDPOINTS.REVIEWS.DELETE(id)).then((res) => res.data),
+  },
+
+  banners: {
+    list: () =>
+      api.get<ApiResponse<Banner[]>>(API_ENDPOINTS.BANNERS.PUBLIC).then((res) => res.data),
+
+    getPublic: () =>
+      api.get<ApiResponse<Banner[]>>(API_ENDPOINTS.BANNERS.PUBLIC).then((res) => res.data),
+
+    getPublicBanners: () =>
+      api.get<ApiResponse<Banner[]>>(API_ENDPOINTS.BANNERS.PUBLIC).then((res) => res.data),
+
+    getById: (id: string) =>
+      api.get<ApiResponse<Banner>>(API_ENDPOINTS.BANNERS.DETAIL(id)).then((res) => res.data),
   },
 
   notifications: {
